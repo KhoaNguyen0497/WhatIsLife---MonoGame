@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "uv10/vwRBQe4zoreDglfT3qcFQmkO/pdNkmguob+XSoLXi0SbCPXxVBYdfZ1zxLiocOeFL9bJAVm2EwY8kWTSA==",
+  "success": true,
+  "projectFilePath": "D:\\Repos\\WhatIsLife\\WhatIsLife\\WhatIsLife.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\khoan\\.nuget\\packages\\monogame.content.builder.task\\3.8.0.1641\\monogame.content.builder.task.3.8.0.1641.nupkg.sha512",
+    "C:\\Users\\khoan\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.0.1641\\monogame.framework.desktopgl.3.8.0.1641.nupkg.sha512"
+  ],
+  "logs": []
+}
