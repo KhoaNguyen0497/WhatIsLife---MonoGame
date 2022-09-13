@@ -24,7 +24,7 @@ namespace WhatIsLife
 
         public void Update()
         {
-            Camera.Move(GetMovementDirection() * _cameraBaseMovementSpeed * GameConfig.SpeedMultiplier);
+            Camera.Move(GetMovementDirection() * _cameraBaseMovementSpeed * GameConfig.CameraSpeed);
 
             int scrollWheelValue = Mouse.GetState().ScrollWheelValue;
             Camera.ZoomIn((scrollWheelValue - _previousMouseScrollValue) / 12000f * GameConfig.ZoomSpeed);

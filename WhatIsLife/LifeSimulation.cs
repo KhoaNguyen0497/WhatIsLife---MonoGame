@@ -78,7 +78,7 @@ namespace WhatIsLife
                 _debugUpdateCalls++;
 
                 gameUpdateCalls -= 1;
-                Thread.Sleep(5);
+                //Thread.Sleep(5);
             }
 
             PrintDebug(gameTime);

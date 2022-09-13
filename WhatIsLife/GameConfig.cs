@@ -13,9 +13,10 @@ namespace WhatIsLife
         public static int WindowsWitdth = 1000;
         public static int WindowsHeight = 1000;
 
-        public static float SpeedMultiplier = 1.2f;
+        public static float SpeedMultiplier = 5f;
 
         public static float ZoomSpeed = 1f;
+        public static float CameraSpeed = 10f;
 
         public static Random Random = new Random();
     }
