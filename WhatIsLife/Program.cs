@@ -7,8 +7,8 @@ namespace WhatIsLife
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
-                game.Run();
+            using (var simulation = new LifeSimulation())
+                simulation.Run();
         }
     }
 }
