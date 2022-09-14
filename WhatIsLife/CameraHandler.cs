@@ -36,19 +36,19 @@ namespace WhatIsLife
         {
             var movementDirection = Vector2.Zero;
             var state = Keyboard.GetState();
-            if (state.IsKeyDown(Keys.Down))
+            if (state.IsKeyDown(Keys.Down) || state.IsKeyDown(Keys.S))
             {
                 movementDirection += Vector2.UnitY;
             }
-            if (state.IsKeyDown(Keys.Up))
+            if (state.IsKeyDown(Keys.Up) || state.IsKeyDown(Keys.W))
             {
                 movementDirection -= Vector2.UnitY;
             }
-            if (state.IsKeyDown(Keys.Left))
+            if (state.IsKeyDown(Keys.Left) || state.IsKeyDown(Keys.A))
             {
                 movementDirection -= Vector2.UnitX;
             }
-            if (state.IsKeyDown(Keys.Right))
+            if (state.IsKeyDown(Keys.Right) || state.IsKeyDown(Keys.D))
             {
                 movementDirection += Vector2.UnitX;
             }

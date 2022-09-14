@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.ViewportAdapters;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using WhatIsLife.Objects;
@@ -19,6 +20,7 @@ namespace WhatIsLife
         private int _debugUpdateCalls = 0;
         private int _debugDrawCalls = 0;
 
+        private List<Entity> entities = new List<Entity>();
         public LifeSimulation()
         {
             InactiveSleepTime = new TimeSpan(0);
@@ -41,6 +43,12 @@ namespace WhatIsLife
             _graphics.PreferredBackBufferWidth = GameConfig.WindowsWitdth;
             _graphics.PreferredBackBufferHeight = GameConfig.WindowsHeight;
             _graphics.ApplyChanges();
+
+            for (int i = 0; i < 10000; i++)
+            {
+                Entity entity = new Entity();
+                entities.Add(entity);
+            }
         }
 
         protected override void LoadContent()
@@ -60,10 +68,9 @@ namespace WhatIsLife
 
             var averageUpdatePerSec = _debugUpdateCalls / gameTime.TotalGameTime.TotalSeconds;
             var actualFps = _debugDrawCalls / gameTime.TotalGameTime.TotalSeconds;
-            var targetFps = 1000 / TargetElapsedTime.TotalMilliseconds;
             var msPerFrame = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            Debug.WriteLine($"avg update/s: {averageUpdatePerSec}; actual fps: {actualFps}; target fps: {targetFps}; elapsed: {msPerFrame};loop {maxLoop}");
+            Debug.WriteLine($"avg update/s: {averageUpdatePerSec}; actual fps: {actualFps}; elapsed: {msPerFrame};loop {maxLoop}");
         }
 
         protected override void Update(GameTime gameTime)
@@ -78,6 +85,7 @@ namespace WhatIsLife
                 _debugUpdateCalls++;
 
                 gameUpdateCalls -= 1;
+                entities.ForEach(x => x.Move());
                 //Thread.Sleep(5);
             }
 
@@ -86,11 +94,10 @@ namespace WhatIsLife
 
         protected override void Draw(GameTime gameTime)
         {        
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(GameConfig.Colors.Background);
             _cameraHandler.Update();
             _spriteBatch.Begin(transformMatrix: _cameraHandler.GetViewMatrix());
-            _spriteBatch.DrawRectangle(new RectangleF(0, 0, GameConfig.WorldWidth, GameConfig.WorldHeight), Color.Red, 20);
-            _spriteBatch.DrawCircle(new CircleF(new Point2(500, 500), 50), 10, Color.Red);
+            _spriteBatch.DrawRectangle(new RectangleF(0, 0, GameConfig.WorldWidth, GameConfig.WorldHeight), Color.Black, 2);
             DrawEntities();
             _spriteBatch.End();
 
@@ -99,7 +106,7 @@ namespace WhatIsLife
 
         private void DrawEntities()
         {
-
+            entities.ForEach(x => x.Draw(_spriteBatch));
         }
     }
 }
