@@ -6,10 +6,9 @@ using System.Text;
 
 namespace WhatIsLife.Objects
 {
-    public abstract class BaseEntity
+    public abstract class BaseObject
     {
         public Vector2 Position;
-        public Vector2 Velocity;
         public abstract void Draw(SpriteBatch spriteBatch);
     }
 }

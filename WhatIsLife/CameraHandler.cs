@@ -5,7 +5,9 @@ using MonoGame.Extended;
 using MonoGame.Extended.ViewportAdapters;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
+using WhatIsLife.Helpers;
 
 namespace WhatIsLife
 {

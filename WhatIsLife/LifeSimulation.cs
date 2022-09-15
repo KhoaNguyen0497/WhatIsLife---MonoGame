@@ -6,7 +6,9 @@ using MonoGame.Extended.ViewportAdapters;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
+using WhatIsLife.Helpers;
 using WhatIsLife.Objects;
 
 namespace WhatIsLife
@@ -20,7 +22,8 @@ namespace WhatIsLife
         private int _debugUpdateCalls = 0;
         private int _debugDrawCalls = 0;
 
-        private List<Entity> entities = new List<Entity>();
+        private float _frames = 0;
+
         public LifeSimulation()
         {
             InactiveSleepTime = new TimeSpan(0);
@@ -44,10 +47,10 @@ namespace WhatIsLife
             _graphics.PreferredBackBufferHeight = GameConfig.WindowsHeight;
             _graphics.ApplyChanges();
 
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < GameConfig.InitialEntities; i++)
             {
                 Entity entity = new Entity();
-                entities.Add(entity);
+                GlobalObject.Entities.Add(entity);
             }
         }
 
@@ -70,23 +73,29 @@ namespace WhatIsLife
             var actualFps = _debugDrawCalls / gameTime.TotalGameTime.TotalSeconds;
             var msPerFrame = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            Debug.WriteLine($"avg update/s: {averageUpdatePerSec}; actual fps: {actualFps}; elapsed: {msPerFrame};loop {maxLoop}");
+            Debug.WriteLine($"avg update/s: {averageUpdatePerSec}; actual fps: {actualFps}; elapsed: {msPerFrame};loop {maxLoop}; foodSize {GlobalObject.FoodList.Count}/{GlobalObject.FoodList.Count(x=>!x.IsActive)}; RecycledFood {GlobalObject.RecycledFood.Count}; {GlobalObject.FoodList.Count + GlobalObject.RecycledFood.Count}/{GameConfig.FoodPerDay}");
+        }
+
+        private void ProcessFrame()
+        {
+            _debugUpdateCalls++;
+
+            if (_debugUpdateCalls % GameConfig.UpdatesPerday == 0)
+            {
+                GlobalObject.FoodList.AddRange(Food.NewDaySpawn());
+            }
+
+            _frames -= 1;
+            GlobalObject.Entities.ForEach(x => x.Update());
         }
 
         protected override void Update(GameTime gameTime)
         {
-            double gameUpdateCalls = 0;
-            gameUpdateCalls += GameConfig.SpeedMultiplier;
 
-
-            while (gameUpdateCalls >= 1)
+            _frames += GameConfig.SpeedMultiplier;
+            while (_frames >= 1)
             {
-
-                _debugUpdateCalls++;
-
-                gameUpdateCalls -= 1;
-                entities.ForEach(x => x.Move());
-                //Thread.Sleep(5);
+                ProcessFrame();
             }
 
             PrintDebug(gameTime);
@@ -106,7 +115,8 @@ namespace WhatIsLife
 
         private void DrawEntities()
         {
-            entities.ForEach(x => x.Draw(_spriteBatch));
+            GlobalObject.Entities.ForEach(x => x.Draw(_spriteBatch));
+            GlobalObject.FoodList.ForEach(x => x.Draw(_spriteBatch));
         }
     }
 }
