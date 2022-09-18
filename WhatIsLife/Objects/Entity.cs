@@ -15,8 +15,6 @@ namespace WhatIsLife.Objects
         Female
     }
 
-
-
     public class Entity : BaseObject
     {
         public Vector2 Velocity;
@@ -53,7 +51,7 @@ namespace WhatIsLife.Objects
             {
                 Position = new Vector2
                 {
-                    X = GlobalObject.Random.Next(GameConfig.WorldWidth),
+                    X = GlobalObject.Random.Next(GameConfig.WorldLength),
                     Y = GlobalObject.Random.Next(GameConfig.WorldHeight)
                 };
             }
@@ -74,7 +72,7 @@ namespace WhatIsLife.Objects
             // Only if the entity is not targetting something else
             if (Target == null)
             {
-                Food food = GlobalObject.FoodList.FirstOrDefault(x => x.IsActive && VectorHelper.WithinDistance(x.Position, this.Position, Radius));
+                Food food = GlobalObject.FoodList.GetNearbyObjects(Position, Radius).FirstOrDefault(x => x.IsActive && VectorHelper.WithinDistance(x.Position, this.Position, Radius));
 
                 if (food != null)
                 {
@@ -131,9 +129,9 @@ namespace WhatIsLife.Objects
                 Velocity.X *= -1;
             }
 
-            if (Position.X >= GameConfig.WorldWidth)
+            if (Position.X >= GameConfig.WorldLength)
             {
-                Position.X = GameConfig.WorldWidth;
+                Position.X = GameConfig.WorldLength - 1;
                 Velocity.X *= -1;
             }
 
@@ -145,7 +143,7 @@ namespace WhatIsLife.Objects
 
             if (Position.Y >= GameConfig.WorldHeight)
             {
-                Position.Y = GameConfig.WorldHeight;
+                Position.Y = GameConfig.WorldHeight - 1;
                 Velocity.Y *= -1;
             }
 

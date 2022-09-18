@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using WhatIsLife.Helpers;
 using WhatIsLife.Objects;
+using WhatIsLife.Systems;
 
 namespace WhatIsLife
 {
@@ -73,7 +74,7 @@ namespace WhatIsLife
             var actualFps = _debugDrawCalls / gameTime.TotalGameTime.TotalSeconds;
             var msPerFrame = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            Debug.WriteLine($"avg update/s: {averageUpdatePerSec}; actual fps: {actualFps}; elapsed: {msPerFrame};loop {maxLoop}; foodSize {GlobalObject.FoodList.Count}/{GlobalObject.FoodList.Count(x=>!x.IsActive)}; RecycledFood {GlobalObject.RecycledFood.Count}; {GlobalObject.FoodList.Count + GlobalObject.RecycledFood.Count}/{GameConfig.FoodPerDay}");
+            Debug.WriteLine($"avg update/s: {averageUpdatePerSec}; actual fps: {actualFps}; elapsed: {msPerFrame};loop {maxLoop}; foodSize {GlobalObject.FoodList.AllObjects().Count}/{GlobalObject.FoodList.AllObjects().Count(x=>!x.IsActive)}; RecycledFood {GlobalObject.RecycledFood.Count};");
         }
 
         private void ProcessFrame()
@@ -86,7 +87,7 @@ namespace WhatIsLife
             }
 
             _frames -= 1;
-            GlobalObject.Entities.ForEach(x => x.Update());
+            GlobalObject.Entities.AllObjects().ForEach(x => x.Update());
         }
 
         protected override void Update(GameTime gameTime)
@@ -106,7 +107,7 @@ namespace WhatIsLife
             GraphicsDevice.Clear(GameConfig.Colors.Background);
             _cameraHandler.Update();
             _spriteBatch.Begin(transformMatrix: _cameraHandler.GetViewMatrix());
-            _spriteBatch.DrawRectangle(new RectangleF(0, 0, GameConfig.WorldWidth, GameConfig.WorldHeight), Color.Black, 2);
+            _spriteBatch.DrawRectangle(new RectangleF(0, 0, GameConfig.WorldLength, GameConfig.WorldHeight), Color.Black, 2);
             DrawEntities();
             _spriteBatch.End();
 
@@ -115,8 +116,8 @@ namespace WhatIsLife
 
         private void DrawEntities()
         {
-            GlobalObject.Entities.ForEach(x => x.Draw(_spriteBatch));
-            GlobalObject.FoodList.ForEach(x => x.Draw(_spriteBatch));
+            GlobalObject.Entities.AllObjects().ForEach(x => x.Draw(_spriteBatch));
+            GlobalObject.FoodList.AllObjects().ForEach(x => x.Draw(_spriteBatch));
         }
     }
 }

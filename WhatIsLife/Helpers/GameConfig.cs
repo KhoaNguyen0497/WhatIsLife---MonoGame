@@ -9,7 +9,7 @@ namespace WhatIsLife.Helpers
 {
     public static class GameConfig
     {
-        public static int WorldWidth = 20000;
+        public static int WorldLength = 15000;
         public static int WorldHeight = 20000;
 
         public static int WindowsWitdth = 1000;
@@ -24,7 +24,7 @@ namespace WhatIsLife.Helpers
         public static int FoodPerDay = 200;
         public static int InitialEntities = 1000;
 
-        public static bool Debug = false;
+        public static bool Debug = true;
         public static class Colors
         {
             public static Color Background = ColorHelper.FromHex("#30343F");

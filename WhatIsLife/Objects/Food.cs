@@ -42,7 +42,7 @@ namespace WhatIsLife.Objects
             {
                 Position = new Vector2
                 {
-                    X = GlobalObject.Random.Next(GameConfig.WorldWidth),
+                    X = GlobalObject.Random.Next(GameConfig.WorldLength),
                     Y = GlobalObject.Random.Next(GameConfig.WorldHeight)
                 };
             }
