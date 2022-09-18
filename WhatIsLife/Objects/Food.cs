@@ -14,30 +14,39 @@ namespace WhatIsLife.Objects
     {
         public bool IsActive { get; set; }
 
+        public int Age { get; set; }
+
+        // List to keep track of entities currently targeting this object
+        public List<Entity> Entities { get; set; }
+
+        // Private constructor because we are driving the creation of objects through recycling disposed objects
+        private Food()
+        {
+
+        }
+
         public static Food Create()
         {
             Food food;
             if (GlobalObject.RecycledFood.Any())
             {
                 food = GlobalObject.RecycledFood.Pop();
-                food.Respawn();
             }
             else
             {
                 food = new Food();
-                food.Spawn();
             }
 
+            food.Respawn(food.Position);
             return food;
         }
 
-        public void Respawn()
-        {
-            Spawn();
-        }
 
-        public void Spawn(Vector2? position = null)
+        public void Respawn(Vector2? position = null)
         {
+            Age = 0;
+            Entities = new List<Entity>();
+
             if (position == null)
             {
                 Position = new Vector2
@@ -57,9 +66,20 @@ namespace WhatIsLife.Objects
         public void Dispose()
         {
             IsActive = false;
-            GlobalObject.RecycledFood.Push(this);
+            Entities.ForEach(x =>
+            {
+                if (GameConfig.Debug)
+                {
+                    if ((x.Target as Food) == null)
+                    {
+                        throw new Exception("Error");
+                    }
 
-            // TEMP
+                    x.Target = null;
+                }
+            });
+
+            GlobalObject.RecycledFood.Push(this);
             GlobalObject.FoodList.Remove(this);
         }
 
@@ -68,7 +88,7 @@ namespace WhatIsLife.Objects
             List<Food> list = new List<Food>();
             for (int i = 0; i < GameConfig.FoodPerDay; i++)
             {
-                list.Add(Food.Create());
+                list.Add(Create());
             }
 
             return list;
@@ -76,6 +96,7 @@ namespace WhatIsLife.Objects
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            Age += 1;
             if (!IsActive)
             {
                 return;

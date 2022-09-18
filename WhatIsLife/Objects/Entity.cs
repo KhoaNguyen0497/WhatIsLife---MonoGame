@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using WhatIsLife.Helpers;
+using WhatIsLife.Objects.Interfaces;
 
 namespace WhatIsLife.Objects
 {
@@ -15,20 +16,49 @@ namespace WhatIsLife.Objects
         Female
     }
 
-    public class Entity : BaseObject
+    public class Entity : BaseObject, IReusable, IDisposable
     {
         public Vector2 Velocity;
+        public int Age { get; set; }
+        public bool IsActive { get; set; }
 
         public BaseObject Target { get; set; }
-        public Gender Gender { get; } = (Gender)GlobalObject.Random.Next(2);
-        public Entity()
+
+        public Gender Gender { get; set; }
+
+        public float Speed { get; set; }
+
+        public float Radius { get; set; }
+
+        public List<Tuple<Vector2, BaseObject>> History = new List<Tuple<Vector2, BaseObject>>();
+
+        // Private constructor because we are driving the creation of objects through recycling disposed objects
+        private Entity()
         {
-            Spawn();
+
         }
 
-        public float Speed = 0.5f;
+        public static Entity Create()
+        {
+            Entity entity;
+            if (GlobalObject.RecycledEntities.Any())
+            {
+                entity = GlobalObject.RecycledEntities.Pop();
+            }
+            else
+            {
+                entity = new Entity();
+            }
 
-        public float Radius = 50;
+            entity.Respawn();
+            return entity;
+        }
+        public void Dispose()
+        {
+            IsActive = false;
+            GlobalObject.RecycledEntities.Push(this);
+            GlobalObject.Entities.Remove(this);
+        }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -45,8 +75,15 @@ namespace WhatIsLife.Objects
         }
 
         // Spawn and Respawn
-        public void Spawn(Vector2? position = null)
+        public void Respawn(Vector2? position = null)
         {
+            // Reset everything just in case since we are utilizing dispose()
+            Gender = (Gender)GlobalObject.Random.Next(2);
+            Target = null;
+            Speed = GameConfig.BaseEntitySpeed;
+            Radius = GameConfig.BaseEntityRadius;
+            IsActive = true;
+            Age = 0;
             if (position == null)
             {
                 Position = new Vector2
@@ -62,45 +99,49 @@ namespace WhatIsLife.Objects
 
             GlobalObject.Random.NextUnitVector(out Velocity);
             Velocity *= Speed;
-
-
         }
 
         // Find and move to Food, or consume it
         public void FindFood()
         {
-            // Only if the entity is not targetting something else
+            if (Target != null)
+            {
+                if (Target.GetType() == typeof(Food))
+                {
+                    // Consume the food
+                    if (Target.Position == Position)
+                    {
+                        (Target as Food).Dispose();
+                    }
+                }
+            }
+            
             if (Target == null)
             {
-                Food food = GlobalObject.FoodList.GetNearbyObjects(Position, Radius).FirstOrDefault(x => x.IsActive && VectorHelper.WithinDistance(x.Position, this.Position, Radius));
+                Food food = GlobalObject.FoodList.GetNearbyObjects(Position, Radius).FirstOrDefault(x => VectorHelper.WithinDistance(x.Position, Position, Radius));
 
                 if (food != null)
                 {
                     Target = food;
+                    food.Entities.Add(this);
                 }
             }
-            else
-            {
-                if (Target.GetType() == typeof(Food) )
-                {
-                    // If food is already consumed. Clear the Target
-                    if (!(Target as Food).IsActive)
-                    {
-                        Target = null;
-                    }
-                    // Consume the food
-                    else if (Target.Position == Position)
-                    {
-                        (Target as Food).Dispose();
-                        Target = null;
-                    }
-                    
-                }
-            }
+            
         }
 
         public void Update()
         {
+            Age++;
+            if (GameConfig.Debug)
+            {
+                if (Target != null)
+                {
+                    if (!VectorHelper.WithinDistance((Target as Food).Position, Position, Radius))
+                    {
+                        GameConfig.SpeedMultiplier = 0;
+                    }
+                }
+            }
             FindFood();
 
             Move();
@@ -108,6 +149,15 @@ namespace WhatIsLife.Objects
 
         public void Move()
         {
+            if (GameConfig.Debug)
+            {
+                History.Add(new Tuple<Vector2, BaseObject>(Position, Target));
+                if (History.Count > 10)
+                {
+                    History.RemoveAt(0);
+                }
+            }
+
             if (Target != null)
             {
                 Vector2 directionToTarget = new Vector2
@@ -117,8 +167,12 @@ namespace WhatIsLife.Objects
                 };
 
                 Velocity = directionToTarget;
-                Velocity.Normalize();
-                Velocity *= Math.Min(directionToTarget.Length(), Speed);
+                
+                if (Velocity.Length() > Speed)
+                {
+                    Velocity.Normalize();
+                    Velocity *= Speed;
+                }              
             }
 
             Position += Velocity;
@@ -148,7 +202,16 @@ namespace WhatIsLife.Objects
             }
 
             // Reset velocity because sometimes entities slow down to not go pass its Target
-            Velocity.Normalize();
+            // Sometimes Velocity can get to Zero. E.g. when a target spawns at the same position, causing the the path finding system to output velocity of Zero
+            if (Velocity == Vector2.Zero)
+            {
+                GlobalObject.Random.NextUnitVector(out Velocity);
+            }
+            else
+            {
+                Velocity.Normalize();
+            }
+
             Velocity *= Speed;
         }
     }

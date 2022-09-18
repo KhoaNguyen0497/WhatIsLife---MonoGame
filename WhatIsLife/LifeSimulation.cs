@@ -50,8 +50,7 @@ namespace WhatIsLife
 
             for (int i = 0; i < GameConfig.InitialEntities; i++)
             {
-                Entity entity = new Entity();
-                GlobalObject.Entities.Add(entity);
+                GlobalObject.Entities.Add(Entity.Create());
             }
         }
 
@@ -74,7 +73,7 @@ namespace WhatIsLife
             var actualFps = _debugDrawCalls / gameTime.TotalGameTime.TotalSeconds;
             var msPerFrame = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            Debug.WriteLine($"avg update/s: {averageUpdatePerSec}; actual fps: {actualFps}; elapsed: {msPerFrame};loop {maxLoop}; foodSize {GlobalObject.FoodList.AllObjects().Count}/{GlobalObject.FoodList.AllObjects().Count(x=>!x.IsActive)}; RecycledFood {GlobalObject.RecycledFood.Count};");
+            Debug.WriteLine($"avg update/s: {averageUpdatePerSec}; actual fps: {actualFps}; elapsed: {msPerFrame};loop {maxLoop}; foodSize {GlobalObject.FoodList.AllObjects().Count}; RecycledFood {GlobalObject.RecycledFood.Count};");
         }
 
         private void ProcessFrame()

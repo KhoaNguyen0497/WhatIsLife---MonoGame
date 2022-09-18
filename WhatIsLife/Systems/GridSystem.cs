@@ -1,9 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using WhatIsLife.Helpers;
 using WhatIsLife.Objects;
+using WhatIsLife.Objects.Interfaces;
 
 namespace WhatIsLife.Systems
 {
@@ -114,6 +116,8 @@ namespace WhatIsLife.Systems
                 objects.AddRange(Cells[cell]);
             }
 
+           
+
             return objects;
         }
 
@@ -123,6 +127,14 @@ namespace WhatIsLife.Systems
             foreach (KeyValuePair<Point, List<T>> cell in Cells)
             {
                 objects.AddRange(cell.Value);
+            }
+
+            if (GameConfig.Debug)
+            {
+                if (objects.Any(x=> !(x as IReusable).IsActive))
+                {
+                    throw new Exception("Error");
+                }
             }
 
             return objects;

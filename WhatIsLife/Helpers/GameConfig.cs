@@ -9,20 +9,22 @@ namespace WhatIsLife.Helpers
 {
     public static class GameConfig
     {
-        public static int WorldLength = 15000;
-        public static int WorldHeight = 20000;
+        public static int WorldLength = 1000;
+        public static int WorldHeight = 1000;
 
         public static int WindowsWitdth = 1000;
         public static int WindowsHeight = 1000;
 
-        public static float SpeedMultiplier = 1f;
+        public static float SpeedMultiplier = 10f;
 
         public static float ZoomSpeed = 1f;
         public static float CameraSpeed = 10f;
 
-        public static int UpdatesPerday = 200;
-        public static int FoodPerDay = 200;
-        public static int InitialEntities = 1000;
+        public static int UpdatesPerday = 100;
+        public static int FoodPerDay = 20;
+        public static int InitialEntities = 100;
+        public static float BaseEntitySpeed = 10f;
+        public static float BaseEntityRadius = 100f;
 
         public static bool Debug = true;
         public static class Colors
