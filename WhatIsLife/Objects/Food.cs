@@ -37,7 +37,7 @@ namespace WhatIsLife.Objects
                 food = new Food();
             }
 
-            food.Respawn(food.Position);
+            food.Respawn();
             return food;
         }
 
