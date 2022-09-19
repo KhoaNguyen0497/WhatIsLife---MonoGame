@@ -64,6 +64,7 @@ namespace WhatIsLife.Objects
 			entity.Respawn();
 			return entity;
 		}
+
 		public void Dispose()
 		{
 			IsActive = false;
@@ -73,16 +74,17 @@ namespace WhatIsLife.Objects
 
 		public override void Draw(SpriteBatch spriteBatch)
 		{
-			spriteBatch.DrawPoint(Position, Gender == Gender.Male ? GameConfig.Colors.MaleEntity : GameConfig.Colors.FemaleEntity, 10);
+			Color genderColor = Gender == Gender.Male ? GameConfig.Colors.MaleEntity : GameConfig.Colors.FemaleEntity;
+			spriteBatch.DrawPoint(Position, genderColor, 10);
 
 			if (GameConfig.Debug)
 			{
-				spriteBatch.DrawCircle(Position, Radius, 20, Gender == Gender.Male ? GameConfig.Colors.MaleEntity : GameConfig.Colors.FemaleEntity, 1);
+				spriteBatch.DrawCircle(Position, Radius, 20, genderColor, 1);
 				if (Target != null)
 				{
-					spriteBatch.DrawLine(Position, Target.Position, Color.Wheat, 2);
-				}
-			}          
+					spriteBatch.DrawLine(Position, Target.Position, genderColor, 2);
+				}			
+			}
 		}
 
 		// Spawn and Respawn
@@ -136,8 +138,7 @@ namespace WhatIsLife.Objects
 					Target = food;
 					food.Entities.Add(this);
 				}
-			}
-			
+			}		
 		}
 
 		public void Wander()
@@ -147,7 +148,7 @@ namespace WhatIsLife.Objects
 				return;
 			}
 	
-			if (GlobalObject.Random.Next(100) < NoiseRandomness)
+			if (Velocity == Vector2.Zero || GlobalObject.Random.Next(100) < NoiseRandomness)
 			{
 				Velocity = Velocity.Rotate(GlobalObject.Random.NextSingle(-RotationAngleRadian, RotationAngleRadian));
 			}
@@ -156,6 +157,7 @@ namespace WhatIsLife.Objects
 		public void Update()
 		{
 			Age++;
+
 			if (GameConfig.Debug)
 			{
 				if (Target != null)
@@ -166,6 +168,7 @@ namespace WhatIsLife.Objects
 					}
 				}
 			}
+
 			FindFood();
 			Wander();
 			Move();

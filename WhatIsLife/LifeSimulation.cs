@@ -87,6 +87,7 @@ namespace WhatIsLife
 
             _frames -= 1;
             GlobalObject.Entities.AllObjects().ForEach(x => x.Update());
+            GlobalObject.FoodList.AllObjects().ForEach(x => x.Update());
         }
 
         protected override void Update(GameTime gameTime)
@@ -98,7 +99,10 @@ namespace WhatIsLife
                 ProcessFrame();
             }
 
-            PrintDebug(gameTime);
+            if (GameConfig.Debug)
+			{
+                PrintDebug(gameTime);
+            }
         }
 
         protected override void Draw(GameTime gameTime)
@@ -115,6 +119,8 @@ namespace WhatIsLife
 
         private void DrawEntities()
         {
+            var mouseState = Mouse.GetState();
+            var mousePosition = _cameraHandler.Camera.ScreenToWorld(new Vector2(mouseState.X, mouseState.Y));
             GlobalObject.Entities.AllObjects().ForEach(x => x.Draw(_spriteBatch));
             GlobalObject.FoodList.AllObjects().ForEach(x => x.Draw(_spriteBatch));
         }
