@@ -16,6 +16,13 @@ namespace SettingsManager
         public MainForm()
         {
             InitializeComponent();
+            InitializeValues();
+        }
+
+        private void InitializeValues()
+        {
+            updateSpeed.Value = (int)(GameConfig.SpeedMultiplier * 100);
+            debug.Checked = GameConfig.Debug;
         }
 
         private void debug_CheckedChanged(object sender, EventArgs e)
@@ -26,6 +33,11 @@ namespace SettingsManager
         private void updateSpeed_Scroll(object sender, EventArgs e)
         {
             GameConfig.SpeedMultiplier = updateSpeed.Value / 100f;
+        }
+
+        private void restartButton_Click(object sender, EventArgs e)
+        {
+            GameConfig.TriggerRestart = true;
         }
     }
 }

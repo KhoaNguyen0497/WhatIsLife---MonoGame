@@ -9,8 +9,8 @@ namespace WhatIsLife.Helpers
 {
     public static class GlobalObject
     {
-        public static GridSystem<Entity> Entities { get; } = new GridSystem<Entity>();
-        public static GridSystem<Food> FoodList { get; } = new GridSystem<Food>();
+        public static GridSystem<Entity> Entities { get; set; } = new GridSystem<Entity>();
+        public static GridSystem<Food> FoodList { get; set; } = new GridSystem<Food>();
         public static Random Random { get; } = new Random();
 
         public static Stack<Entity> RecycledEntities { get; set; } = new Stack<Entity>();

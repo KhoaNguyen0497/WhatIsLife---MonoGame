@@ -33,6 +33,7 @@ namespace SettingsManager
             this.debug = new System.Windows.Forms.CheckBox();
             this.updateSpeed = new System.Windows.Forms.TrackBar();
             this.updateSpeedBox = new System.Windows.Forms.GroupBox();
+            this.restartButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.updateSpeed)).BeginInit();
             this.updateSpeedBox.SuspendLayout();
             this.SuspendLayout();
@@ -57,7 +58,6 @@ namespace SettingsManager
             this.updateSpeed.TabIndex = 1;
             this.updateSpeed.TickStyle = System.Windows.Forms.TickStyle.None;
             this.updateSpeed.Scroll += new System.EventHandler(this.updateSpeed_Scroll);
-            this.updateSpeed.Value = (int)(GameConfig.SpeedMultiplier * 100);
             // 
             // updateSpeedBox
             // 
@@ -69,11 +69,22 @@ namespace SettingsManager
             this.updateSpeedBox.TabStop = false;
             this.updateSpeedBox.Text = "Update Speed";
             // 
+            // restartButton
+            // 
+            this.restartButton.Location = new System.Drawing.Point(342, 12);
+            this.restartButton.Name = "restartButton";
+            this.restartButton.Size = new System.Drawing.Size(75, 23);
+            this.restartButton.TabIndex = 4;
+            this.restartButton.Text = "Restart";
+            this.restartButton.UseVisualStyleBackColor = true;
+            this.restartButton.Click += new System.EventHandler(this.restartButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(590, 496);
+            this.ClientSize = new System.Drawing.Size(429, 496);
+            this.Controls.Add(this.restartButton);
             this.Controls.Add(this.updateSpeedBox);
             this.Controls.Add(this.debug);
             this.Name = "MainForm";
@@ -91,5 +102,6 @@ namespace SettingsManager
         private System.Windows.Forms.CheckBox debug;
         private System.Windows.Forms.TrackBar updateSpeed;
         private System.Windows.Forms.GroupBox updateSpeedBox;
+        private System.Windows.Forms.Button restartButton;
     }
 }

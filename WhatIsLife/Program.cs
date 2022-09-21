@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Common;
+using SettingsManager;
+using System;
 
 namespace WhatIsLife
 {
@@ -7,8 +9,16 @@ namespace WhatIsLife
         [STAThread]
         static void Main()
         {
-            using (var simulation = new LifeSimulation())
-                simulation.Run();
+            MainForm mainform = new MainForm();
+            mainform.Show();
+            do
+            {
+                using (var simulation = new LifeSimulation())
+                {
+                    GameConfig.TriggerRestart = false;
+                    simulation.Run();
+                }
+            } while (GameConfig.TriggerRestart);
         }
     }
 }

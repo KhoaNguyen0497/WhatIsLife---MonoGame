@@ -1,5 +1,7 @@
 ﻿using Common;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,21 +38,16 @@ namespace WhatIsLife.Systems
         public void PopulateEmptyGrid()
         {
             Cells = new Dictionary<Point, List<T>>();
-            
+
             for (int i = 0; i < _totalColumns; i++)
             {
-                for (int j = 0; j< _totalRows; j++)
+                for (int j = 0; j < _totalRows; j++)
                 {
                     Cells[new Point(i, j)] = new List<T>();
                 }
             }
         }
 
-        public void RepopulateGrid(List<T> objects)
-        {
-            PopulateEmptyGrid();
-            objects.ForEach(x => Add(x));
-        }
 
         public Point GetCellKey(Vector2 position)
         {
@@ -111,13 +108,13 @@ namespace WhatIsLife.Systems
                     nearbyCells.Add(new Point(i, j));
                 }
             }
-            
+
             foreach (Point cell in nearbyCells)
             {
                 objects.AddRange(Cells[cell]);
             }
 
-           
+
 
             return objects;
         }
@@ -132,13 +129,26 @@ namespace WhatIsLife.Systems
 
             if (GameConfig.Debug)
             {
-                if (objects.Any(x=> !(x as IReusable).IsActive))
+                if (objects.Any(x => !(x as IReusable).IsActive))
                 {
                     throw new Exception("Error");
                 }
             }
 
             return objects;
+        }
+
+        public void Draw(SpriteBatch spriteBatch, float cameraZoom)
+        {
+            for (int column = 1; column < _totalColumns; column++)
+            {
+                spriteBatch.DrawLine(column * CellLength, 0, column * CellLength, GameConfig.WorldHeight, GameConfig.Colors.GridColor, 1 / cameraZoom);
+            }
+
+            for (int row = 1; row < _totalRows; row++)
+            {
+                spriteBatch.DrawLine(0, row * CellHeight, GameConfig.WorldLength, row * CellHeight, GameConfig.Colors.GridColor, 1 / cameraZoom);
+            }
         }
     }
 }

@@ -39,19 +39,23 @@ namespace WhatIsLife
             // These are important. Its so that 1) the fps is capped at monitor's refresh rate (vsync), and 2) if update calls take too long, the game is slowed down (fewer draw calls) instead of skipping draw calls
             _graphics.SynchronizeWithVerticalRetrace = true;
             IsFixedTimeStep = false;
-            MainForm mainform = new MainForm();
-            mainform.Show();
         }
-
-
 
         protected override void Initialize()
         {
             base.Initialize();
-            _cameraHandler = new CameraHandler(Window, GraphicsDevice);
             _graphics.PreferredBackBufferWidth = GameConfig.WindowsWitdth;
             _graphics.PreferredBackBufferHeight = GameConfig.WindowsHeight;
             _graphics.ApplyChanges();
+
+            SetupGameObjects();
+        }
+
+
+        private void SetupGameObjects()
+        {
+            GlobalObject.Entities = new GridSystem<Entity>();
+            GlobalObject.FoodList = new GridSystem<Food>();
 
             for (int i = 0; i < GameConfig.InitialEntities; i++)
             {
@@ -61,11 +65,11 @@ namespace WhatIsLife
 
         protected override void LoadContent()
         {
+            _cameraHandler = new CameraHandler(Window, GraphicsDevice);
             _spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
         
-
         private void PrintDebug(GameTime gameTime)
         {
             double maxLoop = 0; ;
@@ -101,6 +105,11 @@ namespace WhatIsLife
             _frames += GameConfig.SpeedMultiplier;
             while (_frames >= 1)
             {
+                if (GameConfig.TriggerRestart)
+                {
+                    this.Exit();
+                }
+
                 ProcessFrame();
             }
 
@@ -115,11 +124,20 @@ namespace WhatIsLife
             GraphicsDevice.Clear(GameConfig.Colors.Background);
             _cameraHandler.Update();
             _spriteBatch.Begin(transformMatrix: _cameraHandler.GetViewMatrix());
-            _spriteBatch.DrawRectangle(new RectangleF(0, 0, GameConfig.WorldLength, GameConfig.WorldHeight), Color.Black, 2);
+            DrawGrids();
             DrawEntities();
+            _spriteBatch.DrawRectangle(new RectangleF(0, 0, GameConfig.WorldLength, GameConfig.WorldHeight), Color.Black, 2);
             _spriteBatch.End();
 
             _debugDrawCalls++;
+        }
+
+        private void DrawGrids()
+        {
+            if (GameConfig.Debug)
+            {
+                GlobalObject.Entities.Draw(_spriteBatch, _cameraHandler.Camera.Zoom);
+            }
         }
 
         private void DrawEntities()
