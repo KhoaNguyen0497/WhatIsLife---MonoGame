@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,5 +18,14 @@ namespace SettingsManager
             InitializeComponent();
         }
 
+        private void debug_CheckedChanged(object sender, EventArgs e)
+        {
+            GameConfig.Debug = debug.Checked;
+        }
+
+        private void updateSpeed_Scroll(object sender, EventArgs e)
+        {
+            GameConfig.SpeedMultiplier = updateSpeed.Value / 100f;
+        }
     }
 }

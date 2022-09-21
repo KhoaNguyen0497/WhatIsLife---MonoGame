@@ -5,7 +5,9 @@ VisualStudioVersion = 17.2.32602.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhatIsLife", "WhatIsLife\WhatIsLife.csproj", "{F5ED1863-D67A-446F-961B-CF9C334513F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettingsManager", "SettingsManager\SettingsManager.csproj", "{55E27F20-0DEF-4368-BD4B-9B620B734615}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SettingsManager", "SettingsManager\SettingsManager.csproj", "{55E27F20-0DEF-4368-BD4B-9B620B734615}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{0832487E-5D30-4E2E-993B-78D42D11BE2B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{55E27F20-0DEF-4368-BD4B-9B620B734615}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55E27F20-0DEF-4368-BD4B-9B620B734615}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55E27F20-0DEF-4368-BD4B-9B620B734615}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0832487E-5D30-4E2E-993B-78D42D11BE2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0832487E-5D30-4E2E-993B-78D42D11BE2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0832487E-5D30-4E2E-993B-78D42D11BE2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0832487E-5D30-4E2E-993B-78D42D11BE2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

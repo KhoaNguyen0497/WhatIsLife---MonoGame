@@ -1,16 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using WhatIsLife.Objects; 
 
-namespace WhatIsLife.Helpers
+namespace Common
 {
     public static class GameConfig
     {
-        public static int WorldLength = 2000;
-        public static int WorldHeight = 2000;
+        public static int WorldLength = 10000;
+        public static int WorldHeight = 10000;
 
         public static int WindowsWitdth = 1920;
         public static int WindowsHeight = 1080;
@@ -37,3 +34,4 @@ namespace WhatIsLife.Helpers
 
     }
 }
+
