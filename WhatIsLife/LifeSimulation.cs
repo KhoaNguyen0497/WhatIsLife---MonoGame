@@ -3,11 +3,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.ViewportAdapters;
+using SettingsManager;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Windows.Forms;
 using WhatIsLife.Helpers;
 using WhatIsLife.Objects;
 using WhatIsLife.Systems;
@@ -36,6 +38,8 @@ namespace WhatIsLife
             // These are important. Its so that 1) the fps is capped at monitor's refresh rate (vsync), and 2) if update calls take too long, the game is slowed down (fewer draw calls) instead of skipping draw calls
             _graphics.SynchronizeWithVerticalRetrace = true;
             IsFixedTimeStep = false;
+            MainForm mainform = new MainForm();
+            mainform.Show();
         }
 
 
