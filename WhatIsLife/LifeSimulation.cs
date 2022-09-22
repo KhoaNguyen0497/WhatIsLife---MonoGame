@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Attributes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -9,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using WhatIsLife.Helpers;
@@ -50,7 +53,8 @@ namespace WhatIsLife
             _graphics.SynchronizeWithVerticalRetrace = true; //*
             _graphics.ApplyChanges();
 
-            SetupGameObjects();
+            GameConfig.SanityCheck();
+            SetupGameObjects();  
         }
 
         // Called on game start and restart
