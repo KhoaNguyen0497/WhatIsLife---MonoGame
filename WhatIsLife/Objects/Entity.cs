@@ -53,9 +53,9 @@ namespace WhatIsLife.Objects
 		public static Entity Create()
 		{
 			Entity entity;
-			if (GlobalObject.RecycledEntities.Any())
+			if (GameObjects.RecycledEntities.Any())
 			{
-				entity = GlobalObject.RecycledEntities.Pop();
+				entity = GameObjects.RecycledEntities.Pop();
 			}
 			else
 			{
@@ -69,16 +69,16 @@ namespace WhatIsLife.Objects
 		public void Dispose()
 		{
 			IsActive = false;
-			GlobalObject.RecycledEntities.Push(this);
-			GlobalObject.Entities.Remove(this);
+			GameObjects.RecycledEntities.Push(this);
+			GameObjects.Entities.Remove(this);
 		}
 
 		public override void Draw(SpriteBatch spriteBatch)
 		{
-			Color genderColor = Gender == Gender.Male ? GameConfig.Colors.MaleEntity : GameConfig.Colors.FemaleEntity;
+			Color genderColor = Gender == Gender.Male ? GlobalObjects.GameConfig.Colors.MaleEntity : GlobalObjects.GameConfig.Colors.FemaleEntity;
 			spriteBatch.DrawPoint(Position, genderColor, 10);
 
-			if (GameConfig.Debug)
+			if (GlobalObjects.GameConfig.Debug)
 			{
 				spriteBatch.DrawCircle(Position, Radius, 20, genderColor, 1);
 				if (Target != null)
@@ -92,18 +92,18 @@ namespace WhatIsLife.Objects
 		public void Respawn(Vector2? position = null)
 		{
 			// Reset everything just in case since we are utilizing dispose()
-			Gender = (Gender)GlobalObject.Random.Next(2);
+			Gender = (Gender)GameObjects.Random.Next(2);
 			Target = null;
-			Speed = GameConfig.BaseEntitySpeed;
-			Radius = GameConfig.BaseEntityRadius;
+			Speed = GlobalObjects.GameConfig.BaseEntitySpeed;
+			Radius = GlobalObjects.GameConfig.BaseEntityRadius;
 			IsActive = true;
 			Age = 0;
 			if (position == null)
 			{
 				Position = new Vector2
 				{
-					X = GlobalObject.Random.Next(GameConfig.WorldWidth),
-					Y = GlobalObject.Random.Next(GameConfig.WorldHeight)
+					X = GameObjects.Random.Next(GlobalObjects.GameConfig.WorldWidth),
+					Y = GameObjects.Random.Next(GlobalObjects.GameConfig.WorldHeight)
 				};
 			}
 			else
@@ -111,7 +111,7 @@ namespace WhatIsLife.Objects
 				Position = (Vector2)position;
 			}
 
-			GlobalObject.Random.NextUnitVector(out Velocity);
+			GameObjects.Random.NextUnitVector(out Velocity);
 			Velocity *= Speed;
 		}
 
@@ -132,7 +132,7 @@ namespace WhatIsLife.Objects
 			
 			if (Target == null)
 			{
-				Food food = GlobalObject.FoodList.GetNearbyObjects(Position, Radius).FirstOrDefault(x => VectorHelper.WithinDistance(x.Position, Position, Radius));
+				Food food = GameObjects.FoodList.GetNearbyObjects(Position, Radius).FirstOrDefault(x => VectorHelper.WithinDistance(x.Position, Position, Radius));
 
 				if (food != null)
 				{
@@ -149,9 +149,9 @@ namespace WhatIsLife.Objects
 				return;
 			}
 	
-			if (Velocity == Vector2.Zero || GlobalObject.Random.Next(100) < NoiseRandomness)
+			if (Velocity == Vector2.Zero || GameObjects.Random.Next(100) < NoiseRandomness)
 			{
-				Velocity = Velocity.Rotate(GlobalObject.Random.NextSingle(-RotationAngleRadian, RotationAngleRadian));
+				Velocity = Velocity.Rotate(GameObjects.Random.NextSingle(-RotationAngleRadian, RotationAngleRadian));
 			}
 		}
 
@@ -159,13 +159,13 @@ namespace WhatIsLife.Objects
 		{
 			Age++;
 
-			if (GameConfig.Debug)
+			if (GlobalObjects.GameConfig.Debug)
 			{
 				if (Target != null)
 				{
 					if (!VectorHelper.WithinDistance((Target as Food).Position, Position, Radius))
 					{
-						GameConfig.SpeedMultiplier = 0;
+						GlobalObjects.GameConfig.SpeedMultiplier = 0;
 					}
 				}
 			}
@@ -177,7 +177,7 @@ namespace WhatIsLife.Objects
 
 		public void Move()
 		{
-			if (GameConfig.Debug)
+			if (GlobalObjects.GameConfig.Debug)
 			{
 				History.Add(new Tuple<Vector2, BaseObject>(Position, Target));
 				if (History.Count > 10)
@@ -211,9 +211,9 @@ namespace WhatIsLife.Objects
 				Velocity.X *= -1;
 			}
 
-			if (Position.X >= GameConfig.WorldWidth)
+			if (Position.X >= GlobalObjects.GameConfig.WorldWidth)
 			{
-				Position.X = GameConfig.WorldWidth - 1;
+				Position.X = GlobalObjects.GameConfig.WorldWidth - 1;
 				Velocity.X *= -1;
 			}
 
@@ -223,9 +223,9 @@ namespace WhatIsLife.Objects
 				Velocity.Y *= -1;
 			}
 
-			if (Position.Y >= GameConfig.WorldHeight)
+			if (Position.Y >= GlobalObjects.GameConfig.WorldHeight)
 			{
-				Position.Y = GameConfig.WorldHeight - 1;
+				Position.Y = GlobalObjects.GameConfig.WorldHeight - 1;
 				Velocity.Y *= -1;
 			}
 
@@ -233,7 +233,7 @@ namespace WhatIsLife.Objects
 			// Sometimes Velocity can get to Zero. E.g. when a target spawns at the same position, causing the the path finding system to output velocity of Zero
 			if (Velocity == Vector2.Zero)
 			{
-				GlobalObject.Random.NextUnitVector(out Velocity);
+				GameObjects.Random.NextUnitVector(out Velocity);
 			}
 			else
 			{

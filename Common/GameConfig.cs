@@ -2,44 +2,96 @@
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Common
 {
-	public static class GameConfig
-	{ 
+	public class GameConfig
+	{
 		[RestartRequired]
-		public static int WorldWidth { get; set; } = 5000;
+		public int WorldWidth { get; private set; } = 5000;
 
 		[RestartRequired]
-		public static int WorldHeight { get; set; } = 5000;
+		public int WorldHeight { get; private set; } = 5000;
 
-		public static int WindowsWitdth { get; } = 1920;
-		public static int WindowsHeight { get; } = 1080;
+		public int WindowsWitdth { get; } = 1920;
+		public int WindowsHeight { get; } = 1080;
 
-		public static float SpeedMultiplier { get; set; } = 1f;
+		public float SpeedMultiplier { get; set; } = 1f;
 
-		public static float ZoomSpeed { get; set; } = 1f;
-		public static float CameraSpeed { get; set; } = 5f;
+		public float ZoomSpeed { get; set; } = 1f;
+		public float CameraSpeed { get; set; } = 5f;
 
-		public static int UpdatesPerday { get; set; } = 100;
-		public static int FoodPerDay { get; set; } = 10;
-		public static int InitialEntities { get; set; } = 100;
-		public static float BaseEntitySpeed { get; set; } = 2f;
-		public static float BaseEntityRadius { get; set; } = 100f;
+		public int UpdatesPerday { get; set; } = 100;
+		public int FoodPerDay { get; set; } = 10;
+		public int InitialEntities { get; set; } = 100;
+		public float BaseEntitySpeed { get; set; } = 2f;
+		public float BaseEntityRadius { get; set; } = 100f;
 
-		public static bool Debug { get; set; } = true;
+		public bool Debug { get; set; } = true;
 
-		public static bool TriggerRestart { get; set; } = false;
+		public bool TriggerRestart { get; set; } = false;
 
-		public static class Colors
+		public ColorConfig Colors { get; set; } = new ColorConfig();
+		public class ColorConfig
 		{
-			public static Color Background { get; set; } = ColorHelper.FromHex("#30343F");
-			public static Color MaleEntity { get; set; } = ColorHelper.FromHex("#8ECEFD");
-			public static Color FemaleEntity { get; set; } = ColorHelper.FromHex("#F88B9D");
-			public static Color Food { get; set; } = ColorHelper.FromHex("#87C38F");
-			public static Color GridColor { get; set; } = ColorHelper.FromHex("#eab676");
+			public Color Background { get; set; } = ColorHelper.FromHex("#30343F");
+			public Color MaleEntity { get; set; } = ColorHelper.FromHex("#8ECEFD");
+			public Color FemaleEntity { get; set; } = ColorHelper.FromHex("#F88B9D");
+			public Color Food { get; set; } = ColorHelper.FromHex("#87C38F");
+			public Color GridColor { get; set; } = ColorHelper.FromHex("#eab676");
 		}
 
+		/// <summary>
+		/// All properties within this class with RestartRequiredAttribute must have a private setter to prevent the values from being changed mid-game since a restart is required.
+		/// </summary>
+		public void SanityCheck()
+		{
+			Type objType = typeof(GameConfig);
+			foreach (PropertyInfo f in objType.GetProperties())
+			{
+				if (f.IsDefined(typeof(RestartRequiredAttribute)))
+				{
+					if (f.SetMethod == null)
+                    {
+						throw new Exception($"{f.Name} must have a private setter");
+					}
+					if (!f.SetMethod.IsPrivate)
+					{
+						throw new Exception($"Setter of {f.Name} must be private");
+					}
+				}
+			};
+		}
+
+		private Dictionary<PropertyInfo, Action> _queuedSetters = new Dictionary<PropertyInfo, Action>();
+		/// <summary>
+		/// All properties with RestartRequiredAttribute can only be changed on game restart. This queues up the actions to be invoked on restart.
+		/// </summary>
+		public void SetValueOnRestart<T>(Expression<Func<GameConfig, T>> expr, T value)
+		{
+			MemberExpression member = expr.Body as MemberExpression;
+			UnaryExpression unary = expr.Body as UnaryExpression;
+
+			member = member ?? (unary != null ? unary.Operand as MemberExpression : null);
+            _queuedSetters[member.Member as PropertyInfo] = () => 
+			{
+				(member.Member as PropertyInfo).SetValue(this, value);
+			};
+		}
+
+		public void InvokeQueuedSetters()
+        {
+			foreach (var action in _queuedSetters.Values)
+            {
+				action.Invoke();
+            }
+
+			_queuedSetters.Clear();			
+		}
 	}
 }
 

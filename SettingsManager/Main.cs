@@ -21,23 +21,25 @@ namespace SettingsManager
 
         private void InitializeValues()
         {
-            updateSpeed.Value = (int)(GameConfig.SpeedMultiplier * 100);
-            debug.Checked = GameConfig.Debug;
+            updateSpeedBar.Value = (int)(GlobalObjects.GameConfig.SpeedMultiplier * 100);
+            debugCheckBox.Checked = GlobalObjects.GameConfig.Debug;
+            worldWidthInput.Value = GlobalObjects.GameConfig.WorldWidth;
+            worldHeightInput.Value = GlobalObjects.GameConfig.WorldHeight;
         }
 
-        private void debug_CheckedChanged(object sender, EventArgs e)
+        private void debugCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            GameConfig.Debug = debug.Checked;
+            GlobalObjects.GameConfig.Debug = debugCheckBox.Checked;
         }
 
-        private void updateSpeed_Scroll(object sender, EventArgs e)
+        private void updateSpeedBar_Scroll(object sender, EventArgs e)
         {
-            GameConfig.SpeedMultiplier = updateSpeed.Value / 100f;
+            GlobalObjects.GameConfig.SpeedMultiplier = updateSpeedBar.Value / 100f;
         }
 
         private void restartButton_Click(object sender, EventArgs e)
         {
-            GameConfig.TriggerRestart = true;
+            GlobalObjects.GameConfig.TriggerRestart = true;
         }
 
         private const int CP_NOCLOSE_BUTTON = 0x200;
@@ -49,6 +51,16 @@ namespace SettingsManager
                 myCp.ClassStyle = myCp.ClassStyle | CP_NOCLOSE_BUTTON;
                 return myCp;
             }
+        }
+
+        private void worldWidthInput_ValueChanged(object sender, EventArgs e)
+        {
+            GlobalObjects.GameConfig.SetValueOnRestart(x => x.WorldWidth, (int)worldWidthInput.Value);
+        }
+
+        private void worldHeightInput_ValueChanged(object sender, EventArgs e)
+        {
+            GlobalObjects.GameConfig.SetValueOnRestart(x => x.WorldHeight, (int)worldWidthInput.Value);
         }
     }
 }

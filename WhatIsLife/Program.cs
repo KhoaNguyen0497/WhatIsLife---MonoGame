@@ -15,10 +15,11 @@ namespace WhatIsLife
             {
                 using (var simulation = new LifeSimulation())
                 {
-                    GameConfig.TriggerRestart = false;
+                    GlobalObjects.GameConfig.TriggerRestart = false;
+                    GlobalObjects.GameConfig.InvokeQueuedSetters();
                     simulation.Run();
                 }
-            } while (GameConfig.TriggerRestart);
+            } while (GlobalObjects.GameConfig.TriggerRestart);
         }
     }
 }

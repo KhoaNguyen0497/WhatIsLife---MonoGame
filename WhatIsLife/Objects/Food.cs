@@ -29,9 +29,9 @@ namespace WhatIsLife.Objects
 		public static Food Create()
 		{
 			Food food;
-			if (GlobalObject.RecycledFood.Any())
+			if (GameObjects.RecycledFood.Any())
 			{
-				food = GlobalObject.RecycledFood.Pop();
+				food = GameObjects.RecycledFood.Pop();
 			}
 			else
 			{
@@ -52,8 +52,8 @@ namespace WhatIsLife.Objects
 			{
 				Position = new Vector2
 				{
-					X = GlobalObject.Random.Next(GameConfig.WorldWidth),
-					Y = GlobalObject.Random.Next(GameConfig.WorldHeight)
+					X = GameObjects.Random.Next(GlobalObjects.GameConfig.WorldWidth),
+					Y = GameObjects.Random.Next(GlobalObjects.GameConfig.WorldHeight)
 				};
 			}
 			else
@@ -77,14 +77,14 @@ namespace WhatIsLife.Objects
 				x.Target = null;
 			});
 
-			GlobalObject.RecycledFood.Push(this);
-			GlobalObject.FoodList.Remove(this);
+			GameObjects.RecycledFood.Push(this);
+			GameObjects.FoodList.Remove(this);
 		}
 
 		public static List<Food> NewDaySpawn()
 		{
 			List<Food> list = new List<Food>();
-			for (int i = 0; i < GameConfig.FoodPerDay; i++)
+			for (int i = 0; i < GlobalObjects.GameConfig.FoodPerDay; i++)
 			{
 				list.Add(Create());
 			}
@@ -108,7 +108,7 @@ namespace WhatIsLife.Objects
 				return;
 			}
 
-			spriteBatch.DrawPoint(Position, GameConfig.Colors.Food, 5);
+			spriteBatch.DrawPoint(Position, GlobalObjects.GameConfig.Colors.Food, 5);
 		}
 	}
 }
