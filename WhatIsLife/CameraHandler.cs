@@ -19,18 +19,18 @@ namespace WhatIsLife
         private int _previousMouseScrollValue = 0;
         public CameraHandler(GameWindow window, GraphicsDevice graphicsDevice)
         {
-            BoxingViewportAdapter viewportAdapter = new BoxingViewportAdapter(window, graphicsDevice, GameConfig.WindowsWitdth, GameConfig.WindowsHeight);
+            BoxingViewportAdapter viewportAdapter = new BoxingViewportAdapter(window, graphicsDevice, GlobalObjects.GameConfig.WindowsWitdth, GlobalObjects.GameConfig.WindowsHeight);
             Camera = new OrthographicCamera(viewportAdapter);
             Camera.MaximumZoom = 2f;
-            Camera.MinimumZoom = Math.Max(GameConfig.WindowsWitdth / (float)GameConfig.WorldWidth, GameConfig.WindowsHeight / (float)GameConfig.WorldHeight);
+            Camera.MinimumZoom = Math.Max(GlobalObjects.GameConfig.WindowsWitdth / (float)GlobalObjects.GameConfig.WorldWidth, GlobalObjects.GameConfig.WindowsHeight / (float)GlobalObjects.GameConfig.WorldHeight);
         }
 
         public void Update()
         {
-            Camera.Move(GetMovementDirection() * _cameraBaseMovementSpeed * GameConfig.CameraSpeed);
+            Camera.Move(GetMovementDirection() * _cameraBaseMovementSpeed * GlobalObjects.GameConfig.CameraSpeed);
 
             int scrollWheelValue = Mouse.GetState().ScrollWheelValue;
-            Camera.ZoomIn((scrollWheelValue - _previousMouseScrollValue) / 12000f * GameConfig.ZoomSpeed);
+            Camera.ZoomIn((scrollWheelValue - _previousMouseScrollValue) / 12000f * GlobalObjects.GameConfig.ZoomSpeed);
             _previousMouseScrollValue = scrollWheelValue;
             AdjustCameraBound();
         }
@@ -63,8 +63,8 @@ namespace WhatIsLife
         {
             Camera.Move(new Vector2
             {
-                X = Math.Max(-Camera.BoundingRectangle.X, 0) + Math.Min(GameConfig.WorldWidth - Camera.BoundingRectangle.X - Camera.BoundingRectangle.Width, 0),
-                Y = Math.Max(-Camera.BoundingRectangle.Y, 0) + Math.Min(GameConfig.WorldHeight - Camera.BoundingRectangle.Y - Camera.BoundingRectangle.Height, 0)
+                X = Math.Max(-Camera.BoundingRectangle.X, 0) + Math.Min(GlobalObjects.GameConfig.WorldWidth - Camera.BoundingRectangle.X - Camera.BoundingRectangle.Width, 0),
+                Y = Math.Max(-Camera.BoundingRectangle.Y, 0) + Math.Min(GlobalObjects.GameConfig.WorldHeight - Camera.BoundingRectangle.Y - Camera.BoundingRectangle.Height, 0)
             });
         }
 

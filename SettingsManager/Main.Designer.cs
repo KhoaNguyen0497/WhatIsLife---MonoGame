@@ -30,85 +30,173 @@ namespace SettingsManager
         /// </summary>
         private void InitializeComponent()
         {
-			this.debug = new System.Windows.Forms.CheckBox();
-			this.updateSpeed = new System.Windows.Forms.TrackBar();
-			this.updateSpeedBox = new System.Windows.Forms.GroupBox();
-			this.restartButton = new System.Windows.Forms.Button();
-			((System.ComponentModel.ISupportInitialize)(this.updateSpeed)).BeginInit();
-			this.updateSpeedBox.SuspendLayout();
-			this.SuspendLayout();
-			// 
-			// debug
-			// 
-			this.debug.AutoSize = true;
-			this.debug.Location = new System.Drawing.Point(14, 16);
-			this.debug.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.debug.Name = "debug";
-			this.debug.Size = new System.Drawing.Size(119, 24);
-			this.debug.TabIndex = 0;
-			this.debug.Text = "Debug Mode";
-			this.debug.UseVisualStyleBackColor = true;
-			this.debug.CheckedChanged += new System.EventHandler(this.debug_CheckedChanged);
-			// 
-			// updateSpeed
-			// 
-			this.updateSpeed.Location = new System.Drawing.Point(7, 29);
-			this.updateSpeed.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.updateSpeed.Maximum = 500;
-			this.updateSpeed.Name = "updateSpeed";
-			this.updateSpeed.Size = new System.Drawing.Size(215, 56);
-			this.updateSpeed.TabIndex = 1;
-			this.updateSpeed.TickStyle = System.Windows.Forms.TickStyle.None;
-			this.updateSpeed.Scroll += new System.EventHandler(this.updateSpeed_Scroll);
-			// 
-			// updateSpeedBox
-			// 
-			this.updateSpeedBox.Controls.Add(this.updateSpeed);
-			this.updateSpeedBox.Location = new System.Drawing.Point(14, 63);
-			this.updateSpeedBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.updateSpeedBox.Name = "updateSpeedBox";
-			this.updateSpeedBox.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.updateSpeedBox.Size = new System.Drawing.Size(229, 96);
-			this.updateSpeedBox.TabIndex = 3;
-			this.updateSpeedBox.TabStop = false;
-			this.updateSpeedBox.Text = "Update Speed";
-			// 
-			// restartButton
-			// 
-			this.restartButton.Location = new System.Drawing.Point(391, 16);
-			this.restartButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.restartButton.Name = "restartButton";
-			this.restartButton.Size = new System.Drawing.Size(86, 31);
-			this.restartButton.TabIndex = 4;
-			this.restartButton.Text = "Restart";
-			this.restartButton.UseVisualStyleBackColor = true;
-			this.restartButton.Click += new System.EventHandler(this.restartButton_Click);
-			// 
-			// MainForm
-			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(490, 661);
-			this.Controls.Add(this.restartButton);
-			this.Controls.Add(this.updateSpeedBox);
-			this.Controls.Add(this.debug);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.Name = "MainForm";
-			this.Text = "Settings";
-			((System.ComponentModel.ISupportInitialize)(this.updateSpeed)).EndInit();
-			this.updateSpeedBox.ResumeLayout(false);
-			this.updateSpeedBox.PerformLayout();
-			this.ResumeLayout(false);
-			this.PerformLayout();
+            this.debugCheckBox = new System.Windows.Forms.CheckBox();
+            this.updateSpeedBar = new System.Windows.Forms.TrackBar();
+            this.updateSpeedBox = new System.Windows.Forms.GroupBox();
+            this.restartButton = new System.Windows.Forms.Button();
+            this.worldWidthInput = new System.Windows.Forms.NumericUpDown();
+            this.worldWidthBox = new System.Windows.Forms.GroupBox();
+            this.worldHeightBox = new System.Windows.Forms.GroupBox();
+            this.worldHeightInput = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.updateSpeedBar)).BeginInit();
+            this.updateSpeedBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.worldWidthInput)).BeginInit();
+            this.worldWidthBox.SuspendLayout();
+            this.worldHeightBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.worldHeightInput)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // debugCheckBox
+            // 
+            this.debugCheckBox.AutoSize = true;
+            this.debugCheckBox.Location = new System.Drawing.Point(12, 12);
+            this.debugCheckBox.Name = "debugCheckBox";
+            this.debugCheckBox.Size = new System.Drawing.Size(95, 19);
+            this.debugCheckBox.TabIndex = 0;
+            this.debugCheckBox.Text = "Debug Mode";
+            this.debugCheckBox.UseVisualStyleBackColor = true;
+            this.debugCheckBox.CheckedChanged += new System.EventHandler(this.debugCheckBox_CheckedChanged);
+            // 
+            // updateSpeedBar
+            // 
+            this.updateSpeedBar.Location = new System.Drawing.Point(6, 22);
+            this.updateSpeedBar.Maximum = 500;
+            this.updateSpeedBar.Name = "updateSpeedBar";
+            this.updateSpeedBar.Size = new System.Drawing.Size(188, 45);
+            this.updateSpeedBar.TabIndex = 1;
+            this.updateSpeedBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.updateSpeedBar.Scroll += new System.EventHandler(this.updateSpeedBar_Scroll);
+            // 
+            // updateSpeedBox
+            // 
+            this.updateSpeedBox.Controls.Add(this.updateSpeedBar);
+            this.updateSpeedBox.Location = new System.Drawing.Point(12, 47);
+            this.updateSpeedBox.Name = "updateSpeedBox";
+            this.updateSpeedBox.Size = new System.Drawing.Size(200, 72);
+            this.updateSpeedBox.TabIndex = 3;
+            this.updateSpeedBox.TabStop = false;
+            this.updateSpeedBox.Text = "Update Speed";
+            // 
+            // restartButton
+            // 
+            this.restartButton.Location = new System.Drawing.Point(342, 12);
+            this.restartButton.Name = "restartButton";
+            this.restartButton.Size = new System.Drawing.Size(75, 23);
+            this.restartButton.TabIndex = 4;
+            this.restartButton.Text = "Restart";
+            this.restartButton.UseVisualStyleBackColor = true;
+            this.restartButton.Click += new System.EventHandler(this.restartButton_Click);
+            // 
+            // worldWidthInput
+            // 
+            this.worldWidthInput.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.worldWidthInput.Location = new System.Drawing.Point(13, 22);
+            this.worldWidthInput.Maximum = new decimal(new int[] {
+            15000,
+            0,
+            0,
+            0});
+            this.worldWidthInput.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.worldWidthInput.Name = "worldWidthInput";
+            this.worldWidthInput.Size = new System.Drawing.Size(120, 23);
+            this.worldWidthInput.TabIndex = 5;
+            this.worldWidthInput.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.worldWidthInput.ValueChanged += new System.EventHandler(this.worldWidthInput_ValueChanged);
+            // 
+            // worldWidthBox
+            // 
+            this.worldWidthBox.Controls.Add(this.worldWidthInput);
+            this.worldWidthBox.Location = new System.Drawing.Point(12, 137);
+            this.worldWidthBox.Name = "worldWidthBox";
+            this.worldWidthBox.Size = new System.Drawing.Size(146, 62);
+            this.worldWidthBox.TabIndex = 6;
+            this.worldWidthBox.TabStop = false;
+            this.worldWidthBox.Text = "World Width";
+            // 
+            // worldHeightBox
+            // 
+            this.worldHeightBox.Controls.Add(this.worldHeightInput);
+            this.worldHeightBox.Location = new System.Drawing.Point(177, 137);
+            this.worldHeightBox.Name = "worldHeightBox";
+            this.worldHeightBox.Size = new System.Drawing.Size(146, 62);
+            this.worldHeightBox.TabIndex = 7;
+            this.worldHeightBox.TabStop = false;
+            this.worldHeightBox.Text = "World Height";
+            // 
+            // worldHeightInput
+            // 
+            this.worldHeightInput.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.worldHeightInput.Location = new System.Drawing.Point(13, 22);
+            this.worldHeightInput.Maximum = new decimal(new int[] {
+            15000,
+            0,
+            0,
+            0});
+            this.worldHeightInput.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.worldHeightInput.Name = "worldHeightInput";
+            this.worldHeightInput.Size = new System.Drawing.Size(120, 23);
+            this.worldHeightInput.TabIndex = 5;
+            this.worldHeightInput.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.worldHeightInput.ValueChanged += new System.EventHandler(this.worldHeightInput_ValueChanged);
+            // 
+            // MainForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(429, 496);
+            this.Controls.Add(this.worldHeightBox);
+            this.Controls.Add(this.worldWidthBox);
+            this.Controls.Add(this.restartButton);
+            this.Controls.Add(this.updateSpeedBox);
+            this.Controls.Add(this.debugCheckBox);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Name = "MainForm";
+            this.Text = "Settings";
+            ((System.ComponentModel.ISupportInitialize)(this.updateSpeedBar)).EndInit();
+            this.updateSpeedBox.ResumeLayout(false);
+            this.updateSpeedBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.worldWidthInput)).EndInit();
+            this.worldWidthBox.ResumeLayout(false);
+            this.worldHeightBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.worldHeightInput)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.CheckBox debug;
-        private System.Windows.Forms.TrackBar updateSpeed;
+        private System.Windows.Forms.CheckBox debugCheckBox;
+        private System.Windows.Forms.TrackBar updateSpeedBar;
         private System.Windows.Forms.GroupBox updateSpeedBox;
         private System.Windows.Forms.Button restartButton;
+        private System.Windows.Forms.NumericUpDown worldWidthInput;
+        private System.Windows.Forms.GroupBox worldWidthBox;
+        private System.Windows.Forms.GroupBox worldHeightBox;
+        private System.Windows.Forms.NumericUpDown worldHeightInput;
     }
 }

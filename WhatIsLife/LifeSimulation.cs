@@ -47,30 +47,30 @@ namespace WhatIsLife
         protected override void Initialize()
         {
             base.Initialize();
-            _graphics.PreferredBackBufferWidth = GameConfig.WindowsWitdth;
-            _graphics.PreferredBackBufferHeight = GameConfig.WindowsHeight;
+            _graphics.PreferredBackBufferWidth = GlobalObjects.GameConfig.WindowsWitdth;
+            _graphics.PreferredBackBufferHeight = GlobalObjects.GameConfig.WindowsHeight;
        
             _graphics.SynchronizeWithVerticalRetrace = true; //*
             _graphics.ApplyChanges();
 
-            GameConfig.SanityCheck();
-            SetupGameObjects();  
+            GlobalObjects.GameConfig.SanityCheck();
+            SetupGameObjects();
         }
 
         // Called on game start and restart
         private void SetupGameObjects()
         {
             // Flush everything to be recycled.
-            GlobalObject.Entities.AllObjects().ForEach(x => x.Dispose());
-            GlobalObject.FoodList.AllObjects().ForEach(x => x.Dispose());
+            GameObjects.Entities.AllObjects().ForEach(x => x.Dispose());
+            GameObjects.FoodList.AllObjects().ForEach(x => x.Dispose());
 
             // Reinitiate grid to apply
-            GlobalObject.Entities = new GridSystem<Entity>();
-            GlobalObject.FoodList = new GridSystem<Food>();
+            GameObjects.Entities = new GridSystem<Entity>();
+            GameObjects.FoodList = new GridSystem<Food>();
 
-            for (int i = 0; i < GameConfig.InitialEntities; i++)
+            for (int i = 0; i < GlobalObjects.GameConfig.InitialEntities; i++)
             {
-                GlobalObject.Entities.Add(Entity.Create());
+                GameObjects.Entities.Add(Entity.Create());
             }
         }
 
@@ -93,31 +93,30 @@ namespace WhatIsLife
             var actualFps = _debugDrawCalls / gameTime.TotalGameTime.TotalSeconds;
             var msPerFrame = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            Debug.WriteLine($"avg update/s: {averageUpdatePerSec}; actual fps: {actualFps}; elapsed: {msPerFrame};loop {maxLoop}; foodSize {GlobalObject.FoodList.AllObjects().Count}; RecycledFood {GlobalObject.RecycledFood.Count};");
+            Debug.WriteLine($"avg update/s: {averageUpdatePerSec}; actual fps: {actualFps}; elapsed: {msPerFrame};loop {maxLoop}; foodSize {GameObjects.FoodList.AllObjects().Count}; RecycledFood {GameObjects.RecycledFood.Count};");
         }
 
         private void ProcessFrame()
         {
-            Thread.Sleep(5);
             _debugUpdateCalls++;
 
-            if (_debugUpdateCalls % GameConfig.UpdatesPerday == 0)
+            if (_debugUpdateCalls % GlobalObjects.GameConfig.UpdatesPerday == 0)
             {
-                GlobalObject.FoodList.AddRange(Food.NewDaySpawn());
+                GameObjects.FoodList.AddRange(Food.NewDaySpawn());
             }
 
             _frames -= 1;
-            GlobalObject.Entities.AllObjects().ForEach(x => x.Update());
-            GlobalObject.FoodList.AllObjects().ForEach(x => x.Update());
+            GameObjects.Entities.AllObjects().ForEach(x => x.Update());
+            GameObjects.FoodList.AllObjects().ForEach(x => x.Update());
         }
 
         protected override void Update(GameTime gameTime)
         {
 
-            _frames += GameConfig.SpeedMultiplier;
+            _frames += GlobalObjects.GameConfig.SpeedMultiplier;
             while (_frames >= 1)
             {
-                if (GameConfig.TriggerRestart)
+                if (GlobalObjects.GameConfig.TriggerRestart)
                 {
                     this.Exit();
                 }
@@ -125,7 +124,7 @@ namespace WhatIsLife
                 ProcessFrame();
             }
 
-            if (GameConfig.Debug)
+            if (GlobalObjects.GameConfig.Debug)
 			{
                 PrintDebug(gameTime);
             }
@@ -133,12 +132,12 @@ namespace WhatIsLife
 
         protected override void Draw(GameTime gameTime)
         {        
-            GraphicsDevice.Clear(GameConfig.Colors.Background);
+            GraphicsDevice.Clear(GlobalObjects.GameConfig.Colors.Background);
             _cameraHandler.Update();
             _spriteBatch.Begin(transformMatrix: _cameraHandler.GetViewMatrix());
             DrawGrids();
             DrawEntities();
-            _spriteBatch.DrawRectangle(new RectangleF(0, 0, GameConfig.WorldWidth, GameConfig.WorldHeight), Color.Black, 2);
+            _spriteBatch.DrawRectangle(new RectangleF(0, 0, GlobalObjects.GameConfig.WorldWidth, GlobalObjects.GameConfig.WorldHeight), Color.Black, 2);
             _spriteBatch.End();
 
             _debugDrawCalls++;
@@ -146,9 +145,9 @@ namespace WhatIsLife
 
         private void DrawGrids()
         {
-            if (GameConfig.Debug)
+            if (GlobalObjects.GameConfig.Debug)
             {
-                GlobalObject.Entities.Draw(_spriteBatch, _cameraHandler.Camera.Zoom);
+                GameObjects.Entities.Draw(_spriteBatch, _cameraHandler.Camera.Zoom);
             }
         }
 
@@ -156,8 +155,8 @@ namespace WhatIsLife
         {
             var mouseState = Mouse.GetState();
             var mousePosition = _cameraHandler.Camera.ScreenToWorld(new Vector2(mouseState.X, mouseState.Y));
-            GlobalObject.Entities.AllObjects().ForEach(x => x.Draw(_spriteBatch));
-            GlobalObject.FoodList.AllObjects().ForEach(x => x.Draw(_spriteBatch));
+            GameObjects.Entities.AllObjects().ForEach(x => x.Draw(_spriteBatch));
+            GameObjects.FoodList.AllObjects().ForEach(x => x.Draw(_spriteBatch));
         }
     }
 }

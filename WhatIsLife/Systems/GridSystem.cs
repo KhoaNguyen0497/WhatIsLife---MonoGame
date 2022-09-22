@@ -25,13 +25,13 @@ namespace WhatIsLife.Systems
 
         public GridSystem()
         {
-            if (GameConfig.WorldHeight % CellHeight != 0 || GameConfig.WorldWidth % CellWidth != 0)
+            if (GlobalObjects.GameConfig.WorldHeight % CellHeight != 0 || GlobalObjects.GameConfig.WorldWidth % CellWidth != 0)
             {
                 throw new Exception("World Height/Width is not divisible by Cell Length/Width");
             }
 
-            _totalColumns = GameConfig.WorldWidth / CellWidth;
-            _totalRows = GameConfig.WorldHeight / CellHeight;
+            _totalColumns = GlobalObjects.GameConfig.WorldWidth / CellWidth;
+            _totalRows = GlobalObjects.GameConfig.WorldHeight / CellHeight;
             PopulateEmptyGrid();
         }
 
@@ -94,8 +94,8 @@ namespace WhatIsLife.Systems
 
             Vector2 bottomRightPosition = new Vector2
             {
-                X = Math.Min(position.X + radius, GameConfig.WorldWidth - 1),
-                Y = Math.Min(position.Y + radius, GameConfig.WorldHeight - 1)
+                X = Math.Min(position.X + radius, GlobalObjects.GameConfig.WorldWidth - 1),
+                Y = Math.Min(position.Y + radius, GlobalObjects.GameConfig.WorldHeight - 1)
             };
 
             Point topLeftCellNum = GetCellKey(topLeftPosition);
@@ -127,7 +127,7 @@ namespace WhatIsLife.Systems
                 objects.AddRange(cell.Value);
             }
 
-            if (GameConfig.Debug)
+            if (GlobalObjects.GameConfig.Debug)
             {
                 if (objects.Any(x => !(x as IReusable).IsActive))
                 {
@@ -142,12 +142,12 @@ namespace WhatIsLife.Systems
         {
             for (int column = 1; column < _totalColumns; column++)
             {
-                spriteBatch.DrawLine(column * CellWidth, 0, column * CellWidth, GameConfig.WorldHeight, GameConfig.Colors.GridColor, 1 / cameraZoom);
+                spriteBatch.DrawLine(column * CellWidth, 0, column * CellWidth, GlobalObjects.GameConfig.WorldHeight, GlobalObjects.GameConfig.Colors.GridColor, 1 / cameraZoom);
             }
 
             for (int row = 1; row < _totalRows; row++)
             {
-                spriteBatch.DrawLine(0, row * CellHeight, GameConfig.WorldWidth, row * CellHeight, GameConfig.Colors.GridColor, 1 / cameraZoom);
+                spriteBatch.DrawLine(0, row * CellHeight, GlobalObjects.GameConfig.WorldWidth, row * CellHeight, GlobalObjects.GameConfig.Colors.GridColor, 1 / cameraZoom);
             }
         }
     }
