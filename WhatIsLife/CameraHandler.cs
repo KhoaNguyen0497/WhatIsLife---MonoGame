@@ -22,7 +22,7 @@ namespace WhatIsLife
             BoxingViewportAdapter viewportAdapter = new BoxingViewportAdapter(window, graphicsDevice, GameConfig.WindowsWitdth, GameConfig.WindowsHeight);
             Camera = new OrthographicCamera(viewportAdapter);
             Camera.MaximumZoom = 2f;
-            Camera.MinimumZoom = Math.Max(GameConfig.WindowsWitdth / (float)GameConfig.WorldLength, GameConfig.WindowsHeight / (float)GameConfig.WorldHeight);
+            Camera.MinimumZoom = Math.Max(GameConfig.WindowsWitdth / (float)GameConfig.WorldWidth, GameConfig.WindowsHeight / (float)GameConfig.WorldHeight);
         }
 
         public void Update()
@@ -63,7 +63,7 @@ namespace WhatIsLife
         {
             Camera.Move(new Vector2
             {
-                X = Math.Max(-Camera.BoundingRectangle.X, 0) + Math.Min(GameConfig.WorldLength - Camera.BoundingRectangle.X - Camera.BoundingRectangle.Width, 0),
+                X = Math.Max(-Camera.BoundingRectangle.X, 0) + Math.Min(GameConfig.WorldWidth - Camera.BoundingRectangle.X - Camera.BoundingRectangle.Width, 0),
                 Y = Math.Max(-Camera.BoundingRectangle.Y, 0) + Math.Min(GameConfig.WorldHeight - Camera.BoundingRectangle.Y - Camera.BoundingRectangle.Height, 0)
             });
         }

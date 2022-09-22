@@ -102,7 +102,7 @@ namespace WhatIsLife.Objects
 			{
 				Position = new Vector2
 				{
-					X = GlobalObject.Random.Next(GameConfig.WorldLength),
+					X = GlobalObject.Random.Next(GameConfig.WorldWidth),
 					Y = GlobalObject.Random.Next(GameConfig.WorldHeight)
 				};
 			}
@@ -211,9 +211,9 @@ namespace WhatIsLife.Objects
 				Velocity.X *= -1;
 			}
 
-			if (Position.X >= GameConfig.WorldLength)
+			if (Position.X >= GameConfig.WorldWidth)
 			{
-				Position.X = GameConfig.WorldLength - 1;
+				Position.X = GameConfig.WorldWidth - 1;
 				Velocity.X *= -1;
 			}
 

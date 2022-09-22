@@ -28,17 +28,17 @@ namespace WhatIsLife
 
         private float _frames = 0;
 
+
+        // Settings below are important. Its so that 1) the fps is capped at monitor's refresh rate (vsync), and 2) if update calls take too long, the game is slowed down (fewer draw calls) instead of skipping draw calls
+        // Marked with *
         public LifeSimulation()
         {
             InactiveSleepTime = new TimeSpan(0);
-            _graphics = new GraphicsDeviceManager(this);
-
-            Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            IsFixedTimeStep = false; //*
 
-            // These are important. Its so that 1) the fps is capped at monitor's refresh rate (vsync), and 2) if update calls take too long, the game is slowed down (fewer draw calls) instead of skipping draw calls
-            _graphics.SynchronizeWithVerticalRetrace = true;
-            IsFixedTimeStep = false;
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
         }
 
         protected override void Initialize()
@@ -46,14 +46,21 @@ namespace WhatIsLife
             base.Initialize();
             _graphics.PreferredBackBufferWidth = GameConfig.WindowsWitdth;
             _graphics.PreferredBackBufferHeight = GameConfig.WindowsHeight;
+       
+            _graphics.SynchronizeWithVerticalRetrace = true; //*
             _graphics.ApplyChanges();
 
             SetupGameObjects();
         }
 
-
+        // Called on game start and restart
         private void SetupGameObjects()
         {
+            // Flush everything to be recycled.
+            GlobalObject.Entities.AllObjects().ForEach(x => x.Dispose());
+            GlobalObject.FoodList.AllObjects().ForEach(x => x.Dispose());
+
+            // Reinitiate grid to apply
             GlobalObject.Entities = new GridSystem<Entity>();
             GlobalObject.FoodList = new GridSystem<Food>();
 
@@ -87,6 +94,7 @@ namespace WhatIsLife
 
         private void ProcessFrame()
         {
+            Thread.Sleep(5);
             _debugUpdateCalls++;
 
             if (_debugUpdateCalls % GameConfig.UpdatesPerday == 0)
@@ -126,7 +134,7 @@ namespace WhatIsLife
             _spriteBatch.Begin(transformMatrix: _cameraHandler.GetViewMatrix());
             DrawGrids();
             DrawEntities();
-            _spriteBatch.DrawRectangle(new RectangleF(0, 0, GameConfig.WorldLength, GameConfig.WorldHeight), Color.Black, 2);
+            _spriteBatch.DrawRectangle(new RectangleF(0, 0, GameConfig.WorldWidth, GameConfig.WorldHeight), Color.Black, 2);
             _spriteBatch.End();
 
             _debugDrawCalls++;

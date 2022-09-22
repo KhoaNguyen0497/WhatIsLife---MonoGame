@@ -15,7 +15,7 @@ namespace WhatIsLife.Systems
     public class GridSystem<T> where T : BaseObject
     {
         // World length/width must be divisible by these values. There will be santity checks
-        public int CellLength = 100;
+        public int CellWidth = 100;
         public int CellHeight = 100;
 
         public Dictionary<Point, List<T>> Cells = new Dictionary<Point, List<T>>();
@@ -25,12 +25,12 @@ namespace WhatIsLife.Systems
 
         public GridSystem()
         {
-            if (GameConfig.WorldHeight % CellHeight != 0 || GameConfig.WorldLength % CellLength != 0)
+            if (GameConfig.WorldHeight % CellHeight != 0 || GameConfig.WorldWidth % CellWidth != 0)
             {
                 throw new Exception("World Height/Width is not divisible by Cell Length/Width");
             }
 
-            _totalColumns = GameConfig.WorldLength / CellLength;
+            _totalColumns = GameConfig.WorldWidth / CellWidth;
             _totalRows = GameConfig.WorldHeight / CellHeight;
             PopulateEmptyGrid();
         }
@@ -52,7 +52,7 @@ namespace WhatIsLife.Systems
         public Point GetCellKey(Vector2 position)
         {
 
-            int nthColumn = (int)Math.Floor(position.X / CellLength);
+            int nthColumn = (int)Math.Floor(position.X / CellWidth);
             int nthRow = (int)Math.Floor(position.Y / CellHeight);
 
             return new Point(nthColumn, nthRow);
@@ -94,7 +94,7 @@ namespace WhatIsLife.Systems
 
             Vector2 bottomRightPosition = new Vector2
             {
-                X = Math.Min(position.X + radius, GameConfig.WorldLength - 1),
+                X = Math.Min(position.X + radius, GameConfig.WorldWidth - 1),
                 Y = Math.Min(position.Y + radius, GameConfig.WorldHeight - 1)
             };
 
@@ -142,12 +142,12 @@ namespace WhatIsLife.Systems
         {
             for (int column = 1; column < _totalColumns; column++)
             {
-                spriteBatch.DrawLine(column * CellLength, 0, column * CellLength, GameConfig.WorldHeight, GameConfig.Colors.GridColor, 1 / cameraZoom);
+                spriteBatch.DrawLine(column * CellWidth, 0, column * CellWidth, GameConfig.WorldHeight, GameConfig.Colors.GridColor, 1 / cameraZoom);
             }
 
             for (int row = 1; row < _totalRows; row++)
             {
-                spriteBatch.DrawLine(0, row * CellHeight, GameConfig.WorldLength, row * CellHeight, GameConfig.Colors.GridColor, 1 / cameraZoom);
+                spriteBatch.DrawLine(0, row * CellHeight, GameConfig.WorldWidth, row * CellHeight, GameConfig.Colors.GridColor, 1 / cameraZoom);
             }
         }
     }
