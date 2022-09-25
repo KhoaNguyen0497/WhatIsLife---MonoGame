@@ -114,8 +114,10 @@ namespace WhatIsLife
 
         private void UpdateStats()
         {
-            GlobalObjects.GameStats.NumberOfEntities = GameObjects.Entities.AllObjects().Count();
-            GlobalObjects.GameStats.FoodQuantity = GameObjects.FoodList.AllObjects().Count();
+            GlobalObjects.GameStats.NumberOfEntities = GameObjects.Entities.Count();
+            GlobalObjects.GameStats.EntitiesRecycled = GameObjects.Entities.RecycledCount();
+            GlobalObjects.GameStats.FoodQuantity = GameObjects.FoodList.Count();
+            GlobalObjects.GameStats.FoodRecycled = GameObjects.FoodList.RecycledCount();
 
             GameObjects.MainForm.RefreshStats();
         }
@@ -134,10 +136,9 @@ namespace WhatIsLife
                 ProcessFrame();
             }
 
-            UpdateStats();
-
             if (GlobalObjects.GameConfig.Debug)
 			{
+                UpdateStats();
                 PrintDebug(gameTime);
             }
         }

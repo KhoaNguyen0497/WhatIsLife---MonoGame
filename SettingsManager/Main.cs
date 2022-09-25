@@ -29,7 +29,10 @@ namespace SettingsManager
 
         public void RefreshStats()
         {
-           
+            currentDayLabel.Text = $"Current Day: {GlobalObjects.GameStats.CurrentDay}";
+            numOfEntitiesLabel.Text = $"Entities (total/active/recycled): {GlobalObjects.GameStats.NumberOfEntities + GlobalObjects.GameStats.EntitiesRecycled}/{GlobalObjects.GameStats.NumberOfEntities}/{GlobalObjects.GameStats.EntitiesRecycled}";
+            foodLabel.Text = $"Food (total/active/recycled): {GlobalObjects.GameStats.FoodQuantity + GlobalObjects.GameStats.FoodRecycled}/{GlobalObjects.GameStats.FoodQuantity}/{GlobalObjects.GameStats.FoodRecycled}";
+            lastUpdatedLabel.Text = $"Last Updated: {DateTime.Now:T}";
         }
 
         private void debugCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -66,11 +69,6 @@ namespace SettingsManager
         private void worldHeightInput_ValueChanged(object sender, EventArgs e)
         {
             GlobalObjects.GameConfig.SetValueOnRestart(x => x.WorldHeight, (int)worldWidthInput.Value);
-        }
-
-        private void SettingsManagerForm_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

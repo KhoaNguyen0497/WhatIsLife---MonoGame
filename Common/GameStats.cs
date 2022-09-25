@@ -10,6 +10,10 @@ namespace Common
 
         public int NumberOfEntities { get; set; }
 
+        public int EntitiesRecycled { get; set; }
+
         public int FoodQuantity { get; set; }
+
+        public int FoodRecycled { get; set; }
     }
 }

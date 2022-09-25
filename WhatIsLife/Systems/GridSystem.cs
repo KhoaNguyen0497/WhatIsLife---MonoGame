@@ -48,6 +48,15 @@ namespace WhatIsLife.Systems
         public void RepopulateGrid()
         {
             List<T> tempList = AllObjects();
+
+            if (GlobalObjects.GameConfig.Debug)
+            {
+                if (tempList.Any(x => !x.IsActive))
+                {
+                    throw new Exception("Obj is inactive");
+                }
+            }
+
             PopulateEmptyGrid();
             AddRange(tempList);
         }
@@ -175,6 +184,16 @@ namespace WhatIsLife.Systems
             }
 
             return objects;
+        }
+
+        public int Count()
+        {
+            return Cells.Sum(x => x.Value.Count);
+        }
+
+        public int RecycledCount()
+        {
+            return _recycledObjects.Count;
         }
 
         public void Draw(SpriteBatch spriteBatch, float cameraZoom)
