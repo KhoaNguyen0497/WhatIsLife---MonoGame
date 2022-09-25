@@ -26,8 +26,8 @@ namespace Common
 		public float CameraSpeed { get; set; } = 5f;
 
 		public int UpdatesPerday { get; set; } = 100;
-		public int FoodPerDay { get; set; } = 10;
-		public int InitialEntities { get; set; } = 100;
+		public int FoodPerDay { get; set; } = 400;
+		public int InitialEntities { get; set; } = 1000;
 		public float BaseEntitySpeed { get; set; } = 2f;
 		public float BaseEntityRadius { get; set; } = 100f;
 

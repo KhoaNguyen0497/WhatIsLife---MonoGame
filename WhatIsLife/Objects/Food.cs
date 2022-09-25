@@ -14,38 +14,18 @@ namespace WhatIsLife.Objects
 	public class Food : BaseObject, IReusable, IDisposable
 	{
 		public bool IsActive { get; set; }
-
-		public int Age { get; set; }
-
 		// List to keep track of entities currently targeting this object
 		public List<Entity> Entities { get; set; }
 
 		// Private constructor because we are driving the creation of objects through recycling disposed objects
-		private Food()
+		public Food()
 		{
 
 		}
-
-		public static Food Create()
-		{
-			Food food;
-			if (GameObjects.RecycledFood.Any())
-			{
-				food = GameObjects.RecycledFood.Pop();
-			}
-			else
-			{
-				food = new Food();
-			}
-
-			food.Respawn();
-			return food;
-		}
-
 
 		public void Respawn(Vector2? position = null)
 		{
-			Age = 0;
+			_startDay = GlobalObjects.GameStats.CurrentDay;
 			Entities = new List<Entity>();
 
 			if (position == null)
@@ -77,26 +57,20 @@ namespace WhatIsLife.Objects
 				x.Target = null;
 			});
 
-			GameObjects.RecycledFood.Push(this);
 			GameObjects.FoodList.Remove(this);
 		}
 
-		public static List<Food> NewDaySpawn()
+		public static void NewDaySpawn()
 		{
-			List<Food> list = new List<Food>();
 			for (int i = 0; i < GlobalObjects.GameConfig.FoodPerDay; i++)
 			{
-				list.Add(Create());
+				GameObjects.FoodList.CreateNewObject();
 			}
-
-			return list;
 		}
 
 		public void Update()
 		{
-			Age++;
-
-			if (Age >= 1000)
+			if (Age >= 10)
 			{
 				Dispose();
 			}

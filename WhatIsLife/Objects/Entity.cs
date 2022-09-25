@@ -19,8 +19,9 @@ namespace WhatIsLife.Objects
 
 	public class Entity : BaseObject, IReusable, IDisposable
 	{
+
 		public Vector2 Velocity;
-		public int Age { get; set; }
+
 		public bool IsActive { get; set; }
 
 		public BaseObject Target { get; set; }
@@ -45,31 +46,15 @@ namespace WhatIsLife.Objects
 		public List<Tuple<Vector2, BaseObject>> History = new List<Tuple<Vector2, BaseObject>>();
 
 		// Private constructor because we are driving the creation of objects through recycling disposed objects
-		private Entity()
+		public Entity()
 		{
 			RotationAngleRadian = (float)Math.PI / 180 * RotationAngle;
 		}
 
-		public static Entity Create()
-		{
-			Entity entity;
-			if (GameObjects.RecycledEntities.Any())
-			{
-				entity = GameObjects.RecycledEntities.Pop();
-			}
-			else
-			{
-				entity = new Entity();
-			}
-
-			entity.Respawn();
-			return entity;
-		}
 
 		public void Dispose()
 		{
 			IsActive = false;
-			GameObjects.RecycledEntities.Push(this);
 			GameObjects.Entities.Remove(this);
 		}
 
@@ -97,7 +82,7 @@ namespace WhatIsLife.Objects
 			Speed = GlobalObjects.GameConfig.BaseEntitySpeed;
 			Radius = GlobalObjects.GameConfig.BaseEntityRadius;
 			IsActive = true;
-			Age = 0;
+			_startDay = GlobalObjects.GameStats.CurrentDay;
 			if (position == null)
 			{
 				Position = new Vector2
@@ -155,10 +140,22 @@ namespace WhatIsLife.Objects
 			}
 		}
 
+		// {Age - 60}% chance to die every day after turning 60
+		public bool RandomDeathChance()
+        {
+			if (Age >= 60)
+            {
+				if (GameObjects.Random.Next(100) < Age - 60)
+                {
+					return true;
+                }
+            }
+
+			return false;
+        }
+
 		public void Update()
 		{
-			Age++;
-
 			if (GlobalObjects.GameConfig.Debug)
 			{
 				if (Target != null)
@@ -170,9 +167,18 @@ namespace WhatIsLife.Objects
 				}
 			}
 
+			if (RandomDeathChance())
+            {
+				Dispose();
+            }
+
+			if (!IsActive)
+            {
+				return;
+            }
+
 			FindFood();
-			Wander();
-			Move();
+			Wander();		
 		}
 
 		public void Move()

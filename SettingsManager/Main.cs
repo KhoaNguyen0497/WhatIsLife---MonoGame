@@ -11,9 +11,9 @@ using System.Windows.Forms;
 
 namespace SettingsManager
 {
-    public partial class MainForm : Form
+    public partial class SettingsManagerForm : Form
     {
-        public MainForm()
+        public SettingsManagerForm()
         {
             InitializeComponent();
             InitializeValues();
@@ -25,6 +25,11 @@ namespace SettingsManager
             debugCheckBox.Checked = GlobalObjects.GameConfig.Debug;
             worldWidthInput.Value = GlobalObjects.GameConfig.WorldWidth;
             worldHeightInput.Value = GlobalObjects.GameConfig.WorldHeight;
+        }
+
+        public void RefreshStats()
+        {
+           
         }
 
         private void debugCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -61,6 +66,11 @@ namespace SettingsManager
         private void worldHeightInput_ValueChanged(object sender, EventArgs e)
         {
             GlobalObjects.GameConfig.SetValueOnRestart(x => x.WorldHeight, (int)worldWidthInput.Value);
+        }
+
+        private void SettingsManagerForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

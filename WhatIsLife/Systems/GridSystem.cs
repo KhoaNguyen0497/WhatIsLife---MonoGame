@@ -12,7 +12,7 @@ using WhatIsLife.Objects.Interfaces;
 
 namespace WhatIsLife.Systems
 {
-    public class GridSystem<T> where T : BaseObject
+    public class GridSystem<T> where T : BaseObject, IDisposable, IReusable, new()
     {
         // World length/width must be divisible by these values. There will be santity checks
         public int CellWidth = 100;
@@ -23,16 +23,33 @@ namespace WhatIsLife.Systems
         private int _totalColumns;
         private int _totalRows;
 
+        private Stack<T> _recycledObjects { get; set; } = new Stack<T>();
+        
         public GridSystem()
+        {
+            
+        }
+
+        public void Initiate()
         {
             if (GlobalObjects.GameConfig.WorldHeight % CellHeight != 0 || GlobalObjects.GameConfig.WorldWidth % CellWidth != 0)
             {
-                throw new Exception("World Height/Width is not divisible by Cell Length/Width");
+                throw new Exception("World Height/Width is not divisible by Cell Height/Width");
             }
 
             _totalColumns = GlobalObjects.GameConfig.WorldWidth / CellWidth;
             _totalRows = GlobalObjects.GameConfig.WorldHeight / CellHeight;
+
+            // Flush everything to be recycled.
+            AllObjects().ForEach(x => x.Dispose());
             PopulateEmptyGrid();
+        }
+
+        public void RepopulateGrid()
+        {
+            List<T> tempList = AllObjects();
+            PopulateEmptyGrid();
+            AddRange(tempList);
         }
 
         public void PopulateEmptyGrid()
@@ -58,12 +75,26 @@ namespace WhatIsLife.Systems
             return new Point(nthColumn, nthRow);
         }
 
-        public void Add(T obj)
+        /// <summary>
+        /// Find an object in the recycled list. If empty, create a new one
+        /// </summary>
+        public void CreateNewObject()
         {
-            Point cellKey = GetCellKey(obj.Position);
-            List<T> cell = Cells[cellKey];
-            cell.Add(obj);
+            T obj;
+            if (_recycledObjects.Any())
+            {
+                obj = _recycledObjects.Pop();
+            }
+            else
+            {
+                obj = new T();
+            }
+
+            obj.Respawn();
+
+            Add(obj);
         }
+
 
         public void AddRange(List<T> objects)
         {
@@ -73,8 +104,16 @@ namespace WhatIsLife.Systems
             }
         }
 
+        public void Add(T obj)
+        {
+            Point cellKey = GetCellKey(obj.Position);
+            List<T> cell = Cells[cellKey];
+            cell.Add(obj);
+        }
+
         public void Remove(T obj)
         {
+            _recycledObjects.Push(obj);
             Point cellKey = GetCellKey(obj.Position);
             Cells[cellKey].Remove(obj);
         }

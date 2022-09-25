@@ -53,6 +53,7 @@ namespace WhatIsLife
             _graphics.SynchronizeWithVerticalRetrace = true; //*
             _graphics.ApplyChanges();
 
+            GlobalObjects.GameStats = new GameStats();
             GlobalObjects.GameConfig.SanityCheck();
             SetupGameObjects();
         }
@@ -60,17 +61,13 @@ namespace WhatIsLife
         // Called on game start and restart
         private void SetupGameObjects()
         {
-            // Flush everything to be recycled.
-            GameObjects.Entities.AllObjects().ForEach(x => x.Dispose());
-            GameObjects.FoodList.AllObjects().ForEach(x => x.Dispose());
-
             // Reinitiate grid to apply
-            GameObjects.Entities = new GridSystem<Entity>();
-            GameObjects.FoodList = new GridSystem<Food>();
+            GameObjects.Entities.Initiate();
+            GameObjects.FoodList.Initiate();
 
             for (int i = 0; i < GlobalObjects.GameConfig.InitialEntities; i++)
             {
-                GameObjects.Entities.Add(Entity.Create());
+                GameObjects.Entities.CreateNewObject();
             }
         }
 
@@ -93,21 +90,34 @@ namespace WhatIsLife
             var actualFps = _debugDrawCalls / gameTime.TotalGameTime.TotalSeconds;
             var msPerFrame = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            Debug.WriteLine($"avg update/s: {averageUpdatePerSec}; actual fps: {actualFps}; elapsed: {msPerFrame};loop {maxLoop}; foodSize {GameObjects.FoodList.AllObjects().Count}; RecycledFood {GameObjects.RecycledFood.Count};");
+            Debug.WriteLine($"avg update/s: {averageUpdatePerSec}; actual fps: {actualFps}; elapsed: {msPerFrame};loop {maxLoop}; foodSize {GameObjects.FoodList.AllObjects().Count};");
         }
 
         private void ProcessFrame()
         {
             _debugUpdateCalls++;
+            _frames -= 1;
+
+            GameObjects.Entities.RepopulateGrid();
+            GameObjects.FoodList.RepopulateGrid();
 
             if (_debugUpdateCalls % GlobalObjects.GameConfig.UpdatesPerday == 0)
             {
-                GameObjects.FoodList.AddRange(Food.NewDaySpawn());
+                GlobalObjects.GameStats.CurrentDay += 1;
+                Food.NewDaySpawn();
             }
 
-            _frames -= 1;
             GameObjects.Entities.AllObjects().ForEach(x => x.Update());
+            GameObjects.Entities.AllObjects().ForEach(x => x.Move());
             GameObjects.FoodList.AllObjects().ForEach(x => x.Update());
+        }
+
+        private void UpdateStats()
+        {
+            GlobalObjects.GameStats.NumberOfEntities = GameObjects.Entities.AllObjects().Count();
+            GlobalObjects.GameStats.FoodQuantity = GameObjects.FoodList.AllObjects().Count();
+
+            GameObjects.MainForm.RefreshStats();
         }
 
         protected override void Update(GameTime gameTime)
@@ -123,6 +133,8 @@ namespace WhatIsLife
 
                 ProcessFrame();
             }
+
+            UpdateStats();
 
             if (GlobalObjects.GameConfig.Debug)
 			{
@@ -153,8 +165,6 @@ namespace WhatIsLife
 
         private void DrawEntities()
         {
-            var mouseState = Mouse.GetState();
-            var mousePosition = _cameraHandler.Camera.ScreenToWorld(new Vector2(mouseState.X, mouseState.Y));
             GameObjects.Entities.AllObjects().ForEach(x => x.Draw(_spriteBatch));
             GameObjects.FoodList.AllObjects().ForEach(x => x.Draw(_spriteBatch));
         }

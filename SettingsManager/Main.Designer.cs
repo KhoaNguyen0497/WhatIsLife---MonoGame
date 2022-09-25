@@ -2,7 +2,7 @@
 
 namespace SettingsManager
 {
-    partial class MainForm
+    partial class SettingsManagerForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -35,14 +35,14 @@ namespace SettingsManager
             this.updateSpeedBox = new System.Windows.Forms.GroupBox();
             this.restartButton = new System.Windows.Forms.Button();
             this.worldWidthInput = new System.Windows.Forms.NumericUpDown();
-            this.worldWidthBox = new System.Windows.Forms.GroupBox();
-            this.worldHeightBox = new System.Windows.Forms.GroupBox();
+            this.worldDimensionBox = new System.Windows.Forms.GroupBox();
             this.worldHeightInput = new System.Windows.Forms.NumericUpDown();
+            this.heightLabel = new System.Windows.Forms.Label();
+            this.widthLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.updateSpeedBar)).BeginInit();
             this.updateSpeedBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.worldWidthInput)).BeginInit();
-            this.worldWidthBox.SuspendLayout();
-            this.worldHeightBox.SuspendLayout();
+            this.worldDimensionBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.worldHeightInput)).BeginInit();
             this.SuspendLayout();
             // 
@@ -94,7 +94,7 @@ namespace SettingsManager
             0,
             0,
             0});
-            this.worldWidthInput.Location = new System.Drawing.Point(13, 22);
+            this.worldWidthInput.Location = new System.Drawing.Point(67, 31);
             this.worldWidthInput.Maximum = new decimal(new int[] {
             15000,
             0,
@@ -115,25 +115,18 @@ namespace SettingsManager
             0});
             this.worldWidthInput.ValueChanged += new System.EventHandler(this.worldWidthInput_ValueChanged);
             // 
-            // worldWidthBox
+            // worldDimensionBox
             // 
-            this.worldWidthBox.Controls.Add(this.worldWidthInput);
-            this.worldWidthBox.Location = new System.Drawing.Point(12, 137);
-            this.worldWidthBox.Name = "worldWidthBox";
-            this.worldWidthBox.Size = new System.Drawing.Size(146, 62);
-            this.worldWidthBox.TabIndex = 6;
-            this.worldWidthBox.TabStop = false;
-            this.worldWidthBox.Text = "World Width";
-            // 
-            // worldHeightBox
-            // 
-            this.worldHeightBox.Controls.Add(this.worldHeightInput);
-            this.worldHeightBox.Location = new System.Drawing.Point(177, 137);
-            this.worldHeightBox.Name = "worldHeightBox";
-            this.worldHeightBox.Size = new System.Drawing.Size(146, 62);
-            this.worldHeightBox.TabIndex = 7;
-            this.worldHeightBox.TabStop = false;
-            this.worldHeightBox.Text = "World Height";
+            this.worldDimensionBox.Controls.Add(this.worldHeightInput);
+            this.worldDimensionBox.Controls.Add(this.heightLabel);
+            this.worldDimensionBox.Controls.Add(this.widthLabel);
+            this.worldDimensionBox.Controls.Add(this.worldWidthInput);
+            this.worldDimensionBox.Location = new System.Drawing.Point(12, 137);
+            this.worldDimensionBox.Name = "worldDimensionBox";
+            this.worldDimensionBox.Size = new System.Drawing.Size(200, 117);
+            this.worldDimensionBox.TabIndex = 6;
+            this.worldDimensionBox.TabStop = false;
+            this.worldDimensionBox.Text = "World Dimension";
             // 
             // worldHeightInput
             // 
@@ -142,7 +135,7 @@ namespace SettingsManager
             0,
             0,
             0});
-            this.worldHeightInput.Location = new System.Drawing.Point(13, 22);
+            this.worldHeightInput.Location = new System.Drawing.Point(67, 69);
             this.worldHeightInput.Maximum = new decimal(new int[] {
             15000,
             0,
@@ -163,25 +156,43 @@ namespace SettingsManager
             0});
             this.worldHeightInput.ValueChanged += new System.EventHandler(this.worldHeightInput_ValueChanged);
             // 
-            // MainForm
+            // heightLabel
+            // 
+            this.heightLabel.AutoSize = true;
+            this.heightLabel.Location = new System.Drawing.Point(15, 71);
+            this.heightLabel.Name = "heightLabel";
+            this.heightLabel.Size = new System.Drawing.Size(46, 15);
+            this.heightLabel.TabIndex = 7;
+            this.heightLabel.Text = "Height:";
+            // 
+            // widthLabel
+            // 
+            this.widthLabel.AutoSize = true;
+            this.widthLabel.Location = new System.Drawing.Point(15, 33);
+            this.widthLabel.Name = "widthLabel";
+            this.widthLabel.Size = new System.Drawing.Size(42, 15);
+            this.widthLabel.TabIndex = 6;
+            this.widthLabel.Text = "Width:";
+            // 
+            // SettingsManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(429, 496);
-            this.Controls.Add(this.worldHeightBox);
-            this.Controls.Add(this.worldWidthBox);
+            this.ClientSize = new System.Drawing.Size(1484, 589);
+            this.Controls.Add(this.worldDimensionBox);
             this.Controls.Add(this.restartButton);
             this.Controls.Add(this.updateSpeedBox);
             this.Controls.Add(this.debugCheckBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "MainForm";
+            this.Name = "SettingsManagerForm";
             this.Text = "Settings";
+            this.Load += new System.EventHandler(this.SettingsManagerForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.updateSpeedBar)).EndInit();
             this.updateSpeedBox.ResumeLayout(false);
             this.updateSpeedBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.worldWidthInput)).EndInit();
-            this.worldWidthBox.ResumeLayout(false);
-            this.worldHeightBox.ResumeLayout(false);
+            this.worldDimensionBox.ResumeLayout(false);
+            this.worldDimensionBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.worldHeightInput)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -195,8 +206,9 @@ namespace SettingsManager
         private System.Windows.Forms.GroupBox updateSpeedBox;
         private System.Windows.Forms.Button restartButton;
         private System.Windows.Forms.NumericUpDown worldWidthInput;
-        private System.Windows.Forms.GroupBox worldWidthBox;
-        private System.Windows.Forms.GroupBox worldHeightBox;
+        private System.Windows.Forms.GroupBox worldDimensionBox;
         private System.Windows.Forms.NumericUpDown worldHeightInput;
+        private System.Windows.Forms.Label heightLabel;
+        private System.Windows.Forms.Label widthLabel;
     }
 }
