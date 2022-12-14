@@ -43,6 +43,8 @@ namespace WhatIsLife.Objects
 		public float RotationAngle { get; } = 45;
 		public float RotationAngleRadian { get; }
 
+		public int Attractiveness { get; set; } = 100;
+
 		public List<Tuple<Vector2, BaseObject>> History = new List<Tuple<Vector2, BaseObject>>();
 
 		// Private constructor because we are driving the creation of objects through recycling disposed objects
@@ -127,6 +129,10 @@ namespace WhatIsLife.Objects
 			}		
 		}
 
+		public void FindPartner()
+		{
+			if (Target != null) { }
+		}
 		public void Wander()
 		{
 			if (Target != null)
@@ -134,7 +140,7 @@ namespace WhatIsLife.Objects
 				return;
 			}
 	
-			if (Velocity == Vector2.Zero || GameObjects.Random.Next(100) < NoiseRandomness)
+			if (Velocity == Vector2.Zero || GameObjects.Random.Chance(NoiseRandomness))
 			{
 				Velocity = Velocity.Rotate(GameObjects.Random.NextSingle(-RotationAngleRadian, RotationAngleRadian));
 			}
@@ -145,7 +151,7 @@ namespace WhatIsLife.Objects
         {
 			if (Age >= 60)
             {
-				if (GameObjects.Random.Next(100) < Age - 60)
+				if (GameObjects.Random.Chance(Age - 60))
                 {
 					return true;
                 }
