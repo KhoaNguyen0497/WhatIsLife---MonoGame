@@ -87,7 +87,7 @@ namespace WhatIsLife.Systems
         /// <summary>
         /// Find an object in the recycled list. If empty, create a new one
         /// </summary>
-        public void CreateNewObject()
+        public void CreateNewObject(Vector2? position = null)
         {
             T obj;
             if (_recycledObjects.Any())
@@ -99,7 +99,7 @@ namespace WhatIsLife.Systems
                 obj = new T();
             }
 
-            obj.Respawn();
+            obj.Respawn(position);
 
             Add(obj);
         }
