@@ -13,7 +13,9 @@ namespace WhatIsLife.Objects
 {
 	public class Food : BaseObject, IReusable, IDisposable
 	{
-		public bool IsActive { get; set; }
+        public static int Id { get; set; } = 1;
+
+        public bool IsActive { get; set; }
 		// List to keep track of entities currently targeting this object
 		public List<Entity> Entities { get; set; }
 
@@ -21,6 +23,7 @@ namespace WhatIsLife.Objects
 
 		public void Respawn(Vector2? position = null)
 		{
+			Id += 1;
 			Entities = new List<Entity>();
 			Age = 0;
 

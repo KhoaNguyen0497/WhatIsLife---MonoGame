@@ -17,6 +17,8 @@ namespace WhatIsLife
         public OrthographicCamera Camera;
         private int _cameraBaseMovementSpeed = 10;
         private int _previousMouseScrollValue = 0;
+        private float _currentSpeed;
+        private KeyboardState _previousKeyState;
         public CameraHandler(GameWindow window, GraphicsDevice graphicsDevice)
         {
             BoxingViewportAdapter viewportAdapter = new BoxingViewportAdapter(window, graphicsDevice, GlobalObjects.GameConfig.WindowsWitdth, GlobalObjects.GameConfig.WindowsHeight);
@@ -27,7 +29,8 @@ namespace WhatIsLife
 
         public void Update()
         {
-            Camera.Move(GetMovementDirection() * _cameraBaseMovementSpeed * GlobalObjects.GameConfig.CameraSpeed);
+            HandleKeyboardInput(out Vector2 movementDirection);
+            Camera.Move(movementDirection * _cameraBaseMovementSpeed * GlobalObjects.GameConfig.CameraSpeed);
 
             int scrollWheelValue = Mouse.GetState().ScrollWheelValue;
             Camera.ZoomIn((scrollWheelValue - _previousMouseScrollValue) / 12000f * GlobalObjects.GameConfig.ZoomSpeed);
@@ -35,10 +38,11 @@ namespace WhatIsLife
             AdjustCameraBound();
         }
 
-        private Vector2 GetMovementDirection()
+        private void HandleKeyboardInput(out Vector2 movementDirection)
         {
-            var movementDirection = Vector2.Zero;
+            movementDirection = Vector2.Zero;
             var state = Keyboard.GetState();
+
             if (state.IsKeyDown(Keys.Down) || state.IsKeyDown(Keys.S))
             {
                 movementDirection += Vector2.UnitY;
@@ -55,7 +59,20 @@ namespace WhatIsLife
             {
                 movementDirection += Vector2.UnitX;
             }
-            return movementDirection;
+            if (state.IsKeyDown(Keys.Space) && !_previousKeyState.IsKeyDown(Keys.Space))
+            {
+                if (GlobalObjects.GameConfig.SpeedMultiplier == 0)
+                {
+                    GlobalObjects.GameConfig.SpeedMultiplier = _currentSpeed;
+                }
+                else
+                {
+                    _currentSpeed = GlobalObjects.GameConfig.SpeedMultiplier;
+                    GlobalObjects.GameConfig.SpeedMultiplier = 0;
+                }
+            }
+
+            _previousKeyState = state;
         }
 
 

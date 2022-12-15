@@ -30,9 +30,22 @@ namespace SettingsManager
         public void RefreshStats()
         {
             currentDayLabel.Text = $"Current Day: {GlobalObjects.GameStats.CurrentDay}";
-            numOfEntitiesLabel.Text = $"Entities (total/active/recycled): {GlobalObjects.GameStats.NumberOfEntities + GlobalObjects.GameStats.EntitiesRecycled}/{GlobalObjects.GameStats.NumberOfEntities}/{GlobalObjects.GameStats.EntitiesRecycled}";
-            foodLabel.Text = $"Food (total/active/recycled): {GlobalObjects.GameStats.FoodQuantity + GlobalObjects.GameStats.FoodRecycled}/{GlobalObjects.GameStats.FoodQuantity}/{GlobalObjects.GameStats.FoodRecycled}";
+
+            SetObjectStat(ref entityStatTextBox, GlobalObjects.GameStats.NumberOfEntities + GlobalObjects.GameStats.EntitiesRecycled, GlobalObjects.GameStats.NumberOfEntities, GlobalObjects.GameStats.EntitiesRecycled);
+            SetObjectStat(ref foodStatTextBox, GlobalObjects.GameStats.FoodQuantity + GlobalObjects.GameStats.FoodRecycled, GlobalObjects.GameStats.FoodQuantity, GlobalObjects.GameStats.FoodRecycled);
             lastUpdatedLabel.Text = $"Last Updated: {DateTime.Now:T}";
+
+            //These should always be updated. Put in a diff method
+            updateSpeedBar.Value = (int)(GlobalObjects.GameConfig.SpeedMultiplier * 100f);
+
+        }
+
+        private void SetObjectStat(ref RichTextBox textBox, int total, int active, int recycled)
+        {
+            var sb = new StringBuilder();
+            sb.Append(@"{\rtf1\ansi");
+            sb.Append($@"\b {active}\b0/{recycled}/{total}");
+            textBox.Rtf = sb.ToString();
         }
 
         private void debugCheckBox_CheckedChanged(object sender, EventArgs e)

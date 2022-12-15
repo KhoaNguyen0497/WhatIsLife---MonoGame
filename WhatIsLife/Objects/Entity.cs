@@ -19,6 +19,7 @@ namespace WhatIsLife.Objects
 
     public class Entity : BaseObject, IReusable, IDisposable
     {
+        public static int Id { get; set; } = 1;
 
         public Vector2 Velocity;
 
@@ -100,6 +101,7 @@ namespace WhatIsLife.Objects
         public void Respawn(Vector2? position = null)
         {
             // Reset everything just in case since we are utilizing dispose()
+            Id += 1;
             RotationAngleRadian = (float)Math.PI / 180 * RotationAngle;
             Age = 0;
             Attributes.Reset();
