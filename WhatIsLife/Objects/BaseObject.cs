@@ -9,17 +9,10 @@ namespace WhatIsLife.Objects
 {
     public abstract class BaseObject
     {
-        public Vector2 Position;
+        public Vector2 Position = new Vector2();
         public abstract void Draw(SpriteBatch spriteBatch);
 
-        protected int _startDay;
 
-        public int Age
-        {
-            get
-            {
-                return GlobalObjects.GameStats.CurrentDay - _startDay;
-            }
-        }
+        public int Age { get; set; }
     }
 }

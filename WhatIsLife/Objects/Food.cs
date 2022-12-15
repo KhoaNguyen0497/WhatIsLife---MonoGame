@@ -17,31 +17,25 @@ namespace WhatIsLife.Objects
 		// List to keep track of entities currently targeting this object
 		public List<Entity> Entities { get; set; }
 
-		// Private constructor because we are driving the creation of objects through recycling disposed objects
-		public Food()
-		{
-
-		}
+		
 
 		public void Respawn(Vector2? position = null)
 		{
-			_startDay = GlobalObjects.GameStats.CurrentDay;
 			Entities = new List<Entity>();
+			Age = 0;
 
-			if (position == null)
-			{
-				Position = new Vector2
-				{
-					X = GameObjects.Random.Next(GlobalObjects.GameConfig.WorldWidth),
-					Y = GameObjects.Random.Next(GlobalObjects.GameConfig.WorldHeight)
-				};
-			}
-			else
-			{
-				Position = (Vector2)position;
-			}
+            if (position == null)
+            {
+                Position.X = GameObjects.Random.Next(GlobalObjects.GameConfig.WorldWidth);
+                Position.Y = GameObjects.Random.Next(GlobalObjects.GameConfig.WorldHeight);
+            }
+            else
+            {
+                Position.X = ((Vector2)position).X;
+                Position.Y = ((Vector2)position).Y;
+            }
 
-			IsActive = true;
+            IsActive = true;
 		}
 
 		public void Dispose()
@@ -70,6 +64,11 @@ namespace WhatIsLife.Objects
 
 		public void Update()
 		{
+			if (GameObjects.NewDay)
+			{
+				Age++;
+			}
+
 			if (Age >= 10)
 			{
 				Dispose();

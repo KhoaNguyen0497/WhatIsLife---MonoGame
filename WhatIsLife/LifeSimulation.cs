@@ -104,12 +104,19 @@ namespace WhatIsLife
             if (_debugUpdateCalls % GlobalObjects.GameConfig.UpdatesPerday == 0)
             {
                 GlobalObjects.GameStats.CurrentDay += 1;
+                GameObjects.NewDay = true;
                 Food.NewDaySpawn();
             }
 
-            GameObjects.Entities.AllObjects().ForEach(x => x.Update());
-            GameObjects.Entities.AllObjects().ForEach(x => x.Move());
+            GameObjects.Entities.AllObjects().ForEach(x =>
+            {
+                x.Update();
+                x.Move();
+            });
+
             GameObjects.FoodList.AllObjects().ForEach(x => x.Update());
+
+            GameObjects.NewDay = false;
         }
 
         private void UpdateStats()

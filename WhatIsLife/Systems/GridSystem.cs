@@ -177,7 +177,7 @@ namespace WhatIsLife.Systems
 
             if (GlobalObjects.GameConfig.Debug)
             {
-                if (objects.Any(x => !(x as IReusable).IsActive))
+                if (objects.Any(x => !x.IsActive))
                 {
                     throw new Exception("Error");
                 }

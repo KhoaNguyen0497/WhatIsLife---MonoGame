@@ -41,17 +41,14 @@ namespace WhatIsLife.Objects
         /// The Entity can turn x degrees to the left or right
         /// </summary>
         public float RotationAngle { get; } = 45;
-        public float RotationAngleRadian { get; }
+        public float RotationAngleRadian { get; set; }
 
         public int ReproductionCooldown { get; set; }
 
-        public List<Tuple<Vector2, BaseObject>> History = new List<Tuple<Vector2, BaseObject>>();
+        public AttributeSystem Attributes { get; set; } = new AttributeSystem();
 
-        // Private constructor because we are driving the creation of objects through recycling disposed objects
-        public Entity()
-        {
-            RotationAngleRadian = (float)Math.PI / 180 * RotationAngle;
-        }
+
+        public List<Tuple<Vector2, BaseObject>> History = new List<Tuple<Vector2, BaseObject>>();
 
         public void ResetReproductionSystem()
         {
@@ -103,24 +100,25 @@ namespace WhatIsLife.Objects
         public void Respawn(Vector2? position = null)
         {
             // Reset everything just in case since we are utilizing dispose()
+            RotationAngleRadian = (float)Math.PI / 180 * RotationAngle;
+            Age = 0;
+            Attributes.Reset();
             Gender = (Gender)GameObjects.Random.Next(2);
             Target = null;
             Speed = GlobalObjects.GameConfig.BaseEntitySpeed;
             Radius = GlobalObjects.GameConfig.BaseEntityRadius;
             IsActive = true;
-            _startDay = GlobalObjects.GameStats.CurrentDay;
             ReproductionCooldown = 1;
+
             if (position == null)
             {
-                Position = new Vector2
-                {
-                    X = GameObjects.Random.Next(GlobalObjects.GameConfig.WorldWidth),
-                    Y = GameObjects.Random.Next(GlobalObjects.GameConfig.WorldHeight)
-                };
+                Position.X = GameObjects.Random.Next(GlobalObjects.GameConfig.WorldWidth);
+                Position.Y = GameObjects.Random.Next(GlobalObjects.GameConfig.WorldHeight);
             }
             else
             {
-                Position = (Vector2)position;
+                Position.X = ((Vector2)position).X;
+                Position.Y = ((Vector2)position).Y;
             }
 
             GameObjects.Random.NextUnitVector(out Velocity);
@@ -137,6 +135,7 @@ namespace WhatIsLife.Objects
                     // Consume the food
                     if (Target.Position == Position)
                     {
+                        Attributes.Hunger += 30;
                         (Target as Food).Dispose();
                     }
                 }
@@ -209,9 +208,15 @@ namespace WhatIsLife.Objects
             }
         }
 
-        // {Age - 60}% chance to die every day after turning 60
         public bool RandomDeathChance()
         {
+            // If Hunger reaches 0, it dies
+            if (Attributes.Hunger <= 0)
+            {
+                return true;
+            }
+
+            // {Age - 60}% chance to die every day after turning 60
             int dyingAge = 25;
             if (Age >= dyingAge)
             {
@@ -242,13 +247,15 @@ namespace WhatIsLife.Objects
                 }
             }
 
+            if (GameObjects.NewDay)
+            {
+                Age++;
+                Attributes.Hunger -= 20;
+            }
+
             if (RandomDeathChance())
             {
                 Dispose();
-            }
-
-            if (!IsActive)
-            {
                 return;
             }
 
@@ -259,6 +266,11 @@ namespace WhatIsLife.Objects
 
         public void Move()
         {
+            if (!IsActive)
+            {
+                return;
+            }
+
             if (GlobalObjects.GameConfig.Debug)
             {
                 History.Add(new Tuple<Vector2, BaseObject>(Position, Target));
