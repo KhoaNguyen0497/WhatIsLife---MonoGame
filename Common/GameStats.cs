@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace Common
@@ -15,5 +17,9 @@ namespace Common
         public int FoodQuantity { get; set; }
 
         public int FoodRecycled { get; set; }
+
+        public Vector2 Cursor { get; set; } 
+
+        public Dictionary<int, string> TrackedEntities { get; set; } = new Dictionary<int, string>();
     }
 }

@@ -18,6 +18,7 @@ namespace WhatIsLife
         private int _cameraBaseMovementSpeed = 10;
         private int _previousMouseScrollValue = 0;
         private float _currentSpeed;
+        private int _zoom;
         private KeyboardState _previousKeyState;
         public CameraHandler(GameWindow window, GraphicsDevice graphicsDevice)
         {
@@ -29,37 +30,56 @@ namespace WhatIsLife
 
         public void Update()
         {
-            HandleKeyboardInput(out Vector2 movementDirection);
+            HandleInput(out Vector2 movementDirection);
             Camera.Move(movementDirection * _cameraBaseMovementSpeed * GlobalObjects.GameConfig.CameraSpeed);
 
-            int scrollWheelValue = Mouse.GetState().ScrollWheelValue;
-            Camera.ZoomIn((scrollWheelValue - _previousMouseScrollValue) / 12000f * GlobalObjects.GameConfig.ZoomSpeed);
-            _previousMouseScrollValue = scrollWheelValue;
+            Camera.ZoomIn(_zoom / 12000f * GlobalObjects.GameConfig.ZoomSpeed);
+            _zoom = 0;
             AdjustCameraBound();
         }
 
-        private void HandleKeyboardInput(out Vector2 movementDirection)
+        private void HandleInput(out Vector2 movementDirection)
         {
             movementDirection = Vector2.Zero;
-            var state = Keyboard.GetState();
+            int scrollWheelValue = Mouse.GetState().ScrollWheelValue;
+            _zoom += scrollWheelValue - _previousMouseScrollValue;
+            _previousMouseScrollValue = scrollWheelValue;
 
-            if (state.IsKeyDown(Keys.Down) || state.IsKeyDown(Keys.S))
+            var keyboardState = Keyboard.GetState();
+            var mouseState = Mouse.GetState();
+            GlobalObjects.GameStats.Cursor = Camera.ScreenToWorld(new Vector2(mouseState.X, mouseState.Y));
+
+            if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S))
             {
                 movementDirection += Vector2.UnitY;
             }
-            if (state.IsKeyDown(Keys.Up) || state.IsKeyDown(Keys.W))
+
+            if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W))
             {
                 movementDirection -= Vector2.UnitY;
             }
-            if (state.IsKeyDown(Keys.Left) || state.IsKeyDown(Keys.A))
+
+            if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A))
             {
                 movementDirection -= Vector2.UnitX;
             }
-            if (state.IsKeyDown(Keys.Right) || state.IsKeyDown(Keys.D))
+
+            if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
             {
                 movementDirection += Vector2.UnitX;
             }
-            if (state.IsKeyDown(Keys.Space) && !_previousKeyState.IsKeyDown(Keys.Space))
+
+            if (keyboardState.IsKeyDown(Keys.OemMinus))
+            {
+                _zoom -= 100;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.OemPlus))
+            {
+                _zoom += 100;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.Space) && !_previousKeyState.IsKeyDown(Keys.Space))
             {
                 if (GlobalObjects.GameConfig.SpeedMultiplier == 0)
                 {
@@ -72,7 +92,7 @@ namespace WhatIsLife
                 }
             }
 
-            _previousKeyState = state;
+            _previousKeyState = keyboardState;
         }
 
 

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
+using MonoGame.Extended.Timers;
 using MonoGame.Extended.ViewportAdapters;
 using SettingsManager;
 using System;
@@ -119,14 +120,36 @@ namespace WhatIsLife
             GameObjects.NewDay = false;
         }
 
-        private void UpdateStats()
+        private void UpdateStats(GameTime gameTime)
         {
-            GlobalObjects.GameStats.NumberOfEntities = GameObjects.Entities.Count();
-            GlobalObjects.GameStats.EntitiesRecycled = GameObjects.Entities.RecycledCount();
-            GlobalObjects.GameStats.FoodQuantity = GameObjects.FoodList.Count();
-            GlobalObjects.GameStats.FoodRecycled = GameObjects.FoodList.RecycledCount();
+            if (GlobalObjects.GameConfig.Debug)
+            {
+                GlobalObjects.GameStats.NumberOfEntities = GameObjects.Entities.Count();
+                GlobalObjects.GameStats.EntitiesRecycled = GameObjects.Entities.RecycledCount();
+                GlobalObjects.GameStats.FoodQuantity = GameObjects.FoodList.Count();
+                GlobalObjects.GameStats.FoodRecycled = GameObjects.FoodList.RecycledCount();
+
+                GameObjects.MainForm.RefreshDebugStats();
+
+                PrintDebug(gameTime);
+            }
 
             GameObjects.MainForm.RefreshStats();
+
+            if (GlobalObjects.GameConfig.ToggleTrackedEntities.Any())
+            {
+                foreach (var id in GlobalObjects.GameConfig.ToggleTrackedEntities)
+                {
+                    Entity trackedEntity = GameObjects.Entities.AllObjects().FirstOrDefault(x => x.Id == id);
+
+                    if (trackedEntity != null)
+                    {
+                        trackedEntity.IsTracked =  !trackedEntity.IsTracked;
+                    }
+                }
+
+                GlobalObjects.GameConfig.ToggleTrackedEntities.Clear();
+            }
         }
 
         protected override void Update(GameTime gameTime)
@@ -142,12 +165,12 @@ namespace WhatIsLife
 
                 ProcessFrame();
             }
+            GameObjects.Entities.AllObjects(true).Where(x => x.IsTracked).ToList().ForEach(x =>
+            {
+                GlobalObjects.GameStats.TrackedEntities[x.Id] = x.ToString();
+            });
 
-            if (GlobalObjects.GameConfig.Debug)
-			{
-                UpdateStats();
-                PrintDebug(gameTime);
-            }
+            UpdateStats(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)

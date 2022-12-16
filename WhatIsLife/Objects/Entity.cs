@@ -19,7 +19,7 @@ namespace WhatIsLife.Objects
 
     public class Entity : BaseObject, IReusable, IDisposable
     {
-        public static int Id { get; set; } = 1;
+        private static int _currentId { get; set; } = 0;
 
         public Vector2 Velocity;
 
@@ -45,6 +45,8 @@ namespace WhatIsLife.Objects
         public float RotationAngleRadian { get; set; }
 
         public int ReproductionCooldown { get; set; }
+
+        public bool IsTracked { get; set; } = false;
 
         public AttributeSystem Attributes { get; set; } = new AttributeSystem();
 
@@ -101,7 +103,12 @@ namespace WhatIsLife.Objects
         public void Respawn(Vector2? position = null)
         {
             // Reset everything just in case since we are utilizing dispose()
-            Id += 1;
+            if (Id == 0)
+            {
+                _currentId++;
+                Id = _currentId;
+            }
+
             RotationAngleRadian = (float)Math.PI / 180 * RotationAngle;
             Age = 0;
             Attributes.Reset();
@@ -231,6 +238,27 @@ namespace WhatIsLife.Objects
             return false;
         }
 
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(@"{\rtf1\ansi ");
+
+            sb.Append(@$"Position: {Position.X:#},{Position.Y:#}\line ");
+            sb.Append(@$"Age: {Age}\line ");
+            sb.Append(@$"Gender: {Gender}\line ");
+
+            var targetString = Target == null ? ""
+                : Target is Food ? "Food "
+                : Target is Entity ? "Entity "
+                : "";
+            targetString += $"{Target?.Id}";
+
+
+            sb.Append(@$"Target: {targetString}\line ");
+            sb.Append(@$"Active: {IsActive}\line ");
+            return sb.ToString();
+        }
+
         public void Update()
         {
             if (GlobalObjects.GameConfig.Debug)
@@ -336,7 +364,7 @@ namespace WhatIsLife.Objects
                 Velocity.Normalize();
             }
 
-            Velocity *= Speed;
+            Velocity *= Speed;          
         }
     }
 }

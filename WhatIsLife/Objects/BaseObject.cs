@@ -9,6 +9,8 @@ namespace WhatIsLife.Objects
 {
     public abstract class BaseObject
     {
+        public int Id { get; set; }
+
         public Vector2 Position = new Vector2();
         public abstract void Draw(SpriteBatch spriteBatch);
 

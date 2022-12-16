@@ -167,7 +167,7 @@ namespace WhatIsLife.Systems
             return objects;
         }
 
-        public List<T> AllObjects()
+        public List<T> AllObjects(bool includingInactive = false)
         {
             List<T> objects = new List<T>();
             foreach (KeyValuePair<Point, List<T>> cell in Cells)
@@ -181,6 +181,11 @@ namespace WhatIsLife.Systems
                 {
                     throw new Exception("Error");
                 }
+            }
+
+            if (includingInactive)
+            {
+                objects.AddRange(_recycledObjects);
             }
 
             return objects;

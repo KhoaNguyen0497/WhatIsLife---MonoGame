@@ -41,6 +41,14 @@ namespace SettingsManager
             this.widthLabel = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.debugPage = new System.Windows.Forms.TabPage();
+            this.trackedEntitiesBox = new System.Windows.Forms.GroupBox();
+            this.entityInput = new System.Windows.Forms.NumericUpDown();
+            this.trackedEntityTextBox = new System.Windows.Forms.RichTextBox();
+            this.nextTrackedEntityButton = new System.Windows.Forms.Button();
+            this.previousTrackedEntityButton = new System.Windows.Forms.Button();
+            this.trackedEntitiesComboBox = new System.Windows.Forms.ComboBox();
+            this.removeEntityButton = new System.Windows.Forms.Button();
+            this.addEntityButton = new System.Windows.Forms.Button();
             this.baseObjectGroupLabel = new System.Windows.Forms.GroupBox();
             this.foodStatTextBox = new System.Windows.Forms.RichTextBox();
             this.entityStatLabel = new System.Windows.Forms.Label();
@@ -51,6 +59,7 @@ namespace SettingsManager
             this.commandPage = new System.Windows.Forms.TabPage();
             this.worldSettingsPage = new System.Windows.Forms.TabPage();
             this.label1 = new System.Windows.Forms.Label();
+            this.cursorCoordinate = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.updateSpeedBar)).BeginInit();
             this.updateSpeedBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.worldWidthInput)).BeginInit();
@@ -58,6 +67,8 @@ namespace SettingsManager
             ((System.ComponentModel.ISupportInitialize)(this.worldHeightInput)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.debugPage.SuspendLayout();
+            this.trackedEntitiesBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.entityInput)).BeginInit();
             this.baseObjectGroupLabel.SuspendLayout();
             this.commandPage.SuspendLayout();
             this.worldSettingsPage.SuspendLayout();
@@ -214,6 +225,7 @@ namespace SettingsManager
             // 
             // debugPage
             // 
+            this.debugPage.Controls.Add(this.trackedEntitiesBox);
             this.debugPage.Controls.Add(this.baseObjectGroupLabel);
             this.debugPage.Controls.Add(this.lastUpdatedLabel);
             this.debugPage.Controls.Add(this.currentDayLabel);
@@ -227,6 +239,104 @@ namespace SettingsManager
             this.debugPage.Text = "Debug";
             this.debugPage.UseVisualStyleBackColor = true;
             // 
+            // trackedEntitiesBox
+            // 
+            this.trackedEntitiesBox.Controls.Add(this.entityInput);
+            this.trackedEntitiesBox.Controls.Add(this.trackedEntityTextBox);
+            this.trackedEntitiesBox.Controls.Add(this.nextTrackedEntityButton);
+            this.trackedEntitiesBox.Controls.Add(this.previousTrackedEntityButton);
+            this.trackedEntitiesBox.Controls.Add(this.trackedEntitiesComboBox);
+            this.trackedEntitiesBox.Controls.Add(this.removeEntityButton);
+            this.trackedEntitiesBox.Controls.Add(this.addEntityButton);
+            this.trackedEntitiesBox.Location = new System.Drawing.Point(7, 205);
+            this.trackedEntitiesBox.Name = "trackedEntitiesBox";
+            this.trackedEntitiesBox.Size = new System.Drawing.Size(322, 362);
+            this.trackedEntitiesBox.TabIndex = 10;
+            this.trackedEntitiesBox.TabStop = false;
+            this.trackedEntitiesBox.Text = "Tracked Entities";
+            // 
+            // entityInput
+            // 
+            this.entityInput.Location = new System.Drawing.Point(12, 28);
+            this.entityInput.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.entityInput.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.entityInput.Name = "entityInput";
+            this.entityInput.Size = new System.Drawing.Size(64, 27);
+            this.entityInput.TabIndex = 11;
+            this.entityInput.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // trackedEntityTextBox
+            // 
+            this.trackedEntityTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.trackedEntityTextBox.Location = new System.Drawing.Point(12, 109);
+            this.trackedEntityTextBox.Name = "trackedEntityTextBox";
+            this.trackedEntityTextBox.ReadOnly = true;
+            this.trackedEntityTextBox.Size = new System.Drawing.Size(304, 237);
+            this.trackedEntityTextBox.TabIndex = 11;
+            this.trackedEntityTextBox.Text = "";
+            // 
+            // nextTrackedEntityButton
+            // 
+            this.nextTrackedEntityButton.Enabled = false;
+            this.nextTrackedEntityButton.Location = new System.Drawing.Point(234, 60);
+            this.nextTrackedEntityButton.Name = "nextTrackedEntityButton";
+            this.nextTrackedEntityButton.Size = new System.Drawing.Size(34, 29);
+            this.nextTrackedEntityButton.TabIndex = 14;
+            this.nextTrackedEntityButton.Text = ">";
+            this.nextTrackedEntityButton.UseVisualStyleBackColor = true;
+            this.nextTrackedEntityButton.Click += new System.EventHandler(this.nextTrackedEntityButton_Click);
+            // 
+            // previousTrackedEntityButton
+            // 
+            this.previousTrackedEntityButton.Enabled = false;
+            this.previousTrackedEntityButton.Location = new System.Drawing.Point(194, 60);
+            this.previousTrackedEntityButton.Name = "previousTrackedEntityButton";
+            this.previousTrackedEntityButton.Size = new System.Drawing.Size(34, 29);
+            this.previousTrackedEntityButton.TabIndex = 13;
+            this.previousTrackedEntityButton.Text = "<";
+            this.previousTrackedEntityButton.UseVisualStyleBackColor = true;
+            this.previousTrackedEntityButton.Click += new System.EventHandler(this.previousTrackedEntityButton_Click);
+            // 
+            // trackedEntitiesComboBox
+            // 
+            this.trackedEntitiesComboBox.FormattingEnabled = true;
+            this.trackedEntitiesComboBox.Location = new System.Drawing.Point(12, 61);
+            this.trackedEntitiesComboBox.Name = "trackedEntitiesComboBox";
+            this.trackedEntitiesComboBox.Size = new System.Drawing.Size(64, 28);
+            this.trackedEntitiesComboBox.TabIndex = 12;
+            // 
+            // removeEntityButton
+            // 
+            this.removeEntityButton.Location = new System.Drawing.Point(94, 61);
+            this.removeEntityButton.Name = "removeEntityButton";
+            this.removeEntityButton.Size = new System.Drawing.Size(94, 29);
+            this.removeEntityButton.TabIndex = 11;
+            this.removeEntityButton.Text = "Remove";
+            this.removeEntityButton.UseVisualStyleBackColor = true;
+            this.removeEntityButton.Click += new System.EventHandler(this.removeEntityButton_Click);
+            // 
+            // addEntityButton
+            // 
+            this.addEntityButton.Location = new System.Drawing.Point(94, 27);
+            this.addEntityButton.Name = "addEntityButton";
+            this.addEntityButton.Size = new System.Drawing.Size(94, 29);
+            this.addEntityButton.TabIndex = 10;
+            this.addEntityButton.Text = "Add";
+            this.addEntityButton.UseVisualStyleBackColor = true;
+            this.addEntityButton.Click += new System.EventHandler(this.addEntityButton_Click);
+            // 
             // baseObjectGroupLabel
             // 
             this.baseObjectGroupLabel.Controls.Add(this.foodStatTextBox);
@@ -235,7 +345,7 @@ namespace SettingsManager
             this.baseObjectGroupLabel.Controls.Add(this.entityStatTextBox);
             this.baseObjectGroupLabel.Location = new System.Drawing.Point(7, 88);
             this.baseObjectGroupLabel.Name = "baseObjectGroupLabel";
-            this.baseObjectGroupLabel.Size = new System.Drawing.Size(260, 111);
+            this.baseObjectGroupLabel.Size = new System.Drawing.Size(322, 111);
             this.baseObjectGroupLabel.TabIndex = 6;
             this.baseObjectGroupLabel.TabStop = false;
             this.baseObjectGroupLabel.Text = "BaseObjects - active/recycled/total";
@@ -303,7 +413,7 @@ namespace SettingsManager
             this.commandPage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.commandPage.Name = "commandPage";
             this.commandPage.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.commandPage.Size = new System.Drawing.Size(309, 720);
+            this.commandPage.Size = new System.Drawing.Size(335, 720);
             this.commandPage.TabIndex = 2;
             this.commandPage.Text = "Commands";
             this.commandPage.UseVisualStyleBackColor = true;
@@ -316,7 +426,7 @@ namespace SettingsManager
             this.worldSettingsPage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.worldSettingsPage.Name = "worldSettingsPage";
             this.worldSettingsPage.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.worldSettingsPage.Size = new System.Drawing.Size(309, 720);
+            this.worldSettingsPage.Size = new System.Drawing.Size(335, 720);
             this.worldSettingsPage.TabIndex = 1;
             this.worldSettingsPage.Text = "World Settings";
             this.worldSettingsPage.UseVisualStyleBackColor = true;
@@ -330,11 +440,21 @@ namespace SettingsManager
             this.label1.TabIndex = 2;
             this.label1.Text = "These settings require a game restart";
             // 
+            // cursorCoordinate
+            // 
+            this.cursorCoordinate.AutoSize = true;
+            this.cursorCoordinate.Location = new System.Drawing.Point(363, 101);
+            this.cursorCoordinate.Name = "cursorCoordinate";
+            this.cursorCoordinate.Size = new System.Drawing.Size(54, 20);
+            this.cursorCoordinate.TabIndex = 9;
+            this.cursorCoordinate.Text = "Cursor:";
+            // 
             // SettingsManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(561, 785);
+            this.Controls.Add(this.cursorCoordinate);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.restartButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -351,12 +471,15 @@ namespace SettingsManager
             this.tabControl1.ResumeLayout(false);
             this.debugPage.ResumeLayout(false);
             this.debugPage.PerformLayout();
+            this.trackedEntitiesBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.entityInput)).EndInit();
             this.baseObjectGroupLabel.ResumeLayout(false);
             this.baseObjectGroupLabel.PerformLayout();
             this.commandPage.ResumeLayout(false);
             this.worldSettingsPage.ResumeLayout(false);
             this.worldSettingsPage.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -383,5 +506,14 @@ namespace SettingsManager
         private System.Windows.Forms.RichTextBox entityStatTextBox;
         private System.Windows.Forms.RichTextBox foodStatTextBox;
         private System.Windows.Forms.GroupBox baseObjectGroupLabel;
+        private System.Windows.Forms.Label cursorCoordinate;
+        private System.Windows.Forms.GroupBox trackedEntitiesBox;
+        private System.Windows.Forms.ComboBox trackedEntitiesComboBox;
+        private System.Windows.Forms.Button removeEntityButton;
+        private System.Windows.Forms.Button addEntityButton;
+        private System.Windows.Forms.RichTextBox trackedEntityTextBox;
+        private System.Windows.Forms.Button nextTrackedEntityButton;
+        private System.Windows.Forms.Button previousTrackedEntityButton;
+        private System.Windows.Forms.NumericUpDown entityInput;
     }
 }
