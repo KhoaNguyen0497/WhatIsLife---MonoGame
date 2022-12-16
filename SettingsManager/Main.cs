@@ -54,7 +54,8 @@ namespace SettingsManager
 			{
 				trackedEntityTextBox.Rtf = entity;
 			}
-			
+
+			nearestEntityTextBox.Rtf = GlobalObjects.GameStats.NearestEntityData;
 		}
 
 		private void SetObjectStat(ref RichTextBox textBox, int total, int active, int recycled)

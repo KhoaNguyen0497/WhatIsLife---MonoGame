@@ -60,6 +60,8 @@ namespace SettingsManager
             this.worldSettingsPage = new System.Windows.Forms.TabPage();
             this.label1 = new System.Windows.Forms.Label();
             this.cursorCoordinate = new System.Windows.Forms.Label();
+            this.nearestEntityLabel = new System.Windows.Forms.Label();
+            this.nearestEntityTextBox = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.updateSpeedBar)).BeginInit();
             this.updateSpeedBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.worldWidthInput)).BeginInit();
@@ -449,11 +451,32 @@ namespace SettingsManager
             this.cursorCoordinate.TabIndex = 9;
             this.cursorCoordinate.Text = "Cursor:";
             // 
+            // nearestEntityLabel
+            // 
+            this.nearestEntityLabel.AutoSize = true;
+            this.nearestEntityLabel.Location = new System.Drawing.Point(363, 133);
+            this.nearestEntityLabel.Name = "nearestEntityLabel";
+            this.nearestEntityLabel.Size = new System.Drawing.Size(104, 20);
+            this.nearestEntityLabel.TabIndex = 15;
+            this.nearestEntityLabel.Text = "Nearest Entity:";
+            // 
+            // nearestEntityTextBox
+            // 
+            this.nearestEntityTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.nearestEntityTextBox.Location = new System.Drawing.Point(363, 171);
+            this.nearestEntityTextBox.Name = "nearestEntityTextBox";
+            this.nearestEntityTextBox.ReadOnly = true;
+            this.nearestEntityTextBox.Size = new System.Drawing.Size(161, 188);
+            this.nearestEntityTextBox.TabIndex = 16;
+            this.nearestEntityTextBox.Text = "";
+            // 
             // SettingsManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(561, 785);
+            this.Controls.Add(this.nearestEntityTextBox);
+            this.Controls.Add(this.nearestEntityLabel);
             this.Controls.Add(this.cursorCoordinate);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.restartButton);
@@ -515,5 +538,7 @@ namespace SettingsManager
         private System.Windows.Forms.Button nextTrackedEntityButton;
         private System.Windows.Forms.Button previousTrackedEntityButton;
         private System.Windows.Forms.NumericUpDown entityInput;
+        private System.Windows.Forms.Label nearestEntityLabel;
+        private System.Windows.Forms.RichTextBox nearestEntityTextBox;
     }
 }

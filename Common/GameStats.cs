@@ -20,6 +20,7 @@ namespace Common
 
         public Vector2 Cursor { get; set; } 
 
+        public string NearestEntityData { get; set; }
         public Dictionary<int, string> TrackedEntities { get; set; } = new Dictionary<int, string>();
     }
 }

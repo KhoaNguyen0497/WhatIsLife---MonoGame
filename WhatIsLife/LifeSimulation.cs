@@ -108,6 +108,7 @@ namespace WhatIsLife
                 GameObjects.NewDay = true;
                 Food.NewDaySpawn();
             }
+            
 
             GameObjects.Entities.AllObjects().ForEach(x =>
             {
@@ -134,8 +135,7 @@ namespace WhatIsLife
                 PrintDebug(gameTime);
             }
 
-            GameObjects.MainForm.RefreshStats();
-
+            #region entity tracking
             if (GlobalObjects.GameConfig.ToggleTrackedEntities.Any())
             {
                 foreach (var id in GlobalObjects.GameConfig.ToggleTrackedEntities)
@@ -144,12 +144,43 @@ namespace WhatIsLife
 
                     if (trackedEntity != null)
                     {
-                        trackedEntity.IsTracked =  !trackedEntity.IsTracked;
+                        trackedEntity.IsTracked = !trackedEntity.IsTracked;
                     }
                 }
 
                 GlobalObjects.GameConfig.ToggleTrackedEntities.Clear();
             }
+
+            //TODO: put this as a game config
+            var radiusSquared = Math.Pow(GlobalObjects.GameConfig.EntityTrackingRadius, 2);
+            GlobalObjects.GameStats.NearestEntityData = "";
+            GameObjects.Entities.AllObjects(true).ForEach(x =>
+            {
+                if (x.IsTracked)
+                {
+                    GlobalObjects.GameStats.TrackedEntities[x.Id] = x.ToString();
+                }
+
+                if (x.IsActive)
+                {
+                    if (VectorHelper.WithinDistance(GlobalObjects.GameStats.Cursor, x.Position, GlobalObjects.GameConfig.EntityTrackingRadius))
+                    {
+                        var currentDistanceSquared = VectorHelper.DistanceSquared(GlobalObjects.GameStats.Cursor, x.Position);
+                        if (currentDistanceSquared <= radiusSquared)
+                        {
+                            GlobalObjects.GameStats.NearestEntityData = x.ToString();
+                            radiusSquared = currentDistanceSquared;
+                        }
+                    }
+                }
+            });
+
+
+            #endregion
+
+            GameObjects.MainForm.RefreshStats();
+
+            
         }
 
         protected override void Update(GameTime gameTime)
@@ -165,10 +196,6 @@ namespace WhatIsLife
 
                 ProcessFrame();
             }
-            GameObjects.Entities.AllObjects(true).Where(x => x.IsTracked).ToList().ForEach(x =>
-            {
-                GlobalObjects.GameStats.TrackedEntities[x.Id] = x.ToString();
-            });
 
             UpdateStats(gameTime);
         }
