@@ -161,26 +161,25 @@ namespace WhatIsLife
                     GlobalObjects.GameStats.TrackedEntities[x.Id] = x.ToString();
                 }
 
-                if (x.IsActive)
+                if (GlobalObjects.GameConfig.EntityMouseTracking)
                 {
-                    if (VectorHelper.WithinDistance(GlobalObjects.GameStats.Cursor, x.Position, GlobalObjects.GameConfig.EntityTrackingRadius))
+                    if (x.IsActive)
                     {
-                        var currentDistanceSquared = VectorHelper.DistanceSquared(GlobalObjects.GameStats.Cursor, x.Position);
-                        if (currentDistanceSquared <= radiusSquared)
+                        if (VectorHelper.WithinDistance(GlobalObjects.GameStats.Cursor, x.Position, GlobalObjects.GameConfig.EntityTrackingRadius))
                         {
-                            GlobalObjects.GameStats.NearestEntityData = x.ToString();
-                            radiusSquared = currentDistanceSquared;
+                            var currentDistanceSquared = VectorHelper.DistanceSquared(GlobalObjects.GameStats.Cursor, x.Position);
+                            if (currentDistanceSquared <= radiusSquared)
+                            {
+                                GlobalObjects.GameStats.NearestEntityData = x.ToString();
+                                radiusSquared = currentDistanceSquared;
+                            }
                         }
                     }
-                }
+                }          
             });
-
-
             #endregion
 
-            GameObjects.MainForm.RefreshStats();
-
-            
+            GameObjects.MainForm.RefreshStats();            
         }
 
         protected override void Update(GameTime gameTime)
