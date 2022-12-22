@@ -20,6 +20,7 @@ namespace WhatIsLife
         private float _currentSpeed;
         private int _zoom;
         private KeyboardState _previousKeyState;
+        private MouseState _previousMouseState;
         public CameraHandler(GameWindow window, GraphicsDevice graphicsDevice)
         {
             BoxingViewportAdapter viewportAdapter = new BoxingViewportAdapter(window, graphicsDevice, GlobalObjects.GameConfig.WindowsWitdth, GlobalObjects.GameConfig.WindowsHeight);
@@ -92,7 +93,13 @@ namespace WhatIsLife
                 }
             }
 
+            if (mouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+            {
+                GlobalObjects.TempVariables.LeftClickPressed = true;
+            }
+
             _previousKeyState = keyboardState;
+            _previousMouseState = mouseState;
         }
 
 

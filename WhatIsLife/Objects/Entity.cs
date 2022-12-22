@@ -277,7 +277,7 @@ namespace WhatIsLife.Objects
                 }
             }
 
-            if (GameObjects.NewDay)
+            if (GlobalObjects.TempVariables.NewDay)
             {
                 Age++;
                 Attributes.Hunger -= 20;

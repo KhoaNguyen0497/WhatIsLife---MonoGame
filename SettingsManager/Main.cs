@@ -42,8 +42,19 @@ namespace SettingsManager
 			updateSpeedBar.Value = (int)(GlobalObjects.GameConfig.SpeedMultiplier * 100f);
 			cursorCoordinate.Text = $"Cursor: {GlobalObjects.GameStats.Cursor.X:#},{GlobalObjects.GameStats.Cursor.Y:#}";
 
-			// Tracked entities
-			int selectedEntity = Convert.ToInt32(trackedEntitiesComboBox.SelectedItem);
+            // For adding entity by clicking near them
+            foreach (var trackedEntityData in GlobalObjects.GameStats.TrackedEntities)
+            {
+                int key = trackedEntityData.Key;
+                if (!trackedEntitiesComboBox.Items.Contains(key))
+                {
+                    trackedEntitiesComboBox.Items.Add(key);
+					trackedEntitiesComboBox.SelectedItem = key;
+                }
+            }
+
+            // Tracked entities
+            int selectedEntity = Convert.ToInt32(trackedEntitiesComboBox.SelectedItem);
 			if (selectedEntity == 0) // either the entity doesnt exist or it was recently removed
 			{
 				trackedEntitiesComboBox.Text = "";
@@ -55,6 +66,7 @@ namespace SettingsManager
 				trackedEntityTextBox.Rtf = entity;
 			}
 
+			
 			nearestEntityTextBox.Rtf = GlobalObjects.GameStats.NearestEntityData;
 		}
 

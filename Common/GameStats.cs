@@ -18,9 +18,9 @@ namespace Common
 
         public int FoodRecycled { get; set; }
 
-        public Vector2 Cursor { get; set; } 
+        public Vector2 Cursor { get; set; }
+        public Dictionary<int, string> TrackedEntities { get; set; } = new Dictionary<int, string>();
 
         public string NearestEntityData { get; set; }
-        public Dictionary<int, string> TrackedEntities { get; set; } = new Dictionary<int, string>();
     }
 }

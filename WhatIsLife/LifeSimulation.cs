@@ -55,6 +55,7 @@ namespace WhatIsLife
             _graphics.ApplyChanges();
 
             GlobalObjects.GameStats = new GameStats();
+            GlobalObjects.TempVariables = new TempVariable();
             GlobalObjects.GameConfig.SanityCheck();
             SetupGameObjects();
         }
@@ -105,7 +106,7 @@ namespace WhatIsLife
             if (_debugUpdateCalls % GlobalObjects.GameConfig.UpdatesPerday == 0)
             {
                 GlobalObjects.GameStats.CurrentDay += 1;
-                GameObjects.NewDay = true;
+                GlobalObjects.TempVariables.NewDay = true;
                 Food.NewDaySpawn();
             }
             
@@ -118,7 +119,7 @@ namespace WhatIsLife
 
             GameObjects.FoodList.AllObjects().ForEach(x => x.Update());
 
-            GameObjects.NewDay = false;
+            GlobalObjects.TempVariables.NewDay = false;
         }
 
         private void UpdateStats(GameTime gameTime)
@@ -136,24 +137,23 @@ namespace WhatIsLife
             }
 
             #region entity tracking
-            if (GlobalObjects.GameConfig.ToggleTrackedEntities.Any())
+
+            foreach (var id in GlobalObjects.GameConfig.ToggleTrackedEntities)
             {
-                foreach (var id in GlobalObjects.GameConfig.ToggleTrackedEntities)
+                Entity trackedEntity = GameObjects.Entities.AllObjects(true).FirstOrDefault(x => x.Id == id);
+
+                if (trackedEntity != null)
                 {
-                    Entity trackedEntity = GameObjects.Entities.AllObjects().FirstOrDefault(x => x.Id == id);
-
-                    if (trackedEntity != null)
-                    {
-                        trackedEntity.IsTracked = !trackedEntity.IsTracked;
-                    }
+                    trackedEntity.IsTracked = !trackedEntity.IsTracked;
                 }
-
-                GlobalObjects.GameConfig.ToggleTrackedEntities.Clear();
             }
 
-            //TODO: put this as a game config
+            GlobalObjects.GameConfig.ToggleTrackedEntities.Clear();
+            
+
             var radiusSquared = Math.Pow(GlobalObjects.GameConfig.EntityTrackingRadius, 2);
             GlobalObjects.GameStats.NearestEntityData = "";
+            Entity entityNearCursor = null;
             GameObjects.Entities.AllObjects(true).ForEach(x =>
             {
                 if (x.IsTracked)
@@ -170,15 +170,27 @@ namespace WhatIsLife
                             var currentDistanceSquared = VectorHelper.DistanceSquared(GlobalObjects.GameStats.Cursor, x.Position);
                             if (currentDistanceSquared <= radiusSquared)
                             {
-                                GlobalObjects.GameStats.NearestEntityData = x.ToString();
+                                entityNearCursor = x;
                                 radiusSquared = currentDistanceSquared;
                             }
                         }
                     }
                 }          
             });
+
+            if (entityNearCursor != null)
+            {
+                GlobalObjects.GameStats.NearestEntityData = entityNearCursor.ToString();
+
+                if (GlobalObjects.TempVariables.LeftClickPressed)
+                {
+                    entityNearCursor.IsTracked = true;
+                }
+            }
+
             #endregion
 
+            GlobalObjects.TempVariables.LeftClickPressed = false;
             GameObjects.MainForm.RefreshStats();            
         }
 

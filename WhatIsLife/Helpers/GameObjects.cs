@@ -14,8 +14,5 @@ namespace WhatIsLife.Helpers
         public static GridSystem<Food> FoodList { get; set; } = new GridSystem<Food>();
         public static Random Random { get; } = new Random();
         public static SettingsManagerForm MainForm { get; set; } = new SettingsManagerForm();
-
-        public static bool NewDay { get; set; } = false;
-
     }
 }

@@ -71,7 +71,7 @@ namespace WhatIsLife.Objects
 
 		public void Update()
 		{
-			if (GameObjects.NewDay)
+			if (GlobalObjects.TempVariables.NewDay)
 			{
 				Age++;
 			}

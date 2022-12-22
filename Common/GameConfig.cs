@@ -12,28 +12,35 @@ namespace Common
 	public class GameConfig
 	{
 		[RestartRequired]
-		public int WorldWidth { get; private set; } = 5000;
+		public int WorldWidth { get; private set; } = 1000;
 
 		[RestartRequired]
-		public int WorldHeight { get; private set; } = 5000;
+		public int WorldHeight { get; private set; } = 1000;
 
-		public int WindowsWitdth { get; } = 1920;
-		public int WindowsHeight { get; } = 1080;
+		public int WindowsWitdth { get; } = 1000;
 
-		public float SpeedMultiplier { get; set; } = 1f;
+		public int WindowsHeight { get; } = 900;
+
+		public float SpeedMultiplier { get; set; } = 0.5f;
 
 		public float ZoomSpeed { get; set; } = 1f;
 		public float CameraSpeed { get; set; } = 5f;
 
 		public int UpdatesPerday { get; set; } = 100;
-		public int FoodPerDay { get; set; } = 400;
-		public int InitialEntities { get; set; } = 1000;
+		public int FoodPerDay { get; set; } = 0;
+		public int InitialEntities { get; set; } = 10;
 		public float BaseEntitySpeed { get; set; } = 2f;
 		public float BaseEntityRadius { get; set; } = 100f;
 
+		public float EntityTrackingRadius { get; set; } = 100f;
+
 		public bool Debug { get; set; } = true;
 
+		public bool EntityMouseTracking { get; set; } = true;
+
 		public bool TriggerRestart { get; set; } = false;
+
+		public List<int> ToggleTrackedEntities { get; set; } = new List<int>();
 
 		public ColorConfig Colors { get; set; } = new ColorConfig();
 		public class ColorConfig
