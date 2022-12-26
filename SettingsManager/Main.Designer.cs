@@ -30,16 +30,22 @@ namespace SettingsManager
         /// </summary>
         private void InitializeComponent()
         {
-            this.debugCheckBox = new System.Windows.Forms.CheckBox();
-            this.updateSpeedBar = new System.Windows.Forms.TrackBar();
-            this.updateSpeedBox = new System.Windows.Forms.GroupBox();
             this.restartButton = new System.Windows.Forms.Button();
-            this.worldWidthInput = new System.Windows.Forms.NumericUpDown();
+            this.cursorCoordinate = new System.Windows.Forms.Label();
+            this.nearestEntityLabel = new System.Windows.Forms.Label();
+            this.nearestEntityTextBox = new System.Windows.Forms.RichTextBox();
+            this.upsLabel = new System.Windows.Forms.Label();
+            this.fpsLabel = new System.Windows.Forms.Label();
+            this.worldSettingsPage = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
             this.worldDimensionBox = new System.Windows.Forms.GroupBox();
             this.worldHeightInput = new System.Windows.Forms.NumericUpDown();
             this.heightLabel = new System.Windows.Forms.Label();
             this.widthLabel = new System.Windows.Forms.Label();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.worldWidthInput = new System.Windows.Forms.NumericUpDown();
+            this.commandPage = new System.Windows.Forms.TabPage();
+            this.updateSpeedBox = new System.Windows.Forms.GroupBox();
+            this.updateSpeedBar = new System.Windows.Forms.TrackBar();
             this.debugPage = new System.Windows.Forms.TabPage();
             this.trackedEntitiesBox = new System.Windows.Forms.GroupBox();
             this.entityInput = new System.Windows.Forms.NumericUpDown();
@@ -56,64 +62,27 @@ namespace SettingsManager
             this.entityStatTextBox = new System.Windows.Forms.RichTextBox();
             this.lastUpdatedLabel = new System.Windows.Forms.Label();
             this.currentDayLabel = new System.Windows.Forms.Label();
-            this.commandPage = new System.Windows.Forms.TabPage();
-            this.worldSettingsPage = new System.Windows.Forms.TabPage();
-            this.label1 = new System.Windows.Forms.Label();
-            this.cursorCoordinate = new System.Windows.Forms.Label();
-            this.nearestEntityLabel = new System.Windows.Forms.Label();
-            this.nearestEntityTextBox = new System.Windows.Forms.RichTextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.updateSpeedBar)).BeginInit();
-            this.updateSpeedBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.worldWidthInput)).BeginInit();
+            this.debugCheckBox = new System.Windows.Forms.CheckBox();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.alwaysOnPanel = new System.Windows.Forms.Panel();
+            this.worldSettingsPage.SuspendLayout();
             this.worldDimensionBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.worldHeightInput)).BeginInit();
-            this.tabControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.worldWidthInput)).BeginInit();
+            this.commandPage.SuspendLayout();
+            this.updateSpeedBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.updateSpeedBar)).BeginInit();
             this.debugPage.SuspendLayout();
             this.trackedEntitiesBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.entityInput)).BeginInit();
             this.baseObjectGroupLabel.SuspendLayout();
-            this.commandPage.SuspendLayout();
-            this.worldSettingsPage.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.alwaysOnPanel.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // debugCheckBox
-            // 
-            this.debugCheckBox.AutoSize = true;
-            this.debugCheckBox.Location = new System.Drawing.Point(7, 15);
-            this.debugCheckBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.debugCheckBox.Name = "debugCheckBox";
-            this.debugCheckBox.Size = new System.Drawing.Size(119, 24);
-            this.debugCheckBox.TabIndex = 0;
-            this.debugCheckBox.Text = "Debug Mode";
-            this.debugCheckBox.UseVisualStyleBackColor = true;
-            this.debugCheckBox.CheckedChanged += new System.EventHandler(this.debugCheckBox_CheckedChanged);
-            // 
-            // updateSpeedBar
-            // 
-            this.updateSpeedBar.Location = new System.Drawing.Point(7, 29);
-            this.updateSpeedBar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.updateSpeedBar.Maximum = 500;
-            this.updateSpeedBar.Name = "updateSpeedBar";
-            this.updateSpeedBar.Size = new System.Drawing.Size(215, 56);
-            this.updateSpeedBar.TabIndex = 1;
-            this.updateSpeedBar.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.updateSpeedBar.Scroll += new System.EventHandler(this.updateSpeedBar_Scroll);
-            // 
-            // updateSpeedBox
-            // 
-            this.updateSpeedBox.Controls.Add(this.updateSpeedBar);
-            this.updateSpeedBox.Location = new System.Drawing.Point(7, 8);
-            this.updateSpeedBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.updateSpeedBox.Name = "updateSpeedBox";
-            this.updateSpeedBox.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.updateSpeedBox.Size = new System.Drawing.Size(229, 96);
-            this.updateSpeedBox.TabIndex = 3;
-            this.updateSpeedBox.TabStop = false;
-            this.updateSpeedBox.Text = "Update Speed";
             // 
             // restartButton
             // 
-            this.restartButton.Location = new System.Drawing.Point(413, 45);
+            this.restartButton.Location = new System.Drawing.Point(27, 0);
             this.restartButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.restartButton.Name = "restartButton";
             this.restartButton.Size = new System.Drawing.Size(86, 31);
@@ -122,34 +91,73 @@ namespace SettingsManager
             this.restartButton.UseVisualStyleBackColor = true;
             this.restartButton.Click += new System.EventHandler(this.restartButton_Click);
             // 
-            // worldWidthInput
+            // cursorCoordinate
             // 
-            this.worldWidthInput.Increment = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.worldWidthInput.Location = new System.Drawing.Point(77, 41);
-            this.worldWidthInput.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.worldWidthInput.Maximum = new decimal(new int[] {
-            15000,
-            0,
-            0,
-            0});
-            this.worldWidthInput.Minimum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.worldWidthInput.Name = "worldWidthInput";
-            this.worldWidthInput.Size = new System.Drawing.Size(137, 27);
-            this.worldWidthInput.TabIndex = 5;
-            this.worldWidthInput.Value = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.worldWidthInput.ValueChanged += new System.EventHandler(this.worldWidthInput_ValueChanged);
+            this.cursorCoordinate.AutoSize = true;
+            this.cursorCoordinate.Location = new System.Drawing.Point(27, 66);
+            this.cursorCoordinate.Name = "cursorCoordinate";
+            this.cursorCoordinate.Size = new System.Drawing.Size(54, 20);
+            this.cursorCoordinate.TabIndex = 9;
+            this.cursorCoordinate.Text = "Cursor:";
+            // 
+            // nearestEntityLabel
+            // 
+            this.nearestEntityLabel.AutoSize = true;
+            this.nearestEntityLabel.Location = new System.Drawing.Point(27, 92);
+            this.nearestEntityLabel.Name = "nearestEntityLabel";
+            this.nearestEntityLabel.Size = new System.Drawing.Size(104, 20);
+            this.nearestEntityLabel.TabIndex = 15;
+            this.nearestEntityLabel.Text = "Nearest Entity:";
+            // 
+            // nearestEntityTextBox
+            // 
+            this.nearestEntityTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.nearestEntityTextBox.Location = new System.Drawing.Point(27, 115);
+            this.nearestEntityTextBox.Name = "nearestEntityTextBox";
+            this.nearestEntityTextBox.ReadOnly = true;
+            this.nearestEntityTextBox.Size = new System.Drawing.Size(161, 188);
+            this.nearestEntityTextBox.TabIndex = 16;
+            this.nearestEntityTextBox.Text = "";
+            // 
+            // upsLabel
+            // 
+            this.upsLabel.AutoSize = true;
+            this.upsLabel.Location = new System.Drawing.Point(153, 23);
+            this.upsLabel.Name = "upsLabel";
+            this.upsLabel.Size = new System.Drawing.Size(38, 20);
+            this.upsLabel.TabIndex = 1;
+            this.upsLabel.Text = "UPS:";
+            // 
+            // fpsLabel
+            // 
+            this.fpsLabel.AutoSize = true;
+            this.fpsLabel.Location = new System.Drawing.Point(153, 0);
+            this.fpsLabel.Name = "fpsLabel";
+            this.fpsLabel.Size = new System.Drawing.Size(35, 20);
+            this.fpsLabel.TabIndex = 0;
+            this.fpsLabel.Text = "FPS:";
+            // 
+            // worldSettingsPage
+            // 
+            this.worldSettingsPage.Controls.Add(this.label1);
+            this.worldSettingsPage.Controls.Add(this.worldDimensionBox);
+            this.worldSettingsPage.Location = new System.Drawing.Point(4, 29);
+            this.worldSettingsPage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.worldSettingsPage.Name = "worldSettingsPage";
+            this.worldSettingsPage.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.worldSettingsPage.Size = new System.Drawing.Size(336, 720);
+            this.worldSettingsPage.TabIndex = 1;
+            this.worldSettingsPage.Text = "World Settings";
+            this.worldSettingsPage.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(7, 11);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(253, 20);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "These settings require a game restart";
             // 
             // worldDimensionBox
             // 
@@ -213,17 +221,69 @@ namespace SettingsManager
             this.widthLabel.TabIndex = 6;
             this.widthLabel.Text = "Width:";
             // 
-            // tabControl1
+            // worldWidthInput
             // 
-            this.tabControl1.Controls.Add(this.debugPage);
-            this.tabControl1.Controls.Add(this.commandPage);
-            this.tabControl1.Controls.Add(this.worldSettingsPage);
-            this.tabControl1.Location = new System.Drawing.Point(14, 16);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(343, 753);
-            this.tabControl1.TabIndex = 8;
+            this.worldWidthInput.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.worldWidthInput.Location = new System.Drawing.Point(77, 41);
+            this.worldWidthInput.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.worldWidthInput.Maximum = new decimal(new int[] {
+            15000,
+            0,
+            0,
+            0});
+            this.worldWidthInput.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.worldWidthInput.Name = "worldWidthInput";
+            this.worldWidthInput.Size = new System.Drawing.Size(137, 27);
+            this.worldWidthInput.TabIndex = 5;
+            this.worldWidthInput.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.worldWidthInput.ValueChanged += new System.EventHandler(this.worldWidthInput_ValueChanged);
+            // 
+            // commandPage
+            // 
+            this.commandPage.Controls.Add(this.updateSpeedBox);
+            this.commandPage.Location = new System.Drawing.Point(4, 29);
+            this.commandPage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.commandPage.Name = "commandPage";
+            this.commandPage.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.commandPage.Size = new System.Drawing.Size(336, 720);
+            this.commandPage.TabIndex = 2;
+            this.commandPage.Text = "Commands";
+            this.commandPage.UseVisualStyleBackColor = true;
+            // 
+            // updateSpeedBox
+            // 
+            this.updateSpeedBox.Controls.Add(this.updateSpeedBar);
+            this.updateSpeedBox.Location = new System.Drawing.Point(7, 8);
+            this.updateSpeedBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.updateSpeedBox.Name = "updateSpeedBox";
+            this.updateSpeedBox.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.updateSpeedBox.Size = new System.Drawing.Size(229, 96);
+            this.updateSpeedBox.TabIndex = 3;
+            this.updateSpeedBox.TabStop = false;
+            this.updateSpeedBox.Text = "Update Speed";
+            // 
+            // updateSpeedBar
+            // 
+            this.updateSpeedBar.Location = new System.Drawing.Point(7, 29);
+            this.updateSpeedBar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.updateSpeedBar.Maximum = 500;
+            this.updateSpeedBar.Name = "updateSpeedBar";
+            this.updateSpeedBar.Size = new System.Drawing.Size(215, 56);
+            this.updateSpeedBar.TabIndex = 1;
+            this.updateSpeedBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.updateSpeedBar.Scroll += new System.EventHandler(this.updateSpeedBar_Scroll);
             // 
             // debugPage
             // 
@@ -236,7 +296,7 @@ namespace SettingsManager
             this.debugPage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.debugPage.Name = "debugPage";
             this.debugPage.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.debugPage.Size = new System.Drawing.Size(335, 720);
+            this.debugPage.Size = new System.Drawing.Size(336, 720);
             this.debugPage.TabIndex = 0;
             this.debugPage.Text = "Debug";
             this.debugPage.UseVisualStyleBackColor = true;
@@ -408,137 +468,112 @@ namespace SettingsManager
             this.currentDayLabel.TabIndex = 1;
             this.currentDayLabel.Text = "Current day:";
             // 
-            // commandPage
+            // debugCheckBox
             // 
-            this.commandPage.Controls.Add(this.updateSpeedBox);
-            this.commandPage.Location = new System.Drawing.Point(4, 29);
-            this.commandPage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.commandPage.Name = "commandPage";
-            this.commandPage.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.commandPage.Size = new System.Drawing.Size(335, 720);
-            this.commandPage.TabIndex = 2;
-            this.commandPage.Text = "Commands";
-            this.commandPage.UseVisualStyleBackColor = true;
+            this.debugCheckBox.AutoSize = true;
+            this.debugCheckBox.Location = new System.Drawing.Point(7, 15);
+            this.debugCheckBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.debugCheckBox.Name = "debugCheckBox";
+            this.debugCheckBox.Size = new System.Drawing.Size(119, 24);
+            this.debugCheckBox.TabIndex = 0;
+            this.debugCheckBox.Text = "Debug Mode";
+            this.debugCheckBox.UseVisualStyleBackColor = true;
+            this.debugCheckBox.CheckedChanged += new System.EventHandler(this.debugCheckBox_CheckedChanged);
             // 
-            // worldSettingsPage
+            // tabControl1
             // 
-            this.worldSettingsPage.Controls.Add(this.label1);
-            this.worldSettingsPage.Controls.Add(this.worldDimensionBox);
-            this.worldSettingsPage.Location = new System.Drawing.Point(4, 29);
-            this.worldSettingsPage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.worldSettingsPage.Name = "worldSettingsPage";
-            this.worldSettingsPage.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.worldSettingsPage.Size = new System.Drawing.Size(335, 720);
-            this.worldSettingsPage.TabIndex = 1;
-            this.worldSettingsPage.Text = "World Settings";
-            this.worldSettingsPage.UseVisualStyleBackColor = true;
+            this.tabControl1.Controls.Add(this.debugPage);
+            this.tabControl1.Controls.Add(this.commandPage);
+            this.tabControl1.Controls.Add(this.worldSettingsPage);
+            this.tabControl1.Location = new System.Drawing.Point(14, 16);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(344, 753);
+            this.tabControl1.TabIndex = 8;
             // 
-            // label1
+            // alwaysOnPanel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 11);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(253, 20);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "These settings require a game restart";
-            // 
-            // cursorCoordinate
-            // 
-            this.cursorCoordinate.AutoSize = true;
-            this.cursorCoordinate.Location = new System.Drawing.Point(363, 101);
-            this.cursorCoordinate.Name = "cursorCoordinate";
-            this.cursorCoordinate.Size = new System.Drawing.Size(54, 20);
-            this.cursorCoordinate.TabIndex = 9;
-            this.cursorCoordinate.Text = "Cursor:";
-            // 
-            // nearestEntityLabel
-            // 
-            this.nearestEntityLabel.AutoSize = true;
-            this.nearestEntityLabel.Location = new System.Drawing.Point(363, 133);
-            this.nearestEntityLabel.Name = "nearestEntityLabel";
-            this.nearestEntityLabel.Size = new System.Drawing.Size(104, 20);
-            this.nearestEntityLabel.TabIndex = 15;
-            this.nearestEntityLabel.Text = "Nearest Entity:";
-            // 
-            // nearestEntityTextBox
-            // 
-            this.nearestEntityTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.nearestEntityTextBox.Location = new System.Drawing.Point(363, 171);
-            this.nearestEntityTextBox.Name = "nearestEntityTextBox";
-            this.nearestEntityTextBox.ReadOnly = true;
-            this.nearestEntityTextBox.Size = new System.Drawing.Size(161, 188);
-            this.nearestEntityTextBox.TabIndex = 16;
-            this.nearestEntityTextBox.Text = "";
+            this.alwaysOnPanel.Controls.Add(this.upsLabel);
+            this.alwaysOnPanel.Controls.Add(this.restartButton);
+            this.alwaysOnPanel.Controls.Add(this.fpsLabel);
+            this.alwaysOnPanel.Controls.Add(this.cursorCoordinate);
+            this.alwaysOnPanel.Controls.Add(this.nearestEntityTextBox);
+            this.alwaysOnPanel.Controls.Add(this.nearestEntityLabel);
+            this.alwaysOnPanel.Location = new System.Drawing.Point(364, 45);
+            this.alwaysOnPanel.Name = "alwaysOnPanel";
+            this.alwaysOnPanel.Size = new System.Drawing.Size(219, 339);
+            this.alwaysOnPanel.TabIndex = 11;
             // 
             // SettingsManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(561, 785);
-            this.Controls.Add(this.nearestEntityTextBox);
-            this.Controls.Add(this.nearestEntityLabel);
-            this.Controls.Add(this.cursorCoordinate);
+            this.ClientSize = new System.Drawing.Size(609, 785);
+            this.Controls.Add(this.alwaysOnPanel);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.restartButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "SettingsManagerForm";
             this.Text = "Settings";
-            ((System.ComponentModel.ISupportInitialize)(this.updateSpeedBar)).EndInit();
-            this.updateSpeedBox.ResumeLayout(false);
-            this.updateSpeedBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.worldWidthInput)).EndInit();
+            this.worldSettingsPage.ResumeLayout(false);
+            this.worldSettingsPage.PerformLayout();
             this.worldDimensionBox.ResumeLayout(false);
             this.worldDimensionBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.worldHeightInput)).EndInit();
-            this.tabControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.worldWidthInput)).EndInit();
+            this.commandPage.ResumeLayout(false);
+            this.updateSpeedBox.ResumeLayout(false);
+            this.updateSpeedBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.updateSpeedBar)).EndInit();
             this.debugPage.ResumeLayout(false);
             this.debugPage.PerformLayout();
             this.trackedEntitiesBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.entityInput)).EndInit();
             this.baseObjectGroupLabel.ResumeLayout(false);
             this.baseObjectGroupLabel.PerformLayout();
-            this.commandPage.ResumeLayout(false);
-            this.worldSettingsPage.ResumeLayout(false);
-            this.worldSettingsPage.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.alwaysOnPanel.ResumeLayout(false);
+            this.alwaysOnPanel.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.CheckBox debugCheckBox;
-        private System.Windows.Forms.TrackBar updateSpeedBar;
-        private System.Windows.Forms.GroupBox updateSpeedBox;
         private System.Windows.Forms.Button restartButton;
-        private System.Windows.Forms.NumericUpDown worldWidthInput;
+        private System.Windows.Forms.Label cursorCoordinate;
+        private System.Windows.Forms.Label nearestEntityLabel;
+        private System.Windows.Forms.RichTextBox nearestEntityTextBox;
+        private System.Windows.Forms.TabPage worldSettingsPage;
+        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox worldDimensionBox;
         private System.Windows.Forms.NumericUpDown worldHeightInput;
         private System.Windows.Forms.Label heightLabel;
         private System.Windows.Forms.Label widthLabel;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage debugPage;
-        private System.Windows.Forms.TabPage worldSettingsPage;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown worldWidthInput;
         private System.Windows.Forms.TabPage commandPage;
-        private System.Windows.Forms.Label lastUpdatedLabel;
-        private System.Windows.Forms.Label currentDayLabel;
-        private System.Windows.Forms.Label entityStatLabel;
-        private System.Windows.Forms.Label foodStatLabel;
-        private System.Windows.Forms.RichTextBox entityStatTextBox;
-        private System.Windows.Forms.RichTextBox foodStatTextBox;
-        private System.Windows.Forms.GroupBox baseObjectGroupLabel;
-        private System.Windows.Forms.Label cursorCoordinate;
+        private System.Windows.Forms.GroupBox updateSpeedBox;
+        private System.Windows.Forms.TrackBar updateSpeedBar;
+        private System.Windows.Forms.TabPage debugPage;
         private System.Windows.Forms.GroupBox trackedEntitiesBox;
-        private System.Windows.Forms.ComboBox trackedEntitiesComboBox;
-        private System.Windows.Forms.Button removeEntityButton;
-        private System.Windows.Forms.Button addEntityButton;
+        private System.Windows.Forms.NumericUpDown entityInput;
         private System.Windows.Forms.RichTextBox trackedEntityTextBox;
         private System.Windows.Forms.Button nextTrackedEntityButton;
         private System.Windows.Forms.Button previousTrackedEntityButton;
-        private System.Windows.Forms.NumericUpDown entityInput;
-        private System.Windows.Forms.Label nearestEntityLabel;
-        private System.Windows.Forms.RichTextBox nearestEntityTextBox;
+        private System.Windows.Forms.ComboBox trackedEntitiesComboBox;
+        private System.Windows.Forms.Button removeEntityButton;
+        private System.Windows.Forms.Button addEntityButton;
+        private System.Windows.Forms.GroupBox baseObjectGroupLabel;
+        private System.Windows.Forms.RichTextBox foodStatTextBox;
+        private System.Windows.Forms.Label entityStatLabel;
+        private System.Windows.Forms.Label foodStatLabel;
+        private System.Windows.Forms.RichTextBox entityStatTextBox;
+        private System.Windows.Forms.Label lastUpdatedLabel;
+        private System.Windows.Forms.Label currentDayLabel;
+        private System.Windows.Forms.CheckBox debugCheckBox;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.Panel alwaysOnPanel;
+        private System.Windows.Forms.Label fpsLabel;
+        private System.Windows.Forms.Label upsLabel;
     }
 }

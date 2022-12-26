@@ -13,7 +13,6 @@ namespace SettingsManager
 {
 	public partial class SettingsManagerForm : Form
 	{
-		private int _currentTrackedEntity = 0;
 		public SettingsManagerForm()
 		{
 			InitializeComponent();
@@ -28,6 +27,7 @@ namespace SettingsManager
 			worldHeightInput.Value = GlobalObjects.GameConfig.WorldHeight;
 		}
 
+		// Only refreshed when debug is on
 		public void RefreshDebugStats()
 		{
 			currentDayLabel.Text = $"Current Day: {GlobalObjects.GameStats.CurrentDay}";
@@ -42,19 +42,20 @@ namespace SettingsManager
 			updateSpeedBar.Value = (int)(GlobalObjects.GameConfig.SpeedMultiplier * 100f);
 			cursorCoordinate.Text = $"Cursor: {GlobalObjects.GameStats.Cursor.X:#},{GlobalObjects.GameStats.Cursor.Y:#}";
 
-            // For adding entity by clicking near them
-            foreach (var trackedEntityData in GlobalObjects.GameStats.TrackedEntities)
-            {
-                int key = trackedEntityData.Key;
-                if (!trackedEntitiesComboBox.Items.Contains(key))
-                {
-                    trackedEntitiesComboBox.Items.Add(key);
+			#region Tracked entity
+			// For adding entity by clicking near them
+			foreach (var trackedEntityData in GlobalObjects.GameStats.TrackedEntities)
+			{
+				int key = trackedEntityData.Key;
+				if (!trackedEntitiesComboBox.Items.Contains(key))
+				{
+					trackedEntitiesComboBox.Items.Add(key);
 					trackedEntitiesComboBox.SelectedItem = key;
-                }
-            }
+				}
+			}
 
-            // Tracked entities
-            int selectedEntity = Convert.ToInt32(trackedEntitiesComboBox.SelectedItem);
+			// Tracked entities
+			int selectedEntity = Convert.ToInt32(trackedEntitiesComboBox.SelectedItem);
 			if (selectedEntity == 0) // either the entity doesnt exist or it was recently removed
 			{
 				trackedEntitiesComboBox.Text = "";
@@ -66,7 +67,22 @@ namespace SettingsManager
 				trackedEntityTextBox.Rtf = entity;
 			}
 
-			
+			nextTrackedEntityButton.Enabled = previousTrackedEntityButton.Enabled = trackedEntitiesComboBox.Items.Count > 1;	
+			#endregion
+
+			#region Performance
+			int totalFrames = GlobalObjects.GameStats.PerformanceRecords.Last().Frames - GlobalObjects.GameStats.PerformanceRecords.First().Frames;
+			int totalUpdates = GlobalObjects.GameStats.PerformanceRecords.Last().Updates - GlobalObjects.GameStats.PerformanceRecords.First().Updates;
+
+			double timeDiff = GlobalObjects.GameStats.PerformanceRecords.Last().Millisecond - GlobalObjects.GameStats.PerformanceRecords.First().Millisecond;
+
+			double fps = totalFrames / (timeDiff / 1000);
+			double ups = totalUpdates / (timeDiff / 1000);
+
+			fpsLabel.Text = $"FPS: {fps:#.#}";
+			upsLabel.Text = $"UPS: {ups:#.#}";
+			#endregion
+
 			nearestEntityTextBox.Rtf = GlobalObjects.GameStats.NearestEntityData;
 		}
 
@@ -131,10 +147,7 @@ namespace SettingsManager
 				if (trackedEntitiesComboBox.SelectedIndex == -1)
 				{
 					trackedEntitiesComboBox.SelectedIndex = 0;
-				}
-
-				nextTrackedEntityButton.Enabled = true;
-				previousTrackedEntityButton.Enabled = true;
+				}		
 			}
 		}
 
@@ -163,12 +176,6 @@ namespace SettingsManager
 			{
 				trackedEntitiesComboBox.SelectedIndex = trackedEntitiesComboBox.Items.Count - 1;
 			}
-
-			if (trackedEntitiesComboBox.Items.Count == 0)
-			{
-				nextTrackedEntityButton.Enabled = false;
-				previousTrackedEntityButton.Enabled = false;
-			}
 		}
 
 		private void previousTrackedEntityButton_Click(object sender, EventArgs e)
@@ -194,5 +201,6 @@ namespace SettingsManager
 				trackedEntitiesComboBox.SelectedIndex++;
 			}
 		}
+
 	}
 }

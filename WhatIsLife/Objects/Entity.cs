@@ -173,17 +173,18 @@ namespace WhatIsLife.Objects
                         return false;
                     }
 
-                    if (!VectorHelper.WithinDistance(Position, entity.Position, Radius + entity.Radius))
-                    {
-                        return false;
-                    }
-
                     if (Gender == entity.Gender)
                     {
                         return false;
                     }
 
                     if (Age < ReproductionCooldown || entity.Age < entity.ReproductionCooldown)
+                    {
+                        return false;
+                    }
+
+
+                    if (!VectorHelper.WithinDistance(Position, entity.Position, Radius + entity.Radius))
                     {
                         return false;
                     }
@@ -199,7 +200,11 @@ namespace WhatIsLife.Objects
             }
             else if (Target is Entity && Position == Target.Position)
             {
-                GameObjects.Entities.CreateNewObject(Position);
+                if (GameObjects.Entities.Count() < GlobalObjects.GameConfig.MaxEntity)
+                {
+                    GameObjects.Entities.CreateNewObject(Position);
+                }
+
                 ResetReproductionSystem();
             }
             
@@ -219,6 +224,11 @@ namespace WhatIsLife.Objects
 
         public bool RandomDeathChance()
         {
+            if (!GlobalObjects.GameConfig.EnableDeath)
+            {
+                return false;
+            }
+
             // If Hunger reaches 0, it dies
             if (Attributes.Hunger <= 0)
             {

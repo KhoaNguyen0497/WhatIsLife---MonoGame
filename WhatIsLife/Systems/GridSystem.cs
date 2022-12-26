@@ -15,8 +15,8 @@ namespace WhatIsLife.Systems
     public class GridSystem<T> where T : BaseObject, IDisposable, IReusable, new()
     {
         // World length/width must be divisible by these values. There will be santity checks
-        public int CellWidth = 100;
-        public int CellHeight = 100;
+        public int CellWidth = 500;
+        public int CellHeight = 500;
 
         public Dictionary<Point, List<T>> Cells = new Dictionary<Point, List<T>>();
 
@@ -24,7 +24,8 @@ namespace WhatIsLife.Systems
         private int _totalRows;
 
         private Stack<T> _recycledObjects { get; set; } = new Stack<T>();
-        
+        private List<T> _allObjects { get; set; } = new List<T>();
+
         public GridSystem()
         {
             
@@ -47,18 +48,8 @@ namespace WhatIsLife.Systems
 
         public void RepopulateGrid()
         {
-            List<T> tempList = AllObjects();
-
-            if (GlobalObjects.GameConfig.Debug)
-            {
-                if (tempList.Any(x => !x.IsActive))
-                {
-                    throw new Exception("Obj is inactive");
-                }
-            }
-
             PopulateEmptyGrid();
-            AddRange(tempList);
+            AddRange(AllObjects());
         }
 
         public void PopulateEmptyGrid()
@@ -97,6 +88,7 @@ namespace WhatIsLife.Systems
             else
             {
                 obj = new T();
+                _allObjects.Add(obj);
             }
 
             obj.Respawn(position);
@@ -127,13 +119,12 @@ namespace WhatIsLife.Systems
             Cells[cellKey].Remove(obj);
         }
 
-        // This method assumes the raidus is a square, not a circle and therefore will return more objects
+        // This method assumes the radius is a square, not a circle and therefore will return more objects
         // Although it does not affect accuracy, performance might be impacted
         public List<T> GetNearbyObjects(Vector2 position, float radius)
         {
             List<T> objects = new List<T>();
-            List<Point> nearbyCells = new List<Point>();
-
+            objects.Capacity = GlobalObjects.GameConfig.MaxEntity;
             Vector2 topLeftPosition = new Vector2
             {
                 X = Math.Max(position.X - radius, 0),
@@ -153,16 +144,9 @@ namespace WhatIsLife.Systems
             {
                 for (int j = topLeftCellNum.Y; j <= bottomRightCellNum.Y; j++)
                 {
-                    nearbyCells.Add(new Point(i, j));
+                    objects.AddRange(Cells[new Point(i, j)]);
                 }
             }
-
-            foreach (Point cell in nearbyCells)
-            {
-                objects.AddRange(Cells[cell]);
-            }
-
-
 
             return objects;
         }
@@ -170,28 +154,20 @@ namespace WhatIsLife.Systems
         public List<T> AllObjects(bool includingInactive = false)
         {
             List<T> objects = new List<T>();
-            foreach (KeyValuePair<Point, List<T>> cell in Cells)
-            {
-                objects.AddRange(cell.Value);
-            }
-
-            if (GlobalObjects.GameConfig.Debug)
-            {
-                if (objects.Any(x => !x.IsActive))
-                {
-                    throw new Exception("Error");
-                }
-            }
-
+ 
             if (includingInactive)
             {
-                objects.AddRange(_recycledObjects);
+                objects.AddRange(_allObjects);
+            }
+            else
+            {
+                objects.AddRange(_allObjects.Where(x => x.IsActive));
             }
 
             return objects;
         }
 
-        public int Count()
+        public int ActiveCount()
         {
             return Cells.Sum(x => x.Value.Count);
         }
@@ -199,6 +175,11 @@ namespace WhatIsLife.Systems
         public int RecycledCount()
         {
             return _recycledObjects.Count;
+        }
+
+        public int Count()
+        {
+            return ActiveCount() + RecycledCount();
         }
 
         public void Draw(SpriteBatch spriteBatch, float cameraZoom)

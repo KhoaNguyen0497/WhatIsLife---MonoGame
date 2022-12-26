@@ -18,6 +18,7 @@ using System.Windows.Forms;
 using WhatIsLife.Helpers;
 using WhatIsLife.Objects;
 using WhatIsLife.Systems;
+using static Common.GameStats;
 
 namespace WhatIsLife
 {
@@ -82,17 +83,40 @@ namespace WhatIsLife
         
         private void PrintDebug(GameTime gameTime)
         {
-            double maxLoop = 0; ;
-            if (gameTime.ElapsedGameTime.TotalMilliseconds > TargetElapsedTime.TotalMilliseconds)
-            {
-                maxLoop = Math.Max(1, Math.Floor(_debugUpdateCalls / (gameTime.ElapsedGameTime.TotalMilliseconds / TargetElapsedTime.TotalMilliseconds)));
-            }
+            //double maxLoop = 0; ;
+            //if (gameTime.ElapsedGameTime.TotalMilliseconds > TargetElapsedTime.TotalMilliseconds)
+            //{
+            //    maxLoop = Math.Max(1, Math.Floor(_debugUpdateCalls / (gameTime.ElapsedGameTime.TotalMilliseconds / TargetElapsedTime.TotalMilliseconds)));
+            //}
 
-            var averageUpdatePerSec = _debugUpdateCalls / gameTime.TotalGameTime.TotalSeconds;
+            var currentStat = new PerformanceRecord
+            {
+                Millisecond = gameTime.TotalGameTime.TotalMilliseconds,
+                Frames = _debugDrawCalls,
+                Updates = _debugUpdateCalls
+            };
+            GlobalObjects.GameStats.PerformanceRecords.AddLast(currentStat);
+
+            // This should always break. Worst case it will remove everything, but that should not be possible
+            while (true)
+            {
+                PerformanceRecord firstNode = GlobalObjects.GameStats.PerformanceRecords.First();
+                if (currentStat.Millisecond - firstNode.Millisecond > GlobalObjects.GameConfig.PerformanceMonitorInterval)
+                {
+                    GlobalObjects.GameStats.PerformanceRecords.RemoveFirst();
+                }
+                else
+                {
+                    break;
+                }
+
+            }
+ 
+
             var actualFps = _debugDrawCalls / gameTime.TotalGameTime.TotalSeconds;
             var msPerFrame = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            Debug.WriteLine($"avg update/s: {averageUpdatePerSec}; actual fps: {actualFps}; elapsed: {msPerFrame};loop {maxLoop}; foodSize {GameObjects.FoodList.AllObjects().Count};");
+            //Debug.WriteLine($"avg update/s: {averageUpdatePerSec}; actual fps: {actualFps}; elapsed: {msPerFrame};max speed multiplier {maxLoop};");
         }
 
         private void ProcessFrame()
@@ -101,7 +125,7 @@ namespace WhatIsLife
             _frames -= 1;
 
             GameObjects.Entities.RepopulateGrid();
-            GameObjects.FoodList.RepopulateGrid();
+            //GameObjects.FoodList.RepopulateGrid();
 
             if (_debugUpdateCalls % GlobalObjects.GameConfig.UpdatesPerday == 0)
             {
@@ -126,69 +150,74 @@ namespace WhatIsLife
         {
             if (GlobalObjects.GameConfig.Debug)
             {
-                GlobalObjects.GameStats.NumberOfEntities = GameObjects.Entities.Count();
+                GlobalObjects.GameStats.NumberOfEntities = GameObjects.Entities.ActiveCount();
                 GlobalObjects.GameStats.EntitiesRecycled = GameObjects.Entities.RecycledCount();
-                GlobalObjects.GameStats.FoodQuantity = GameObjects.FoodList.Count();
+                GlobalObjects.GameStats.FoodQuantity = GameObjects.FoodList.ActiveCount();
                 GlobalObjects.GameStats.FoodRecycled = GameObjects.FoodList.RecycledCount();
 
                 GameObjects.MainForm.RefreshDebugStats();
+            }
 
+            if (GlobalObjects.GameConfig.DebugConsole)
+            {
                 PrintDebug(gameTime);
             }
 
-            #region entity tracking
-
-            foreach (var id in GlobalObjects.GameConfig.ToggleTrackedEntities)
+            if (GlobalObjects.GameConfig.Debug)
             {
-                Entity trackedEntity = GameObjects.Entities.AllObjects(true).FirstOrDefault(x => x.Id == id);
-
-                if (trackedEntity != null)
+                #region entity tracking
+                foreach (var id in GlobalObjects.GameConfig.ToggleTrackedEntities)
                 {
-                    trackedEntity.IsTracked = !trackedEntity.IsTracked;
-                }
-            }
+                    Entity trackedEntity = GameObjects.Entities.AllObjects(true).FirstOrDefault(x => x.Id == id);
 
-            GlobalObjects.GameConfig.ToggleTrackedEntities.Clear();
-            
-
-            var radiusSquared = Math.Pow(GlobalObjects.GameConfig.EntityTrackingRadius, 2);
-            GlobalObjects.GameStats.NearestEntityData = "";
-            Entity entityNearCursor = null;
-            GameObjects.Entities.AllObjects(true).ForEach(x =>
-            {
-                if (x.IsTracked)
-                {
-                    GlobalObjects.GameStats.TrackedEntities[x.Id] = x.ToString();
-                }
-
-                if (GlobalObjects.GameConfig.EntityMouseTracking)
-                {
-                    if (x.IsActive)
+                    if (trackedEntity != null)
                     {
-                        if (VectorHelper.WithinDistance(GlobalObjects.GameStats.Cursor, x.Position, GlobalObjects.GameConfig.EntityTrackingRadius))
+                        trackedEntity.IsTracked = !trackedEntity.IsTracked;
+                    }
+                }
+
+                GlobalObjects.GameConfig.ToggleTrackedEntities.Clear();
+
+
+                var radiusSquared = Math.Pow(GlobalObjects.GameConfig.EntityTrackingRadius, 2);
+                GlobalObjects.GameStats.NearestEntityData = "";
+                Entity entityNearCursor = null;
+                GameObjects.Entities.AllObjects(true).ForEach(x =>
+                {
+                    if (x.IsTracked)
+                    {
+                        GlobalObjects.GameStats.TrackedEntities[x.Id] = x.ToString();
+                    }
+
+                    if (GlobalObjects.GameConfig.EntityMouseTracking)
+                    {
+                        if (x.IsActive)
                         {
-                            var currentDistanceSquared = VectorHelper.DistanceSquared(GlobalObjects.GameStats.Cursor, x.Position);
-                            if (currentDistanceSquared <= radiusSquared)
+                            if (VectorHelper.WithinDistance(GlobalObjects.GameStats.Cursor, x.Position, GlobalObjects.GameConfig.EntityTrackingRadius))
                             {
-                                entityNearCursor = x;
-                                radiusSquared = currentDistanceSquared;
+                                var currentDistanceSquared = VectorHelper.DistanceSquared(GlobalObjects.GameStats.Cursor, x.Position);
+                                if (currentDistanceSquared <= radiusSquared)
+                                {
+                                    entityNearCursor = x;
+                                    radiusSquared = currentDistanceSquared;
+                                }
                             }
                         }
                     }
-                }          
-            });
+                });
 
-            if (entityNearCursor != null)
-            {
-                GlobalObjects.GameStats.NearestEntityData = entityNearCursor.ToString();
-
-                if (GlobalObjects.TempVariables.LeftClickPressed)
+                if (entityNearCursor != null)
                 {
-                    entityNearCursor.IsTracked = true;
+                    GlobalObjects.GameStats.NearestEntityData = entityNearCursor.ToString();
+
+                    if (GlobalObjects.TempVariables.LeftClickPressed)
+                    {
+                        entityNearCursor.IsTracked = true;
+                    }
                 }
+                #endregion
             }
 
-            #endregion
 
             GlobalObjects.TempVariables.LeftClickPressed = false;
             GameObjects.MainForm.RefreshStats();            
@@ -212,7 +241,9 @@ namespace WhatIsLife
         }
 
         protected override void Draw(GameTime gameTime)
-        {        
+        {
+            _debugDrawCalls++;
+
             GraphicsDevice.Clear(GlobalObjects.GameConfig.Colors.Background);
             _cameraHandler.Update();
             _spriteBatch.Begin(transformMatrix: _cameraHandler.GetViewMatrix());
@@ -221,7 +252,6 @@ namespace WhatIsLife
             _spriteBatch.DrawRectangle(new RectangleF(0, 0, GlobalObjects.GameConfig.WorldWidth, GlobalObjects.GameConfig.WorldHeight), Color.Black, 2);
             _spriteBatch.End();
 
-            _debugDrawCalls++;
         }
 
         private void DrawGrids()

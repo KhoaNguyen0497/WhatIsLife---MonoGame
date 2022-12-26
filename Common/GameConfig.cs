@@ -12,36 +12,40 @@ namespace Common
 	public class GameConfig
 	{
 		[RestartRequired]
-		public int WorldWidth { get; private set; } = 1000;
+		public int WorldWidth { get; private set; } = 10000;
 
 		[RestartRequired]
-		public int WorldHeight { get; private set; } = 1000;
+		public int WorldHeight { get; private set; } = 10000;
 
 		public int WindowsWitdth { get; } = 1000;
 
 		public int WindowsHeight { get; } = 900;
 
-		public float SpeedMultiplier { get; set; } = 0.5f;
+		public float SpeedMultiplier { get; set; } = 1f;
 
 		public float ZoomSpeed { get; set; } = 1f;
 		public float CameraSpeed { get; set; } = 5f;
 
 		public int UpdatesPerday { get; set; } = 100;
-		public int FoodPerDay { get; set; } = 0;
-		public int InitialEntities { get; set; } = 10;
+		public int FoodPerDay { get; set; } = 500;
+		public int InitialEntities { get; set; } = 10000;
 		public float BaseEntitySpeed { get; set; } = 2f;
 		public float BaseEntityRadius { get; set; } = 100f;
 
 		public float EntityTrackingRadius { get; set; } = 100f;
 
 		public bool Debug { get; set; } = true;
+		public bool DebugConsole { get; set; } = true;
+		public bool EnableDeath { get; set; } = false;
 
-		public bool EntityMouseTracking { get; set; } = true;
+		public int MaxEntity { get; set; } = 1000;
+        public bool EntityMouseTracking { get; set; } = true;
 
-		public bool TriggerRestart { get; set; } = false;
+		public bool TriggerRestart { get; set; } = false; 
 
 		public List<int> ToggleTrackedEntities { get; set; } = new List<int>();
 
+		public int PerformanceMonitorInterval { get; set; } = 5000; // keep data within x milliseconds. Used for performance monitoring
 		public ColorConfig Colors { get; set; } = new ColorConfig();
 		public class ColorConfig
 		{
