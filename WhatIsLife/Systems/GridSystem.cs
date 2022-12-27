@@ -18,7 +18,7 @@ namespace WhatIsLife.Systems
         public int CellWidth = 100;
         public int CellHeight = 100;
 
-        public Dictionary<int, List<T>> Cells = new Dictionary<int, List<T>>();
+        public List<List<T>> Cells = new List<List<T>>();
 
         private int _totalColumns;
         private int _totalRows;
@@ -54,22 +54,22 @@ namespace WhatIsLife.Systems
 
         public void PopulateEmptyGrid()
         {
-            Cells = new Dictionary<int, List<T>>();
+            Cells = new List<List<T>>(_totalRows * _totalColumns);
 
             for (int index = 0; index < _totalColumns * _totalRows; index++)
             {
-                Cells[index] = new List<T>();
+                Cells.Add(new List<T>());
             }
         }
 
 
-        public Point GetCellKey(Vector2 position)
+        public int GetCellKey(Vector2 position, out int nthColumn, out int nthRow)
         {
 
-            int nthColumn = (int)Math.Floor(position.X / CellWidth);
-            int nthRow = (int)Math.Floor(position.Y / CellHeight);
+            nthColumn = (int)Math.Floor(position.X / CellWidth);
+            nthRow = (int)Math.Floor(position.Y / CellHeight);
 
-            return new Point(nthColumn, nthRow);
+            return nthRow * _totalColumns + nthColumn;
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace WhatIsLife.Systems
 
         public void Add(T obj)
         {
-            Point cellKey = GetCellKey(obj.Position);
+            int cellKey = GetCellKey(obj.Position, out _, out _);
             List<T> cell = Cells[cellKey];
             cell.Add(obj);
         }
@@ -112,7 +112,7 @@ namespace WhatIsLife.Systems
         public void Remove(T obj)
         {
             _recycledObjects.Push(obj);
-            Point cellKey = GetCellKey(obj.Position);
+            int cellKey = GetCellKey(obj.Position, out _, out _);
             Cells[cellKey].Remove(obj);
         }
 
@@ -133,17 +133,23 @@ namespace WhatIsLife.Systems
                 Y = Math.Min(position.Y + radius, GlobalObjects.GameConfig.WorldHeight - 1)
             };
 
-            Point topLeftCellNum = GetCellKey(topLeftPosition);
-            Point bottomRightCellNum = GetCellKey(bottomRightPosition);
+            int topLeftCellNum = GetCellKey(topLeftPosition, out int topLeftColumn, out int topLeftRow);
+            int bottomRightCellNum = GetCellKey(bottomRightPosition, out int bottomRightColumn, out int bottomRightRow);
 
-            for (int i = topLeftCellNum.X; i <= bottomRightCellNum.X; i++)
+            int index = topLeftCellNum;
+            while (index <= bottomRightCellNum)
             {
-                for (int j = topLeftCellNum.Y; j <= bottomRightCellNum.Y; j++)
-                {
-                    var p = new Point(i, j);
-                    var temp = Cells[p];
-                    objects.AddRange(temp);
+                var temp = Cells[index];
+                objects.AddRange(temp);
 
+                if ((bottomRightCellNum - index) % _totalColumns == 0)
+                {
+                    topLeftCellNum += _totalColumns;
+                    index = topLeftCellNum;
+                }
+                else
+                {
+                    index++;
                 }
             }
 

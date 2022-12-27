@@ -340,7 +340,7 @@ namespace WhatIsLife.Objects
 
             if (Position.X >= GlobalObjects.GameConfig.WorldWidth)
             {
-                Position.X = GlobalObjects.GameConfig.WorldWidth - 1;
+                Position.X = GlobalObjects.GameConfig.WorldWidth - 1; // -1 because otherwise GetCellKey will return an error
                 Velocity.X *= -1;
             }
 
@@ -352,7 +352,7 @@ namespace WhatIsLife.Objects
 
             if (Position.Y >= GlobalObjects.GameConfig.WorldHeight)
             {
-                Position.Y = GlobalObjects.GameConfig.WorldHeight - 1;
+                Position.Y = GlobalObjects.GameConfig.WorldHeight - 1; // -1 because otherwise GetCellKey will return an error
                 Velocity.Y *= -1;
             }
 
