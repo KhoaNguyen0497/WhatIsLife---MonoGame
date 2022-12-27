@@ -38,14 +38,14 @@ namespace Common
 		public bool DebugConsole { get; set; } = true;
 		public bool EnableDeath { get; set; } = false;
 
-		public int MaxEntity { get; set; } = 1000;
+		public int MaxEntity { get; set; } = 10000;
         public bool EntityMouseTracking { get; set; } = true;
 
 		public bool TriggerRestart { get; set; } = false; 
 
 		public List<int> ToggleTrackedEntities { get; set; } = new List<int>();
 
-		public int PerformanceMonitorInterval { get; set; } = 5000; // keep data within x milliseconds. Used for performance monitoring
+		public int PerformanceMonitorInterval { get; set; } = 10000; // keep data within x milliseconds. Used for performance monitoring
 		public ColorConfig Colors { get; set; } = new ColorConfig();
 		public class ColorConfig
 		{

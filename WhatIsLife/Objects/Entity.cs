@@ -91,7 +91,7 @@ namespace WhatIsLife.Objects
 
             if (GlobalObjects.GameConfig.Debug)
             {
-                spriteBatch.DrawCircle(Position, Radius, 20, genderColor, 1);
+                spriteBatch.DrawCircle(Position, Radius, 10, genderColor, 1);
                 if (Target != null)
                 {
                     spriteBatch.DrawLine(Position, Target.Position, genderColor, 2);
@@ -164,33 +164,35 @@ namespace WhatIsLife.Objects
 
         public void FindPartner()
         {
-            if (Target == null)
+            Func<Entity, bool> condition = (entity) =>
             {
-                Entity partner = GameObjects.Entities.GetNearbyObjects(Position, Radius).FirstOrDefault(entity =>
-                {  
-                    if (entity.Target != null)
-                    {
-                        return false;
-                    }
+                if (entity.Target != null)
+                {
+                    return false;
+                }
 
-                    if (Gender == entity.Gender)
-                    {
-                        return false;
-                    }
+                if (Gender == entity.Gender)
+                {
+                    return false;
+                }
 
-                    if (Age < ReproductionCooldown || entity.Age < entity.ReproductionCooldown)
-                    {
-                        return false;
-                    }
+                if (entity.Age < entity.ReproductionCooldown)
+                {
+                    return false;
+                }
 
 
-                    if (!VectorHelper.WithinDistance(Position, entity.Position, Radius + entity.Radius))
-                    {
-                        return false;
-                    }
+                if (!VectorHelper.WithinDistance(Position, entity.Position, Radius + entity.Radius))
+                {
+                    return false;
+                }
 
-                    return true;
-                });
+                return true;
+            };
+
+            if (Target == null && Age >= ReproductionCooldown)
+            {
+                Entity partner = GameObjects.Entities.GetNearbyObjects(Position, Radius, condition).FirstOrDefault();
 
                 if (partner != null)
                 {

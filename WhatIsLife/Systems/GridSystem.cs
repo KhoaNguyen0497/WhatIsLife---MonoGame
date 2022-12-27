@@ -121,10 +121,9 @@ namespace WhatIsLife.Systems
 
         // This method assumes the radius is a square, not a circle and therefore will return more objects
         // Although it does not affect accuracy, performance might be impacted
-        public List<T> GetNearbyObjects(Vector2 position, float radius)
+        public IEnumerable<T> GetNearbyObjects(Vector2 position, float radius, Func<T, bool> condition = null)
         {
             List<T> objects = new List<T>();
-            objects.Capacity = GlobalObjects.GameConfig.MaxEntity;
             Vector2 topLeftPosition = new Vector2
             {
                 X = Math.Max(position.X - radius, 0),
@@ -145,9 +144,14 @@ namespace WhatIsLife.Systems
                 for (int j = topLeftCellNum.Y; j <= bottomRightCellNum.Y; j++)
                 {
                     objects.AddRange(Cells[new Point(i, j)]);
+
                 }
             }
 
+            if (condition != null)
+            {
+                return objects.Where(x => condition(x));
+            }
             return objects;
         }
 
