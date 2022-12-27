@@ -15,8 +15,8 @@ namespace WhatIsLife.Systems
     public class GridSystem<T> where T : BaseObject, IDisposable, IReusable, new()
     {
         // World length/width must be divisible by these values. There will be santity checks
-        public int CellWidth = 500;
-        public int CellHeight = 500;
+        public int CellWidth = 250;
+        public int CellHeight = 250;
 
         public Dictionary<Point, List<T>> Cells = new Dictionary<Point, List<T>>();
 
@@ -152,6 +152,7 @@ namespace WhatIsLife.Systems
             {
                 return objects.Where(x => condition(x));
             }
+
             return objects;
         }
 

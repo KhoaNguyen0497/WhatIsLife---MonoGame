@@ -149,10 +149,14 @@ namespace WhatIsLife.Objects
                     }
                 }
             }
-
-            if (Target == null)
+            else
             {
-                Food food = GameObjects.FoodList.GetNearbyObjects(Position, Radius).FirstOrDefault(x => VectorHelper.WithinDistance(x.Position, Position, Radius));
+                Func<Food, bool> condition = (x) => 
+                {
+                    return VectorHelper.WithinDistance(x.Position, Position, Radius);
+                };
+
+                Food food = GameObjects.FoodList.GetNearbyObjects(Position, Radius, condition).FirstOrDefault();
 
                 if (food != null)
                 {
@@ -166,23 +170,10 @@ namespace WhatIsLife.Objects
         {
             Func<Entity, bool> condition = (entity) =>
             {
-                if (entity.Target != null)
-                {
-                    return false;
-                }
-
-                if (Gender == entity.Gender)
-                {
-                    return false;
-                }
-
-                if (entity.Age < entity.ReproductionCooldown)
-                {
-                    return false;
-                }
-
-
-                if (!VectorHelper.WithinDistance(Position, entity.Position, Radius + entity.Radius))
+                if (entity.Target != null ||
+                Gender == entity.Gender ||
+                entity.Age < entity.ReproductionCooldown ||
+                !VectorHelper.WithinDistance(Position, entity.Position, Radius + entity.Radius))
                 {
                     return false;
                 }
