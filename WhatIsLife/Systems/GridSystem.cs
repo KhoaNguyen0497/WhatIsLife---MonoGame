@@ -15,10 +15,10 @@ namespace WhatIsLife.Systems
     public class GridSystem<T> where T : BaseObject, IDisposable, IReusable, new()
     {
         // World length/width must be divisible by these values. There will be santity checks
-        public int CellWidth = 250;
-        public int CellHeight = 250;
+        public int CellWidth = 100;
+        public int CellHeight = 100;
 
-        public Dictionary<Point, List<T>> Cells = new Dictionary<Point, List<T>>();
+        public Dictionary<int, List<T>> Cells = new Dictionary<int, List<T>>();
 
         private int _totalColumns;
         private int _totalRows;
@@ -54,14 +54,11 @@ namespace WhatIsLife.Systems
 
         public void PopulateEmptyGrid()
         {
-            Cells = new Dictionary<Point, List<T>>();
+            Cells = new Dictionary<int, List<T>>();
 
-            for (int i = 0; i < _totalColumns; i++)
+            for (int index = 0; index < _totalColumns * _totalRows; index++)
             {
-                for (int j = 0; j < _totalRows; j++)
-                {
-                    Cells[new Point(i, j)] = new List<T>();
-                }
+                Cells[index] = new List<T>();
             }
         }
 
@@ -143,7 +140,9 @@ namespace WhatIsLife.Systems
             {
                 for (int j = topLeftCellNum.Y; j <= bottomRightCellNum.Y; j++)
                 {
-                    objects.AddRange(Cells[new Point(i, j)]);
+                    var p = new Point(i, j);
+                    var temp = Cells[p];
+                    objects.AddRange(temp);
 
                 }
             }
@@ -174,7 +173,7 @@ namespace WhatIsLife.Systems
 
         public int ActiveCount()
         {
-            return Cells.Sum(x => x.Value.Count);
+            return _allObjects.Count - _recycledObjects.Count;
         }
 
         public int RecycledCount()
@@ -184,7 +183,7 @@ namespace WhatIsLife.Systems
 
         public int Count()
         {
-            return ActiveCount() + RecycledCount();
+            return _allObjects.Count;
         }
 
         public void Draw(SpriteBatch spriteBatch, float cameraZoom)
