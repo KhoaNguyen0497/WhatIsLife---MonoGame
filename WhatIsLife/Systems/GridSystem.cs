@@ -15,8 +15,8 @@ namespace WhatIsLife.Systems
     public class GridSystem<T> where T : BaseObject, IDisposable, IReusable, new()
     {
         // World length/width must be divisible by these values. There will be santity checks
-        public int CellWidth = 100;
-        public int CellHeight = 100;
+        public int CellWidth = 250;
+        public int CellHeight = 250;
 
         public List<List<T>> Cells = new List<List<T>>();
 
@@ -63,11 +63,11 @@ namespace WhatIsLife.Systems
         }
 
 
-        public int GetCellKey(Vector2 position, out int nthColumn, out int nthRow)
+        public int GetCellKey(Vector2 position)
         {
 
-            nthColumn = (int)Math.Floor(position.X / CellWidth);
-            nthRow = (int)Math.Floor(position.Y / CellHeight);
+            int nthColumn = (int)Math.Floor(position.X / CellWidth);
+            int nthRow = (int)Math.Floor(position.Y / CellHeight);
 
             return nthRow * _totalColumns + nthColumn;
         }
@@ -104,7 +104,7 @@ namespace WhatIsLife.Systems
 
         public void Add(T obj)
         {
-            int cellKey = GetCellKey(obj.Position, out _, out _);
+            int cellKey = GetCellKey(obj.Position);
             List<T> cell = Cells[cellKey];
             cell.Add(obj);
         }
@@ -112,7 +112,7 @@ namespace WhatIsLife.Systems
         public void Remove(T obj)
         {
             _recycledObjects.Push(obj);
-            int cellKey = GetCellKey(obj.Position, out _, out _);
+            int cellKey = GetCellKey(obj.Position);
             Cells[cellKey].Remove(obj);
         }
 
@@ -133,14 +133,13 @@ namespace WhatIsLife.Systems
                 Y = Math.Min(position.Y + radius, GlobalObjects.GameConfig.WorldHeight - 1)
             };
 
-            int topLeftCellNum = GetCellKey(topLeftPosition, out int topLeftColumn, out int topLeftRow);
-            int bottomRightCellNum = GetCellKey(bottomRightPosition, out int bottomRightColumn, out int bottomRightRow);
+            int topLeftCellNum = GetCellKey(topLeftPosition);
+            int bottomRightCellNum = GetCellKey(bottomRightPosition);
 
             int index = topLeftCellNum;
             while (index <= bottomRightCellNum)
             {
-                var temp = Cells[index];
-                objects.AddRange(temp);
+                objects.AddRange(Cells[index]);
 
                 if ((bottomRightCellNum - index) % _totalColumns == 0)
                 {
@@ -152,29 +151,27 @@ namespace WhatIsLife.Systems
                     index++;
                 }
             }
-
-            if (condition != null)
-            {
-                return objects.Where(x => condition(x));
-            }
+            
+            //// Dont use this yet, it seems to have worse performance
+            //if (condition != null)
+            //{
+            //    return objects.Where(x => condition(x));
+            //}
 
             return objects;
         }
 
         public List<T> AllObjects(bool includingInactive = false)
         {
-            List<T> objects = new List<T>();
  
             if (includingInactive)
             {
-                objects.AddRange(_allObjects);
+                return _allObjects;
             }
             else
             {
-                objects.AddRange(_allObjects.Where(x => x.IsActive));
+                return _allObjects.Where(x => x.IsActive).ToList();
             }
-
-            return objects;
         }
 
         public int ActiveCount()

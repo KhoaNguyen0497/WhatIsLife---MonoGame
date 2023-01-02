@@ -27,14 +27,14 @@ namespace Common
 		public float CameraSpeed { get; set; } = 5f;
 
 		public int UpdatesPerday { get; set; } = 100;
-		public int FoodPerDay { get; set; } = 0;
+		public int FoodPerDay { get; set; } = 500;
 		public int InitialEntities { get; set; } = 10000;
 		public float BaseEntitySpeed { get; set; } = 2f;
 		public float BaseEntityRadius { get; set; } = 100f;
 
 		public float EntityTrackingRadius { get; set; } = 100f;
 
-		public bool Debug { get; set; } = true;
+		public bool Debug { get; set; } = false;
 		public bool DebugConsole { get; set; } = true;
 		public bool EnableDeath { get; set; } = false;
 

@@ -125,7 +125,6 @@ namespace WhatIsLife
             _frames -= 1;
 
             GameObjects.Entities.RepopulateGrid();
-            //GameObjects.FoodList.RepopulateGrid();
 
             if (_debugUpdateCalls % GlobalObjects.GameConfig.UpdatesPerday == 0)
             {
@@ -140,6 +139,7 @@ namespace WhatIsLife
                 x.Update();
                 x.Move();
             });
+
 
             GameObjects.FoodList.AllObjects().ForEach(x => x.Update());
 
