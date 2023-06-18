@@ -71,12 +71,6 @@ namespace WhatIsLife
 
         private void PrintDebug(GameTime gameTime)
         {
-            //double maxLoop = 0; ;
-            //if (gameTime.ElapsedGameTime.TotalMilliseconds > TargetElapsedTime.TotalMilliseconds)
-            //{
-            //    maxLoop = Math.Max(1, Math.Floor(_debugUpdateCalls / (gameTime.ElapsedGameTime.TotalMilliseconds / TargetElapsedTime.TotalMilliseconds)));
-            //}
-
             var currentStat = new PerformanceRecord
             {
                 Millisecond = gameTime.TotalGameTime.TotalMilliseconds,
@@ -99,12 +93,6 @@ namespace WhatIsLife
                 }
 
             }
-
-
-            var actualFps = _debugDrawCalls / gameTime.TotalGameTime.TotalSeconds;
-            var msPerFrame = gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            //Debug.WriteLine($"avg update/s: {averageUpdatePerSec}; actual fps: {actualFps}; elapsed: {msPerFrame};max speed multiplier {maxLoop};");
         }
 
         private void ProcessFrame()

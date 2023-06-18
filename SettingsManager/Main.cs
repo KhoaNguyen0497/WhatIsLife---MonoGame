@@ -27,8 +27,8 @@ namespace SettingsManager
         {
             currentDayLabel.Text = $"Current Day: {GlobalObjects.GameStats.CurrentDay}";
 
-            SetObjectStat(ref entityStatTextBox, GlobalObjects.GameStats.NumberOfEntities + GlobalObjects.GameStats.EntitiesRecycled, GlobalObjects.GameStats.NumberOfEntities, GlobalObjects.GameStats.EntitiesRecycled);
-            SetObjectStat(ref foodStatTextBox, GlobalObjects.GameStats.FoodQuantity + GlobalObjects.GameStats.FoodRecycled, GlobalObjects.GameStats.FoodQuantity, GlobalObjects.GameStats.FoodRecycled);
+            SetObjectStat(ref entityStatTextBox, GlobalObjects.GameStats.NumberOfEntities, GlobalObjects.GameStats.EntitiesRecycled, GlobalObjects.GameStats.NumberOfEntities + GlobalObjects.GameStats.EntitiesRecycled);
+            SetObjectStat(ref foodStatTextBox, GlobalObjects.GameStats.FoodQuantity, GlobalObjects.GameStats.FoodRecycled, GlobalObjects.GameStats.FoodQuantity + GlobalObjects.GameStats.FoodRecycled);
             lastUpdatedLabel.Text = $"Last Updated: {DateTime.Now:T}";
         }
 
@@ -81,7 +81,7 @@ namespace SettingsManager
             nearestEntityTextBox.Rtf = GlobalObjects.GameStats.NearestEntityData;
         }
 
-        private void SetObjectStat(ref RichTextBox textBox, int total, int active, int recycled)
+        private void SetObjectStat(ref RichTextBox textBox, int active, int recycled, int total)
         {
             var sb = new StringBuilder();
             sb.Append(@"{\rtf1\ansi");

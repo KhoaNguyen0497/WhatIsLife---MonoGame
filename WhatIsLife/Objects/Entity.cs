@@ -23,8 +23,6 @@ namespace WhatIsLife.Objects
 
         public Vector2 Velocity;
 
-        public bool IsActive { get; set; }
-
         public BaseObject Target { get; set; }
 
         public Gender Gender { get; set; }

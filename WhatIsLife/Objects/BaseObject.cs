@@ -10,7 +10,7 @@ namespace WhatIsLife.Objects
         public Vector2 Position = new Vector2();
         public abstract void Draw(SpriteBatch spriteBatch);
 
-
+        public bool IsActive { get; set; }
         public int Age { get; set; }
     }
 }

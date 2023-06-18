@@ -13,7 +13,6 @@ namespace WhatIsLife.Objects
     {
         private static int _currentId { get; set; } = 0;
 
-        public bool IsActive { get; set; }
         // List to keep track of entities currently targeting this object
         public List<Entity> Entities { get; set; }
 
