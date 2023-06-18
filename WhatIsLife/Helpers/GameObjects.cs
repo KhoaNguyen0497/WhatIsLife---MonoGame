@@ -1,9 +1,6 @@
 ﻿using SettingsManager;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using WhatIsLife.Objects;
-using WhatIsLife.Objects.Interfaces;
 using WhatIsLife.Systems;
 
 namespace WhatIsLife.Helpers

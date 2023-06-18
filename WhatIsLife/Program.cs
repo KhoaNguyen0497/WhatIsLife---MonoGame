@@ -1,8 +1,5 @@
 ﻿using Common;
-using SettingsManager;
 using System;
-using System.Collections.Generic;
-using System.Xml;
 using WhatIsLife.Helpers;
 
 namespace WhatIsLife
@@ -13,7 +10,7 @@ namespace WhatIsLife
         static void Main()
         {
             GameObjects.MainForm.Show();
-            
+
             do
             {
                 using (var simulation = new LifeSimulation())
@@ -23,6 +20,6 @@ namespace WhatIsLife
                     simulation.Run();
                 }
             } while (GlobalObjects.GameConfig.TriggerRestart);
-        }   
+        }
     }
 }

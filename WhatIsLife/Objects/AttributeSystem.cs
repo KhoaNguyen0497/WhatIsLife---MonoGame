@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace WhatIsLife.Objects
+﻿namespace WhatIsLife.Objects
 {
     public class AttributeSystem
     {

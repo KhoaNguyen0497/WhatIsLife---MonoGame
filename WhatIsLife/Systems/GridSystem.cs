@@ -5,8 +5,6 @@ using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using WhatIsLife.Helpers;
 using WhatIsLife.Objects;
 using WhatIsLife.Objects.Interfaces;
 
@@ -28,7 +26,7 @@ namespace WhatIsLife.Systems
 
         public GridSystem()
         {
-            
+
         }
 
         public void Initiate()
@@ -151,7 +149,7 @@ namespace WhatIsLife.Systems
                     index++;
                 }
             }
-            
+
             //// Dont use this yet, it seems to have worse performance
             //if (condition != null)
             //{
@@ -163,7 +161,7 @@ namespace WhatIsLife.Systems
 
         public List<T> AllObjects(bool includingInactive = false)
         {
- 
+
             if (includingInactive)
             {
                 return _allObjects;

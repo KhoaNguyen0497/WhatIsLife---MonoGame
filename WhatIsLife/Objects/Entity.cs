@@ -151,9 +151,9 @@ namespace WhatIsLife.Objects
             }
             else
             {
-                
+
                 var allFood = GameObjects.FoodList.GetNearbyObjects(Position, Radius);
-                Food food = allFood.FirstOrDefault(x=> VectorHelper.WithinDistance(x.Position, Position, Radius));
+                Food food = allFood.FirstOrDefault(x => VectorHelper.WithinDistance(x.Position, Position, Radius));
 
 
 
@@ -205,7 +205,7 @@ namespace WhatIsLife.Objects
 
                 ResetReproductionSystem();
             }
-            
+
         }
         public void Wander()
         {
@@ -372,7 +372,7 @@ namespace WhatIsLife.Objects
                 Velocity.Normalize();
             }
 
-            Velocity *= Speed;          
+            Velocity *= Speed;
         }
     }
 }

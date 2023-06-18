@@ -1,206 +1,201 @@
 ﻿using Common;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SettingsManager
 {
-	public partial class SettingsManagerForm : Form
-	{
-		public SettingsManagerForm()
-		{
-			InitializeComponent();
-			InitializeValues();
-		}
+    public partial class SettingsManagerForm : Form
+    {
+        public SettingsManagerForm()
+        {
+            InitializeComponent();
+            InitializeValues();
+        }
 
-		private void InitializeValues()
-		{
-			updateSpeedBar.Value = (int)(GlobalObjects.GameConfig.SpeedMultiplier * 100);
-			debugCheckBox.Checked = GlobalObjects.GameConfig.Debug;
-			worldWidthInput.Value = GlobalObjects.GameConfig.WorldWidth;
-			worldHeightInput.Value = GlobalObjects.GameConfig.WorldHeight;
-		}
+        private void InitializeValues()
+        {
+            updateSpeedBar.Value = (int)(GlobalObjects.GameConfig.SpeedMultiplier * 100);
+            debugCheckBox.Checked = GlobalObjects.GameConfig.Debug;
+            worldWidthInput.Value = GlobalObjects.GameConfig.WorldWidth;
+            worldHeightInput.Value = GlobalObjects.GameConfig.WorldHeight;
+        }
 
-		// Only refreshed when debug is on
-		public void RefreshDebugStats()
-		{
-			currentDayLabel.Text = $"Current Day: {GlobalObjects.GameStats.CurrentDay}";
+        // Only refreshed when debug is on
+        public void RefreshDebugStats()
+        {
+            currentDayLabel.Text = $"Current Day: {GlobalObjects.GameStats.CurrentDay}";
 
-			SetObjectStat(ref entityStatTextBox, GlobalObjects.GameStats.NumberOfEntities + GlobalObjects.GameStats.EntitiesRecycled, GlobalObjects.GameStats.NumberOfEntities, GlobalObjects.GameStats.EntitiesRecycled);
-			SetObjectStat(ref foodStatTextBox, GlobalObjects.GameStats.FoodQuantity + GlobalObjects.GameStats.FoodRecycled, GlobalObjects.GameStats.FoodQuantity, GlobalObjects.GameStats.FoodRecycled);
-			lastUpdatedLabel.Text = $"Last Updated: {DateTime.Now:T}";
-		}
+            SetObjectStat(ref entityStatTextBox, GlobalObjects.GameStats.NumberOfEntities + GlobalObjects.GameStats.EntitiesRecycled, GlobalObjects.GameStats.NumberOfEntities, GlobalObjects.GameStats.EntitiesRecycled);
+            SetObjectStat(ref foodStatTextBox, GlobalObjects.GameStats.FoodQuantity + GlobalObjects.GameStats.FoodRecycled, GlobalObjects.GameStats.FoodQuantity, GlobalObjects.GameStats.FoodRecycled);
+            lastUpdatedLabel.Text = $"Last Updated: {DateTime.Now:T}";
+        }
 
-		public void RefreshStats()
-		{
-			updateSpeedBar.Value = (int)(GlobalObjects.GameConfig.SpeedMultiplier * 100f);
-			cursorCoordinate.Text = $"Cursor: {GlobalObjects.GameStats.Cursor.X:#},{GlobalObjects.GameStats.Cursor.Y:#}";
+        public void RefreshStats()
+        {
+            updateSpeedBar.Value = (int)(GlobalObjects.GameConfig.SpeedMultiplier * 100f);
+            cursorCoordinate.Text = $"Cursor: {GlobalObjects.GameStats.Cursor.X:#},{GlobalObjects.GameStats.Cursor.Y:#}";
 
-			#region Tracked entity
-			// For adding entity by clicking near them
-			foreach (var trackedEntityData in GlobalObjects.GameStats.TrackedEntities)
-			{
-				int key = trackedEntityData.Key;
-				if (!trackedEntitiesComboBox.Items.Contains(key))
-				{
-					trackedEntitiesComboBox.Items.Add(key);
-					trackedEntitiesComboBox.SelectedItem = key;
-				}
-			}
+            #region Tracked entity
+            // For adding entity by clicking near them
+            foreach (var trackedEntityData in GlobalObjects.GameStats.TrackedEntities)
+            {
+                int key = trackedEntityData.Key;
+                if (!trackedEntitiesComboBox.Items.Contains(key))
+                {
+                    trackedEntitiesComboBox.Items.Add(key);
+                    trackedEntitiesComboBox.SelectedItem = key;
+                }
+            }
 
-			// Tracked entities
-			int selectedEntity = Convert.ToInt32(trackedEntitiesComboBox.SelectedItem);
-			if (selectedEntity == 0) // either the entity doesnt exist or it was recently removed
-			{
-				trackedEntitiesComboBox.Text = "";
-				trackedEntityTextBox.Text = "";             
-			}
+            // Tracked entities
+            int selectedEntity = Convert.ToInt32(trackedEntitiesComboBox.SelectedItem);
+            if (selectedEntity == 0) // either the entity doesnt exist or it was recently removed
+            {
+                trackedEntitiesComboBox.Text = "";
+                trackedEntityTextBox.Text = "";
+            }
 
-			if (GlobalObjects.GameStats.TrackedEntities.TryGetValue(selectedEntity, out var entity))
-			{
-				trackedEntityTextBox.Rtf = entity;
-			}
+            if (GlobalObjects.GameStats.TrackedEntities.TryGetValue(selectedEntity, out var entity))
+            {
+                trackedEntityTextBox.Rtf = entity;
+            }
 
-			nextTrackedEntityButton.Enabled = previousTrackedEntityButton.Enabled = trackedEntitiesComboBox.Items.Count > 1;	
-			#endregion
+            nextTrackedEntityButton.Enabled = previousTrackedEntityButton.Enabled = trackedEntitiesComboBox.Items.Count > 1;
+            #endregion
 
-			#region Performance
-			int totalFrames = GlobalObjects.GameStats.PerformanceRecords.Last().Frames - GlobalObjects.GameStats.PerformanceRecords.First().Frames;
-			int totalUpdates = GlobalObjects.GameStats.PerformanceRecords.Last().Updates - GlobalObjects.GameStats.PerformanceRecords.First().Updates;
+            #region Performance
+            int totalFrames = GlobalObjects.GameStats.PerformanceRecords.Last().Frames - GlobalObjects.GameStats.PerformanceRecords.First().Frames;
+            int totalUpdates = GlobalObjects.GameStats.PerformanceRecords.Last().Updates - GlobalObjects.GameStats.PerformanceRecords.First().Updates;
 
-			double timeDiff = GlobalObjects.GameStats.PerformanceRecords.Last().Millisecond - GlobalObjects.GameStats.PerformanceRecords.First().Millisecond;
+            double timeDiff = GlobalObjects.GameStats.PerformanceRecords.Last().Millisecond - GlobalObjects.GameStats.PerformanceRecords.First().Millisecond;
 
-			double fps = totalFrames / (timeDiff / 1000);
-			double ups = totalUpdates / (timeDiff / 1000);
+            double fps = totalFrames / (timeDiff / 1000);
+            double ups = totalUpdates / (timeDiff / 1000);
 
-			fpsLabel.Text = $"FPS: {fps:#.#}";
-			upsLabel.Text = $"UPS: {ups:#.#}";
-			#endregion
+            fpsLabel.Text = $"FPS: {fps:#.#}";
+            upsLabel.Text = $"UPS: {ups:#.#}";
+            #endregion
 
-			nearestEntityTextBox.Rtf = GlobalObjects.GameStats.NearestEntityData;
-		}
+            nearestEntityTextBox.Rtf = GlobalObjects.GameStats.NearestEntityData;
+        }
 
-		private void SetObjectStat(ref RichTextBox textBox, int total, int active, int recycled)
-		{
-			var sb = new StringBuilder();
-			sb.Append(@"{\rtf1\ansi");
-			sb.Append($@"\b {active}\b0/{recycled}/{total}");
-			textBox.Rtf = sb.ToString();
-		}
+        private void SetObjectStat(ref RichTextBox textBox, int total, int active, int recycled)
+        {
+            var sb = new StringBuilder();
+            sb.Append(@"{\rtf1\ansi");
+            sb.Append($@"\b {active}\b0/{recycled}/{total}");
+            textBox.Rtf = sb.ToString();
+        }
 
-		private void debugCheckBox_CheckedChanged(object sender, EventArgs e)
-		{
-			GlobalObjects.GameConfig.Debug = debugCheckBox.Checked;
-		}
+        private void debugCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            GlobalObjects.GameConfig.Debug = debugCheckBox.Checked;
+        }
 
-		private void updateSpeedBar_Scroll(object sender, EventArgs e)
-		{
-			GlobalObjects.GameConfig.SpeedMultiplier = updateSpeedBar.Value / 100f;
-		}
+        private void updateSpeedBar_Scroll(object sender, EventArgs e)
+        {
+            GlobalObjects.GameConfig.SpeedMultiplier = updateSpeedBar.Value / 100f;
+        }
 
-		private void restartButton_Click(object sender, EventArgs e)
-		{
-			GlobalObjects.GameConfig.TriggerRestart = true;
-		}
+        private void restartButton_Click(object sender, EventArgs e)
+        {
+            GlobalObjects.GameConfig.TriggerRestart = true;
+        }
 
-		private const int CP_NOCLOSE_BUTTON = 0x200;
-		protected override CreateParams CreateParams
-		{
-			get
-			{
-				CreateParams myCp = base.CreateParams;
-				myCp.ClassStyle = myCp.ClassStyle | CP_NOCLOSE_BUTTON;
-				return myCp;
-			}
-		}
+        private const int CP_NOCLOSE_BUTTON = 0x200;
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams myCp = base.CreateParams;
+                myCp.ClassStyle = myCp.ClassStyle | CP_NOCLOSE_BUTTON;
+                return myCp;
+            }
+        }
 
-		private void worldWidthInput_ValueChanged(object sender, EventArgs e)
-		{
-			GlobalObjects.GameConfig.SetValueOnRestart(x => x.WorldWidth, (int)worldWidthInput.Value);
-		}
+        private void worldWidthInput_ValueChanged(object sender, EventArgs e)
+        {
+            GlobalObjects.GameConfig.SetValueOnRestart(x => x.WorldWidth, (int)worldWidthInput.Value);
+        }
 
-		private void worldHeightInput_ValueChanged(object sender, EventArgs e)
-		{
-			GlobalObjects.GameConfig.SetValueOnRestart(x => x.WorldHeight, (int)worldWidthInput.Value);
-		}
+        private void worldHeightInput_ValueChanged(object sender, EventArgs e)
+        {
+            GlobalObjects.GameConfig.SetValueOnRestart(x => x.WorldHeight, (int)worldWidthInput.Value);
+        }
 
-		private void addEntityButton_Click(object sender, EventArgs e)
-		{
-			int key = Convert.ToInt32(entityInput.Value);
-			
-			if (!trackedEntitiesComboBox.Items.Contains(key))   
-			{
-				GlobalObjects.GameConfig.ToggleTrackedEntities.Add(key);
+        private void addEntityButton_Click(object sender, EventArgs e)
+        {
+            int key = Convert.ToInt32(entityInput.Value);
 
-				var sb = new StringBuilder();
-				sb.Append(@"{\rtf1\ansi ");
-				sb.Append($@"Error: no data Entity {key}");
-				GlobalObjects.GameStats.TrackedEntities[key] = sb.ToString();
-				trackedEntitiesComboBox.Items.Add(key);
+            if (!trackedEntitiesComboBox.Items.Contains(key))
+            {
+                GlobalObjects.GameConfig.ToggleTrackedEntities.Add(key);
 
-				if (trackedEntitiesComboBox.SelectedIndex == -1)
-				{
-					trackedEntitiesComboBox.SelectedIndex = 0;
-				}		
-			}
-		}
+                var sb = new StringBuilder();
+                sb.Append(@"{\rtf1\ansi ");
+                sb.Append($@"Error: no data Entity {key}");
+                GlobalObjects.GameStats.TrackedEntities[key] = sb.ToString();
+                trackedEntitiesComboBox.Items.Add(key);
 
-		private void removeEntityButton_Click(object sender, EventArgs e)
-		{
-			int key = Convert.ToInt32(trackedEntitiesComboBox.SelectedItem);
-			int currentIndex = trackedEntitiesComboBox.SelectedIndex;
+                if (trackedEntitiesComboBox.SelectedIndex == -1)
+                {
+                    trackedEntitiesComboBox.SelectedIndex = 0;
+                }
+            }
+        }
 
-			if ( key == 0 )
-			{
-				return;
-			}
+        private void removeEntityButton_Click(object sender, EventArgs e)
+        {
+            int key = Convert.ToInt32(trackedEntitiesComboBox.SelectedItem);
+            int currentIndex = trackedEntitiesComboBox.SelectedIndex;
 
-			if (!trackedEntitiesComboBox.Items.Contains(key))
-			{
-				throw new Exception($"List of tracked entities does not contain {key}");
-			}
+            if (key == 0)
+            {
+                return;
+            }
 
-			trackedEntitiesComboBox.Items.Remove(key);
-			GlobalObjects.GameConfig.ToggleTrackedEntities.Add(key);
-			GlobalObjects.GameStats.TrackedEntities.Remove(key);
+            if (!trackedEntitiesComboBox.Items.Contains(key))
+            {
+                throw new Exception($"List of tracked entities does not contain {key}");
+            }
 
-			trackedEntitiesComboBox.SelectedIndex = currentIndex - 1;
+            trackedEntitiesComboBox.Items.Remove(key);
+            GlobalObjects.GameConfig.ToggleTrackedEntities.Add(key);
+            GlobalObjects.GameStats.TrackedEntities.Remove(key);
 
-			if (trackedEntitiesComboBox.SelectedIndex < 0)
-			{
-				trackedEntitiesComboBox.SelectedIndex = trackedEntitiesComboBox.Items.Count - 1;
-			}
-		}
+            trackedEntitiesComboBox.SelectedIndex = currentIndex - 1;
 
-		private void previousTrackedEntityButton_Click(object sender, EventArgs e)
-		{
-			if (trackedEntitiesComboBox.SelectedIndex <= 0)
-			{
-				trackedEntitiesComboBox.SelectedIndex = trackedEntitiesComboBox.Items.Count - 1;
-			}
-			else
-			{
-				trackedEntitiesComboBox.SelectedIndex--;
-			}
-		}
+            if (trackedEntitiesComboBox.SelectedIndex < 0)
+            {
+                trackedEntitiesComboBox.SelectedIndex = trackedEntitiesComboBox.Items.Count - 1;
+            }
+        }
 
-		private void nextTrackedEntityButton_Click(object sender, EventArgs e)
-		{
-			if (trackedEntitiesComboBox.SelectedIndex >= trackedEntitiesComboBox.Items.Count - 1)
-			{
-				trackedEntitiesComboBox.SelectedIndex = 0;
-			}
-			else
-			{
-				trackedEntitiesComboBox.SelectedIndex++;
-			}
-		}
+        private void previousTrackedEntityButton_Click(object sender, EventArgs e)
+        {
+            if (trackedEntitiesComboBox.SelectedIndex <= 0)
+            {
+                trackedEntitiesComboBox.SelectedIndex = trackedEntitiesComboBox.Items.Count - 1;
+            }
+            else
+            {
+                trackedEntitiesComboBox.SelectedIndex--;
+            }
+        }
 
-	}
+        private void nextTrackedEntityButton_Click(object sender, EventArgs e)
+        {
+            if (trackedEntitiesComboBox.SelectedIndex >= trackedEntitiesComboBox.Items.Count - 1)
+            {
+                trackedEntitiesComboBox.SelectedIndex = 0;
+            }
+            else
+            {
+                trackedEntitiesComboBox.SelectedIndex++;
+            }
+        }
+
+    }
 }

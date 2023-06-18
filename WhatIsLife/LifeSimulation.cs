@@ -1,23 +1,11 @@
 ﻿using Common;
-using Common.Attributes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
-using MonoGame.Extended.Timers;
-using MonoGame.Extended.ViewportAdapters;
-using SettingsManager;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Threading;
-using System.Windows.Forms;
 using WhatIsLife.Helpers;
 using WhatIsLife.Objects;
-using WhatIsLife.Systems;
 using static Common.GameStats;
 
 namespace WhatIsLife
@@ -51,7 +39,7 @@ namespace WhatIsLife
             base.Initialize();
             _graphics.PreferredBackBufferWidth = GlobalObjects.GameConfig.WindowsWitdth;
             _graphics.PreferredBackBufferHeight = GlobalObjects.GameConfig.WindowsHeight;
-       
+
             _graphics.SynchronizeWithVerticalRetrace = true; //*
             _graphics.ApplyChanges();
 
@@ -80,7 +68,7 @@ namespace WhatIsLife
             _spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
-        
+
         private void PrintDebug(GameTime gameTime)
         {
             //double maxLoop = 0; ;
@@ -111,7 +99,7 @@ namespace WhatIsLife
                 }
 
             }
- 
+
 
             var actualFps = _debugDrawCalls / gameTime.TotalGameTime.TotalSeconds;
             var msPerFrame = gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -132,7 +120,7 @@ namespace WhatIsLife
                 GlobalObjects.TempVariables.NewDay = true;
                 Food.NewDaySpawn();
             }
-            
+
 
             GameObjects.Entities.AllObjects().ForEach(x =>
             {
@@ -220,7 +208,7 @@ namespace WhatIsLife
 
 
             GlobalObjects.TempVariables.LeftClickPressed = false;
-            GameObjects.MainForm.RefreshStats();            
+            GameObjects.MainForm.RefreshStats();
         }
 
         protected override void Update(GameTime gameTime)

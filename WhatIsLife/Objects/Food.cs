@@ -4,32 +4,30 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using WhatIsLife.Helpers;
 using WhatIsLife.Objects.Interfaces;
 
 namespace WhatIsLife.Objects
 {
-	public class Food : BaseObject, IReusable, IDisposable
-	{
+    public class Food : BaseObject, IReusable, IDisposable
+    {
         private static int _currentId { get; set; } = 0;
 
         public bool IsActive { get; set; }
-		// List to keep track of entities currently targeting this object
-		public List<Entity> Entities { get; set; }
+        // List to keep track of entities currently targeting this object
+        public List<Entity> Entities { get; set; }
 
-		
 
-		public void Respawn(Vector2? position = null)
-		{
+
+        public void Respawn(Vector2? position = null)
+        {
             if (Id == 0)
             {
                 _currentId++;
                 Id = _currentId;
             }
             Entities = new List<Entity>();
-			Age = 0;
+            Age = 0;
 
             if (position == null)
             {
@@ -43,52 +41,52 @@ namespace WhatIsLife.Objects
             }
 
             IsActive = true;
-		}
+        }
 
-		public void Dispose()
-		{
-			IsActive = false;
-			Entities.ForEach(x =>
-			{			
-				if ((x.Target as Food) == null)
-				{
-					throw new Exception("Error");
-				}
+        public void Dispose()
+        {
+            IsActive = false;
+            Entities.ForEach(x =>
+            {
+                if ((x.Target as Food) == null)
+                {
+                    throw new Exception("Error");
+                }
 
-				x.Target = null;
-			});
+                x.Target = null;
+            });
 
-			GameObjects.FoodList.Remove(this);
-		}
+            GameObjects.FoodList.Remove(this);
+        }
 
-		public static void NewDaySpawn()
-		{
-			for (int i = 0; i < GlobalObjects.GameConfig.FoodPerDay; i++)
-			{
-				GameObjects.FoodList.CreateNewObject();
-			}
-		}
+        public static void NewDaySpawn()
+        {
+            for (int i = 0; i < GlobalObjects.GameConfig.FoodPerDay; i++)
+            {
+                GameObjects.FoodList.CreateNewObject();
+            }
+        }
 
-		public void Update()
-		{
-			if (GlobalObjects.TempVariables.NewDay)
-			{
-				Age++;
-			}
+        public void Update()
+        {
+            if (GlobalObjects.TempVariables.NewDay)
+            {
+                Age++;
+            }
 
-			if (Age >= 10)
-			{
-				Dispose();
-			}
-		}
-		public override void Draw(SpriteBatch spriteBatch)
-		{
-			if (!IsActive)
-			{
-				return;
-			}
+            if (Age >= 10)
+            {
+                Dispose();
+            }
+        }
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            if (!IsActive)
+            {
+                return;
+            }
 
-			spriteBatch.DrawPoint(Position, GlobalObjects.GameConfig.Colors.Food, 5);
-		}
-	}
+            spriteBatch.DrawPoint(Position, GlobalObjects.GameConfig.Colors.Food, 5);
+        }
+    }
 }

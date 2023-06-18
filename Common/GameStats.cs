@@ -1,8 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
 
 namespace Common
 {
@@ -33,7 +30,7 @@ namespace Common
 
         public class PerformanceRecord
         {
-            public double Millisecond { get; set;}
+            public double Millisecond { get; set; }
 
             public int Frames { get; set; }
 
