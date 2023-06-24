@@ -14,9 +14,8 @@ namespace WhatIsLife.Objects
         private static int _currentId { get; set; } = 0;
 
         // List to keep track of entities currently targeting this object
+        // This is needed because Food can be Expired and Respawned the next day, which causes issues in the targetting system
         public List<Entity> Entities { get; set; }
-
-
 
         public void Respawn(Vector2? position = null)
         {
@@ -42,17 +41,20 @@ namespace WhatIsLife.Objects
             IsActive = true;
         }
 
+
         public void Dispose()
         {
             IsActive = false;
             Entities.ForEach(x =>
             {
-                if ((x.Target as Food) == null)
+                if ((x.Target as Food) != this)
                 {
                     throw new Exception("Error");
                 }
-
-                x.Target = null;
+                else
+                {
+                    x.Target = null;
+                }
             });
 
             GameObjects.FoodList.Remove(this);
@@ -78,6 +80,7 @@ namespace WhatIsLife.Objects
                 Dispose();
             }
         }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             if (!IsActive)

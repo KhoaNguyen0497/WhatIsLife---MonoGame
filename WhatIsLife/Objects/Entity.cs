@@ -65,19 +65,24 @@ namespace WhatIsLife.Objects
 
         public void UnlinkPartner()
         {
-            var currentTarget = Target as Entity;
-
-            if (currentTarget != null)
-            {
-                currentTarget.Target = null;
-            }
-
+            (Target as Entity).Target = null;
             Target = null;
         }
 
         public void Dispose()
         {
-            UnlinkPartner();
+            if (Target != null)
+            {
+                if (Target is Food)
+                {
+                    (Target as Food).Entities.Remove(this);
+                }
+                else if (Target is Entity)
+                {
+                    UnlinkPartner();
+                }
+            }
+
             IsActive = false;
             GameObjects.Entities.Remove(this);
         }
@@ -165,28 +170,15 @@ namespace WhatIsLife.Objects
 
         public void FindPartner()
         {
-            Func<Entity, bool> condition = (entity) =>
-            {
-                if (entity.Target != null ||
-                Gender == entity.Gender ||
-                entity.Age < entity.ReproductionCooldown ||
-                !VectorHelper.WithinDistance(Position, entity.Position, Radius + entity.Radius))
-                {
-                    return false;
-                }
-
-                return true;
-            };
-
             if (Target == null && Age >= ReproductionCooldown)
             {
                 Entity partner = GameObjects.Entities
                     .GetNearbyObjects(Position, Radius)
                     .FirstOrDefault(entity =>
-                    !(entity.Target != null ||
-                    Gender == entity.Gender ||
-                    entity.Age < entity.ReproductionCooldown ||
-                    !VectorHelper.WithinDistance(Position, entity.Position, Radius + entity.Radius)));
+                        !(entity.Target != null ||
+                        Gender == entity.Gender ||
+                        entity.Age < entity.ReproductionCooldown ||
+                        !VectorHelper.WithinDistance(Position, entity.Position, Radius + entity.Radius)));
 
                 if (partner != null)
                 {
@@ -196,6 +188,7 @@ namespace WhatIsLife.Objects
             }
             else if (Target is Entity && Position == Target.Position)
             {
+                // New Entity
                 if (GameObjects.Entities.Count() < GlobalObjects.GameConfig.MaxEntity)
                 {
                     GameObjects.Entities.CreateNewObject(Position);

@@ -27,7 +27,7 @@ namespace Common
 
         public int UpdatesPerday { get; set; } = 100;
         public int FoodPerDay { get; set; } = 500;
-        public int InitialEntities { get; set; } = 10000;
+        public int InitialEntities { get; set; } = 1000;
         public float BaseEntitySpeed { get; set; } = 2f;
         public float BaseEntityRadius { get; set; } = 100f;
 
@@ -35,7 +35,7 @@ namespace Common
 
         public bool Debug { get; set; } = false;
         public bool DebugConsole { get; set; } = true;
-        public bool EnableDeath { get; set; } = false;
+        public bool EnableDeath { get; set; } = true;
 
         public int MaxEntity { get; set; } = 10000;
         public bool EntityMouseTracking { get; set; } = true;
