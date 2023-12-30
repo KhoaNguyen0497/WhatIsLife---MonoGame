@@ -86,6 +86,8 @@ namespace SettingsManager
             var sb = new StringBuilder();
             sb.Append(@"{\rtf1\ansi");
             sb.Append($@"\b {active}\b0/{recycled}/{total}");
+            sb.Append(@"}");
+
             textBox.Rtf = sb.ToString();
         }
 
@@ -134,8 +136,10 @@ namespace SettingsManager
                 GlobalObjects.GameConfig.ToggleTrackedEntities.Add(key);
 
                 var sb = new StringBuilder();
-                sb.Append(@"{\rtf1\ansi ");
+                sb.Append(@"{\rtf1\ansi");
                 sb.Append($@"Error: no data Entity {key}");
+                sb.Append(@"}");
+
                 GlobalObjects.GameStats.TrackedEntities[key] = sb.ToString();
                 trackedEntitiesComboBox.Items.Add(key);
 

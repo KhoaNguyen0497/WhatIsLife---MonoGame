@@ -255,6 +255,8 @@ namespace WhatIsLife.Objects
 
             sb.Append(@$"Target: {targetString}\line ");
             sb.Append(@$"Active: {IsActive}\line ");
+            sb.Append(@"}");
+
             return sb.ToString();
         }
 
