@@ -1,5 +1,11 @@
 ﻿using Common;
+using ScottPlot;
+using ScottPlot.Plottable;
+using SettingsManager.Graph;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -13,14 +19,56 @@ namespace SettingsManager
             InitializeComponent();
             InitializeValues();
         }
+        ScottPlot.Plottable.DataLogger Logger;
 
+        List<BaseGraphContainer> GraphContainers = new List<BaseGraphContainer>();
         private void InitializeValues()
         {
             updateSpeedBar.Value = (int)(GlobalObjects.GameConfig.SpeedMultiplier * 100);
             debugCheckBox.Checked = GlobalObjects.GameConfig.Debug;
+            drawEnabledCheckBox.Checked = GlobalObjects.GameConfig.Draw;
             worldWidthInput.Value = GlobalObjects.GameConfig.WorldWidth;
             worldHeightInput.Value = GlobalObjects.GameConfig.WorldHeight;
+
+            GraphContainers.Add(new LineGraphContainer
+            {
+                Graph = entitiesbyDayGraph,
+                RenderCondition = () => { return renderEntitiesByDay.Checked; },
+                XDataGetter = () => { return GlobalObjects.GameStats.DailyStats.Days.ToArray(); },
+                YDataGetter = () => { return GlobalObjects.GameStats.DailyStats.Entities.ToArray(); },
+                XLabel = "",
+                YLabel = "",
+                Label = "Entities"
+            });
+
+            GraphContainers.Add(new LineGraphContainer
+            {
+                Graph = foodByDayGraph,
+                RenderCondition = () => { return renderFoodByDay.Checked; },
+                XDataGetter = () => { return GlobalObjects.GameStats.DailyStats.Days.ToArray(); },
+                YDataGetter = () => { return GlobalObjects.GameStats.DailyStats.Food.ToArray(); },
+                XLabel = "",
+                YLabel = "",
+                Label = "Food"
+            });
+
+            GraphContainers.Add(new DistributionGraphContainer
+            {
+                Graph = averageSpeedGraph,
+                RenderCondition = () => { return renderAvegrageSpeed.Checked; },
+                DataGetter = () => { return GlobalObjects.GameStats.DailyStats.Speed.ToArray(); },
+                Bins = 2,
+                XMin=1,
+                XMax=4,
+                XLabel = "Day",
+                YLabel = "",
+                Label = "Average Speed"
+            });
+
+            GraphContainers.ForEach(x => x.Initiate());
         }
+
+
 
         // Only refreshed when debug is on
         public void RefreshDebugStats()
@@ -31,7 +79,10 @@ namespace SettingsManager
             SetObjectStat(ref foodStatTextBox, GlobalObjects.GameStats.FoodQuantity, GlobalObjects.GameStats.FoodRecycled, GlobalObjects.GameStats.FoodQuantity + GlobalObjects.GameStats.FoodRecycled);
             lastUpdatedLabel.Text = $"Last Updated: {DateTime.Now:T}";
         }
-
+        public void RefreshGraphs()
+        {
+            GraphContainers.ForEach(x => x.Render());
+        }
         public void RefreshStats()
         {
             updateSpeedBar.Value = (int)(GlobalObjects.GameConfig.SpeedMultiplier * 100f);
@@ -201,5 +252,9 @@ namespace SettingsManager
             }
         }
 
+        private void drawEnabledCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            GlobalObjects.GameConfig.Draw = drawEnabledCheckBox.Checked;
+        }
     }
 }

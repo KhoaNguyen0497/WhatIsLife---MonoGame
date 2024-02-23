@@ -16,8 +16,8 @@ namespace WhatIsLife
         private SpriteBatch _spriteBatch;
         private CameraHandler _cameraHandler;
 
-        private int _debugUpdateCalls = 0;
-        private int _debugDrawCalls = 0;
+        private int _updateCalls = 0;
+        private int _drawCalls = 0;
 
         private float _frames = 0;
 
@@ -74,8 +74,8 @@ namespace WhatIsLife
             var currentStat = new PerformanceRecord
             {
                 Millisecond = gameTime.TotalGameTime.TotalMilliseconds,
-                Frames = _debugDrawCalls,
-                Updates = _debugUpdateCalls
+                Frames = _drawCalls,
+                Updates = _updateCalls
             };
             GlobalObjects.GameStats.PerformanceRecords.AddLast(currentStat);
 
@@ -97,14 +97,21 @@ namespace WhatIsLife
 
         private void ProcessFrame()
         {
-            _debugUpdateCalls++;
+            _updateCalls++;
             _frames -= 1;
 
             GameObjects.Entities.RepopulateGrid();
 
-            if (_debugUpdateCalls % GlobalObjects.GameConfig.UpdatesPerday == 0)
+            if (_updateCalls % GlobalObjects.GameConfig.UpdatesPerday == 0)
             {
+                GlobalObjects.GameStats.DailyStats.Update(
+                    GlobalObjects.GameStats.CurrentDay,
+                    GameObjects.Entities.ActiveCount(), 
+                    GameObjects.FoodList.ActiveCount(), 
+                    GameObjects.Entities.AllObjects().Select(x => (double)x.Attributes.Speed.Value)
+                );
                 GlobalObjects.GameStats.CurrentDay += 1;
+                GameObjects.MainForm.RefreshGraphs();
                 GlobalObjects.TempVariables.NewDay = true;
                 Food.NewDaySpawn();
             }
@@ -218,9 +225,14 @@ namespace WhatIsLife
 
         protected override void Draw(GameTime gameTime)
         {
-            _debugDrawCalls++;
-
             GraphicsDevice.Clear(GlobalObjects.GameConfig.Colors.Background);
+
+            if (!GlobalObjects.GameConfig.Draw)
+            {
+                return;
+            }
+
+            _drawCalls++;
             _cameraHandler.Update();
             _spriteBatch.Begin(transformMatrix: _cameraHandler.GetViewMatrix());
             DrawGrids();

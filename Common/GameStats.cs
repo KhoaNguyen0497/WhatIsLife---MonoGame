@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Common.GraphStats;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
 namespace Common
@@ -17,7 +18,7 @@ namespace Common
 
         public Vector2 Cursor { get; set; }
         public Dictionary<int, string> TrackedEntities { get; set; } = new Dictionary<int, string>();
-
+        public DailyStats DailyStats = new DailyStats();
         public string NearestEntityData { get; set; }
 
         /// <summary>

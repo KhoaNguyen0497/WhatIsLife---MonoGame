@@ -11,14 +11,14 @@ namespace Common
     public class GameConfig
     {
         [RestartRequired]
-        public int WorldWidth { get; private set; } = 10000;
+        public int WorldWidth { get; private set; } = 5000;
 
         [RestartRequired]
-        public int WorldHeight { get; private set; } = 10000;
+        public int WorldHeight { get; private set; } = 5000;
 
-        public int WindowsWitdth { get; } = 1000;
+        public int WindowsWitdth { get; } = 1500;
 
-        public int WindowsHeight { get; } = 900;
+        public int WindowsHeight { get; } = 1200;
 
         public float SpeedMultiplier { get; set; } = 1f;
 
@@ -26,14 +26,16 @@ namespace Common
         public float CameraSpeed { get; set; } = 5f;
 
         public int UpdatesPerday { get; set; } = 100;
-        public int FoodPerDay { get; set; } = 500;
+        public int FoodPerDay { get; set; } = 200;
         public int InitialEntities { get; set; } = 1000;
         public float BaseEntitySpeed { get; set; } = 2f;
-        public float BaseEntityRadius { get; set; } = 100f;
+        public float BaseEntityRadius { get; set; } = 200f;
+        public float BaseEntityHunger { get; set; } = 100f;
 
         public float EntityTrackingRadius { get; set; } = 100f;
 
         public bool Debug { get; set; } = false;
+        public bool Draw { get; set; } = true;
         public bool DebugConsole { get; set; } = true;
         public bool EnableDeath { get; set; } = true;
 

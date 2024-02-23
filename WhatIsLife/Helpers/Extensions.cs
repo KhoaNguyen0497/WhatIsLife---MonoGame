@@ -11,6 +11,14 @@ namespace WhatIsLife.Helpers
             return random.Next(1, 100) < chance;
         }
 
+        public static float NextFloat(this Random random, float lower, float upper) 
+        {
+            double range = (double)upper - (double)lower;
+            double sample = random.NextDouble();
+            double scaled = (sample * range) + lower;
+            return (float)scaled;
+        }
+
         public static IEnumerable<IEnumerable<TValue>> Chunk<TValue>(
         this IEnumerable<TValue> values,
         int chunkSize)

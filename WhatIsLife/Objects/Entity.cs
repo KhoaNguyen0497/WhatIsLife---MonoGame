@@ -7,7 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using WhatIsLife.Helpers;
+using WhatIsLife.Objects.Attributes;
 using WhatIsLife.Objects.Interfaces;
+using WhatIsLife.Objects.Traits;
 
 namespace WhatIsLife.Objects
 {
@@ -27,10 +29,6 @@ namespace WhatIsLife.Objects
 
         public Gender Gender { get; set; }
 
-        public float Speed { get; set; }
-
-        public float Radius { get; set; }
-
         /// <summary>
         /// Chance of turning every update
         /// </summary>
@@ -47,6 +45,7 @@ namespace WhatIsLife.Objects
         public bool IsTracked { get; set; } = false;
 
         public AttributeSystem Attributes { get; set; } = new AttributeSystem();
+        public TraitSystem Traits { get; set; } = new TraitSystem();
 
 
         public List<Tuple<Vector2, BaseObject>> History = new List<Tuple<Vector2, BaseObject>>();
@@ -94,7 +93,7 @@ namespace WhatIsLife.Objects
 
             if (GlobalObjects.GameConfig.Debug)
             {
-                spriteBatch.DrawCircle(Position, Radius, 10, genderColor, 1);
+                spriteBatch.DrawCircle(Position, Attributes.Radius.Value, 10, genderColor, 1);
                 if (Target != null)
                 {
                     spriteBatch.DrawLine(Position, Target.Position, genderColor, 2);
@@ -112,13 +111,12 @@ namespace WhatIsLife.Objects
                 Id = _currentId;
             }
 
-            RotationAngleRadian = (float)Math.PI / 180 * RotationAngle;
+            RotationAngleRadian = (float)Math.PI / 180 * RotationAngle;          
             Age = 0;
             Attributes.Reset();
+            Traits.Reset(this);
             Gender = (Gender)GameObjects.Random.Next(2);
             Target = null;
-            Speed = GlobalObjects.GameConfig.BaseEntitySpeed;
-            Radius = GlobalObjects.GameConfig.BaseEntityRadius;
             IsActive = true;
             ReproductionCooldown = 1;
 
@@ -134,7 +132,7 @@ namespace WhatIsLife.Objects
             }
 
             GameObjects.Random.NextUnitVector(out Velocity);
-            Velocity *= Speed;
+            Velocity *= Attributes.Speed.Value;
         }
 
         // Find and move to Food, or consume it
@@ -145,20 +143,19 @@ namespace WhatIsLife.Objects
                 if (Target.GetType() == typeof(Food))
                 {
                     // Consume the food
+                    // TODO maybe change BaseObject to have Dispose
                     if (Target.Position == Position)
                     {
-                        Attributes.Hunger += 30;
+                        Attributes.Hunger.Increment(30);
                         (Target as Food).Dispose();
                     }
                 }
             }
-            else
+            else if (Attributes.Hunger.FindFoodThreshold())
             {
 
-                var allFood = GameObjects.FoodList.GetNearbyObjects(Position, Radius);
-                Food food = allFood.FirstOrDefault(x => VectorHelper.WithinDistance(x.Position, Position, Radius));
-
-
+                var allFood = GameObjects.FoodList.GetNearbyObjects(Position, Attributes.Radius.Value);
+                Food food = allFood.FirstOrDefault(x => VectorHelper.WithinDistance(x.Position, Position, Attributes.Radius.Value));
 
                 if (food != null)
                 {
@@ -170,15 +167,18 @@ namespace WhatIsLife.Objects
 
         public void FindPartner()
         {
-            if (Target == null && Age >= ReproductionCooldown)
+            // Check count as well.
+            // There's a chance we can breed more than the max capacity but thats fine.
+            // This can happen when count < max cap but lots of entities find a parter this frame.
+            if (Target == null && Age >= ReproductionCooldown && GameObjects.Entities.ActiveCount() < GlobalObjects.GameConfig.MaxEntity)
             {
                 Entity partner = GameObjects.Entities
-                    .GetNearbyObjects(Position, Radius)
+                    .GetNearbyObjects(Position, Attributes.Radius.Value)
                     .FirstOrDefault(entity =>
                         !(entity.Target != null ||
                         Gender == entity.Gender ||
                         entity.Age < entity.ReproductionCooldown ||
-                        !VectorHelper.WithinDistance(Position, entity.Position, Radius + entity.Radius)));
+                        !VectorHelper.WithinDistance(Position, entity.Position, Attributes.Radius.Value + entity.Attributes.Radius.Value)));
 
                 if (partner != null)
                 {
@@ -188,16 +188,17 @@ namespace WhatIsLife.Objects
             }
             else if (Target is Entity && Position == Target.Position)
             {
-                // New Entity
-                if (GameObjects.Entities.Count() < GlobalObjects.GameConfig.MaxEntity)
-                {
-                    GameObjects.Entities.CreateNewObject(Position);
-                }
-
-                ResetReproductionSystem();
+                Breed();
             }
-
         }
+
+        public void Breed()
+        {
+            // New Entity
+            GameObjects.Entities.CreateNewObject(Position);
+            ResetReproductionSystem();
+        }
+
         public void Wander()
         {
             if (Target != null)
@@ -219,7 +220,7 @@ namespace WhatIsLife.Objects
             }
 
             // If Hunger reaches 0, it dies
-            if (Attributes.Hunger <= 0)
+            if (Attributes.Hunger.DeathThreshold())
             {
                 return true;
             }
@@ -253,6 +254,7 @@ namespace WhatIsLife.Objects
             targetString += $"{Target?.Id}";
 
 
+            sb.Append(@$"Speed: {Attributes.Speed.Value}\line ");
             sb.Append(@$"Target: {targetString}\line ");
             sb.Append(@$"Active: {IsActive}\line ");
             sb.Append(@"}");
@@ -262,16 +264,17 @@ namespace WhatIsLife.Objects
 
         public void Update()
         {
+         
             if (GlobalObjects.GameConfig.Debug)
             {
                 if (Target != null)
                 {
-                    if (Target is Entity && !VectorHelper.WithinDistance(Target.Position, Position, Radius + (Target as Entity).Radius))
+                    if (Target is Entity && !VectorHelper.WithinDistance(Target.Position, Position, Attributes.Radius.Value + (Target as Entity).Attributes.Radius.Value))
                     {
                         throw new Exception("Entity not within distance");
                     }
 
-                    if (Target is Food && !VectorHelper.WithinDistance(Target.Position, Position, Radius))
+                    if (Target is Food && !VectorHelper.WithinDistance(Target.Position, Position, Attributes.Radius.Value))
                     {
                         throw new Exception("Food not within distance");
                     }
@@ -281,7 +284,7 @@ namespace WhatIsLife.Objects
             if (GlobalObjects.TempVariables.NewDay)
             {
                 Age++;
-                Attributes.Hunger -= 20;
+                Attributes.Hunger.Decrement(20);
             }
 
             if (RandomDeathChance())
@@ -320,16 +323,18 @@ namespace WhatIsLife.Objects
                 };
 
                 Velocity = directionToTarget;
-
-                if (Velocity.Length() > Speed)
+              
+                if (Velocity.Length() > Attributes.Speed.Value)
                 {
                     Velocity.Normalize();
-                    Velocity *= Speed;
+                    
+                    Velocity *= Attributes.Speed.Value;
                 }
             }
 
             Position += Velocity;
 
+        
             if (Position.X <= 0f)
             {
                 Position.X = 0;
@@ -365,7 +370,7 @@ namespace WhatIsLife.Objects
                 Velocity.Normalize();
             }
 
-            Velocity *= Speed;
+            Velocity *= Attributes.Speed.Value;
         }
     }
 }
